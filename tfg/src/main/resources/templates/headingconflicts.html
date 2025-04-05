@@ -11,11 +11,12 @@
     <div class="hc-container">
       <div class="hc-grid" id="hc-grid"></div>
   
-      <div class="hc-result" id="hc-result"></div>
-  
-      <div class="hc-buttons">
-        <button class="hc-button" onclick="handleAnswer(true)">Hay conflicto</button>
-        <button class="hc-button" onclick="handleAnswer(false)">No hay conflicto</button>
+      <div class="hc-right-side">
+        <div class="hc-result" id="hc-result"></div>
+        <div class="hc-buttons">
+          <button class="hc-button" onclick="handleAnswer(true)">Hay conflicto</button>
+          <button class="hc-button" onclick="handleAnswer(false)">No hay conflicto</button>
+        </div>
       </div>
     </div>
 
@@ -27,7 +28,7 @@
 
     function generatePlanes() {
       planes = [];
-      const gridSize = 12; // 10x10
+      const gridSize = 10; 
       const totalPlanes = 20;
       const occupied = new Set();
 
@@ -61,12 +62,12 @@
       for (let x = 0; x < gridSize; x++) {
         for (let y = 0; y < gridSize; y++) {
           if (!occupied.has(`${x},${y}`)) {
-            // Buscar un par frente a frente
+            // Buscar un par frente a frente, incluidas las direcciones verticales
             const pairs = [
-              [[x, y], [x, y + 1], 'N', 'S'],
-              [[x, y], [x, y - 1], 'S', 'N'],
-              [[x, y], [x + 1, y], 'W', 'E'],
-              [[x, y], [x - 1, y], 'E', 'W']
+              [[x, y], [x, y + 1], 'N', 'S'], // Conflicto vertical (Norte - Sur)
+              [[x, y], [x, y - 1], 'S', 'N'], // Conflicto vertical (Sur - Norte)
+              [[x, y], [x + 1, y], 'W', 'E'], // Conflicto horizontal (Oeste - Este)
+              [[x, y], [x - 1, y], 'E', 'W']  // Conflicto horizontal (Este - Oeste)
             ];
 
             for (let [p1, p2, h1, h2] of pairs) {
@@ -105,7 +106,7 @@
         occupied.add(`${chosen.p1[0]},${chosen.p1[1]}`);
         occupied.add(`${chosen.p2[0]},${chosen.p2[1]}`);
       } else {
-        hasConflict = false; // No había espacio para insertarlo
+        hasConflict = false; 
       }
     }
 
