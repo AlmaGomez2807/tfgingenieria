@@ -8,6 +8,6 @@ public class GreetingController {
 
     @RequestMapping("/")
     public String greeting() {
-        return "principal";
+        return "principalJuegos";
     }
 }
