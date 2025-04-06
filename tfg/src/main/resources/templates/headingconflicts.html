@@ -62,7 +62,7 @@
       for (let x = 0; x < gridSize; x++) {
         for (let y = 0; y < gridSize; y++) {
           if (!occupied.has(`${x},${y}`)) {
-            // Buscar un par frente a frente, incluidas las direcciones verticales
+            // Conflictos Verticales
             const pairs = [
               [[x, y], [x, y + 1], 'N', 'S'], // Conflicto vertical (Norte - Sur)
               [[x, y], [x, y - 1], 'S', 'N'], // Conflicto vertical (Sur - Norte)

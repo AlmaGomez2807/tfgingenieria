@@ -247,3 +247,85 @@ footer {
   margin: 8px 0;
   text-align: center;
 }
+
+
+/* CONTENEDOR GENERAL */
+.coor-juego {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* TÍTULO */
+.coor-titulo {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* PREGUNTA */
+.coor-pregunta {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+/* CUADRÍCULA */
+.coor-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 50px);
+  grid-template-rows: repeat(5, 50px);
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 30px auto;
+  background-color: #007bff; /* Azul de fondo para la cuadrícula */
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* CELDAS DE LA CUADRÍCULA */
+.coor-celda {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  background-color: #cce5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: background-color 0.3s;
+}
+
+/* OPCIONES DE RESPUESTA */
+.coor-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* BOTONES */
+.coor-boton {
+  background-color: #007bff;
+  color: white;
+  font-size: 1em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.coor-boton:hover {
+  background-color: #0056b3;
+}
+
+

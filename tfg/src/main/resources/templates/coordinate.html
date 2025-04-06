@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juego de Rumbo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="coor-juego">
+    <h1 class="coor-titulo">¿Cuál es la respuesta correcta?</h1>
+    <div id="coor-pregunta" class="coor-pregunta"></div>
+    <div class="coor-grid" id="coor-grid"></div>
+    <div class="coor-opciones">
+      <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+      <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+      <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+      <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+    </div>
+  </div>
+
+  <script>
+    const headings = [0, 45, 90, 135, 180, 225, 270, 315];
+    const size = 5;
+    let avion = {}, torre = {}, respuestaCorrecta = "";
+    let tipoPregunta = "distancia"; // alterna entre distancia y heading
+
+    function generarJuego() {
+      const grid = document.getElementById("coor-grid");
+      grid.innerHTML = "";
+
+      avion.x = Math.floor(Math.random() * size);
+      avion.y = Math.floor(Math.random() * size);
+
+      do {
+        torre.x = Math.floor(Math.random() * size);
+        torre.y = Math.floor(Math.random() * size);
+      } while (torre.x === avion.x && torre.y === avion.y);
+
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const cell = document.createElement("div");
+          cell.className = "coor-celda";
+
+          if (x === avion.x && y === avion.y) {
+            cell.textContent = "✈️";
+          } else if (x === torre.x && y === torre.y) {
+            cell.textContent = "🏁";
+          }
+
+          grid.appendChild(cell);
+        }
+      }
+
+      const dx = torre.x - avion.x;
+      const dy = torre.y - avion.y;
+
+      tipoPregunta = Math.random() > 0.5 ? "distancia" : "heading";
+
+      if (tipoPregunta === "distancia") {
+        document.getElementById("coor-pregunta").textContent = "¿Qué distancia hay desde el avión hasta la torre (en Millas Náuticas)?";
+
+        const distancia = calcularDistanciaMN(dx, dy);
+        respuestaCorrecta = distancia.toString();
+
+        const opciones = generarOpcionesDistancia(distancia);
+        asignarOpciones(opciones);
+
+      } else {
+        document.getElementById("coor-pregunta").textContent = "¿Qué rumbo (en grados) debe tomar el avión para llegar a la torre?";
+
+        const heading = calcularHeading(dx, dy);
+        respuestaCorrecta = heading.toString();
+
+        const opciones = generarOpcionesHeading(heading);
+        asignarOpciones(opciones);
+      }
+    }
+
+    function calcularDistanciaMN(dx, dy) {
+      const pasosHoriz = Math.abs(dx);
+      const pasosVert = Math.abs(dy);
+      const diagonales = Math.min(pasosHoriz, pasosVert);
+      const rectos = Math.abs(pasosHoriz - pasosVert);
+      return diagonales * 14 + rectos * 10;
+    }
+
+    function calcularHeading(dx, dy) {
+      const angulo = Math.atan2(-dy, dx) * (180 / Math.PI);
+      const heading = Math.round((angulo + 360) % 360);
+      return headings.reduce((prev, curr) => Math.abs(curr - heading) < Math.abs(prev - heading) ? curr : prev);
+    }
+
+    function generarOpcionesDistancia(correcta) {
+      const opciones = new Set([correcta]);
+      while (opciones.size < 4) {
+        const variacion = (Math.floor(Math.random() * 5) - 2) * 10;
+        const nueva = parseInt(correcta) + variacion;
+        if (nueva > 0) opciones.add(nueva.toString());
+      }
+      return Array.from(opciones).sort(() => Math.random() - 0.5);
+    }
+
+    function generarOpcionesHeading(correcta) {
+      const opciones = new Set([correcta]);
+      while (opciones.size < 4) {
+        const candidata = headings[Math.floor(Math.random() * headings.length)].toString();
+        opciones.add(candidata);
+      }
+      return Array.from(opciones).sort(() => Math.random() - 0.5);
+    }
+
+    function asignarOpciones(opciones) {
+      document.querySelectorAll(".coor-boton").forEach((btn, i) => {
+        btn.textContent = opciones[i];
+      });
+    }
+
+    function verificarRespuesta(boton) {
+      if (boton.textContent === respuestaCorrecta) {
+        alert("¡Correcto! 🎉");
+      } else {
+        alert(`¡Incorrecto! Era ${respuestaCorrecta}.`);
+      }
+      generarJuego();
+    }
+
+    generarJuego();
+  </script>
+</body>
+</html>
