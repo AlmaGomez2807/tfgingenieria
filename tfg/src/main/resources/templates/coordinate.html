@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Juego de Rumbo</title>
+  <title>Juego de Rumbos y Distancias</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,42 +22,40 @@
     const headings = [0, 45, 90, 135, 180, 225, 270, 315];
     const size = 5;
     let avion = {}, torre = {}, respuestaCorrecta = "";
-    let tipoPregunta = "distancia"; // alterna entre distancia y heading
+    let tipoPregunta = "distancia"; // alterna entre distancia y heading (rumbo)
 
     function generarJuego() {
       const grid = document.getElementById("coor-grid");
       grid.innerHTML = "";
 
-      avion.x = Math.floor(Math.random() * size);
-      avion.y = Math.floor(Math.random() * size);
+      coordenadaAvionX = Math.floor(Math.random() * size);
+      coordenadaAvionY = Math.floor(Math.random() * size);
 
       do {
-        torre.x = Math.floor(Math.random() * size);
-        torre.y = Math.floor(Math.random() * size);
-      } while (torre.x === avion.x && torre.y === avion.y);
+        coordenadaTorreX = Math.floor(Math.random() * size);
+        coordenadaTorreY = Math.floor(Math.random() * size);
+      } while (coordenadaTorreX === coordenadaAvionX && coordenadaTorreY === coordenadaAvionY);
 
       for (let y = 0; y < size; y++) {
         for (let x = 0; x < size; x++) {
           const cell = document.createElement("div");
           cell.className = "coor-celda";
-
-          if (x === avion.x && y === avion.y) {
+          if (x === coordenadaAvionX && y === coordenadaAvionY) {
             cell.textContent = "✈️";
-          } else if (x === torre.x && y === torre.y) {
+          } else if (x === coordenadaTorreX && y === coordenadaTorreY) {
             cell.textContent = "🏁";
           }
-
           grid.appendChild(cell);
         }
       }
 
-      const dx = torre.x - avion.x;
-      const dy = torre.y - avion.y;
+      const dx = coordenadaTorreX - coordenadaAvionX;
+      const dy = coordenadaTorreY - coordenadaAvionY;
 
       tipoPregunta = Math.random() > 0.5 ? "distancia" : "heading";
 
       if (tipoPregunta === "distancia") {
-        document.getElementById("coor-pregunta").textContent = "¿Qué distancia hay desde el avión hasta la torre (en Millas Náuticas)?";
+        document.getElementById("coor-pregunta").textContent = "¿Qué distancia hay desde el avión hasta la meta?";
 
         const distancia = calcularDistanciaMN(dx, dy);
         respuestaCorrecta = distancia.toString();
@@ -67,7 +64,7 @@
         asignarOpciones(opciones);
 
       } else {
-        document.getElementById("coor-pregunta").textContent = "¿Qué rumbo (en grados) debe tomar el avión para llegar a la torre?";
+        document.getElementById("coor-pregunta").textContent = "¿Qué rumbo (en grados) debe tomar el avión para llegar a la meta?";
 
         const heading = calcularHeading(dx, dy);
         respuestaCorrecta = heading.toString();

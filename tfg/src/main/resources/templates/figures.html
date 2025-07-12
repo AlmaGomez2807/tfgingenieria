@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Juego de Figuras</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="fig-wrapper">
+  <h1 class="fig-title">¡Elige la figura correcta!</h1>
+  <div id="fig-description" class="fig-description"></div>
+  <div class="fig-center-container">
+    <div id="main-figure" class="fig-main"></div>
+  </div>
+  <div class="fig-options" id="fig-options"></div>
+  <div id="fig-feedback" class="fig-feedback"></div>
+
+  <script>
+    const shapes = ['⬛', '⚪', '🔺', '⭐', '❤️'];
+    const colors = ['black', 'white', 'green', 'yellow', 'red'];
+
+    let mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
+    let round = 0;
+    const maxRounds = 10;
+
+    const description = document.getElementById('fig-description');
+    const mainFigure = document.getElementById('main-figure');
+    const optionsContainer = document.getElementById('fig-options');
+    const feedback = document.getElementById('fig-feedback');
+
+    function getRandomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function createFigure(shape, color) {
+      const span = document.createElement('span');
+      span.textContent = shape;
+      span.style.color = color;
+      span.classList.add('fig-shape');
+      return span;
+    }
+
+    function isUniqueCombination(list, shape, color) {
+      return !list.some(item => item.shape === shape && item.color === color);
+    }
+
+    function newRound() {
+      if (round >= maxRounds) {
+        feedback.textContent = "🏁 ¡Juego terminado!";
+        mainFigure.innerHTML = '';
+        optionsContainer.innerHTML = '';
+        description.textContent = '';
+        return;
+      }
+
+      feedback.textContent = '';
+      optionsContainer.innerHTML = '';
+      round++;
+
+      const baseShape = getRandomItem(shapes);
+      const baseColor = getRandomItem(colors);
+      mainFigure.innerHTML = '';
+      mainFigure.appendChild(createFigure(baseShape, baseColor));
+
+      let correctOption;
+      const options = [];
+
+      if (mode === 'same-shape') {
+        description.textContent = "Selecciona la figura que sea IGUAL a la del centro.";
+        correctOption = { shape: baseShape, color: baseColor };
+        options.push(correctOption);
+
+        while (options.length < 4) {
+          const shape = getRandomItem(shapes);
+          const color = getRandomItem(colors);
+          if (isUniqueCombination(options, shape, color)) {
+            options.push({ shape, color });
+          }
+        }
+
+      } else {
+        description.textContent = "Selecciona la figura con el MISMO COLOR pero forma DIFERENTE.";
+        let diffShape;
+        do {
+          diffShape = getRandomItem(shapes);
+        } while (diffShape === baseShape);
+        correctOption = { shape: diffShape, color: baseColor };
+        options.push(correctOption);
+
+        while (options.length < 4) {
+          const shape = getRandomItem(shapes);
+          const color = getRandomItem(colors);
+          // Aseguramos que no se repita la misma combinación ya usada
+          if (isUniqueCombination(options, shape, color)) {
+            options.push({ shape, color });
+          }
+        }
+      }
+
+      // Mezclar las opciones
+      options.sort(() => Math.random() - 0.5);
+
+      // Renderizar opciones
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.appendChild(createFigure(opt.shape, opt.color));
+        btn.className = 'fig-button';
+        btn.onclick = () => {
+          let isCorrect = false;
+
+          if (mode === 'same-shape') {
+            isCorrect = opt.shape === baseShape && opt.color === baseColor;
+          } else {
+            isCorrect = opt.color === baseColor && opt.shape !== baseShape;
+          }
+
+          feedback.textContent = isCorrect ? '✅ ¡Correcto!' : '❌ Ups, era otra.';
+          setTimeout(newRound, 1000);
+        };
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    newRound();
+  </script>
+</body>
+</html>

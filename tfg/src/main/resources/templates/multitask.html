@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multitarea Infantil</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="mt-wrapper">
+  <h1 class="mt-title">¡Multitastk!</h1>
+
+  <div class="mt-container">
+    <!-- Figuras -->
+    <div class="mt-section">
+      <h2 class="mt-section-title">¿Los aviones son iguales?</h2>
+      <div class="mt-figures">
+        <div id="figure1">✈️</div>
+        <div id="figure2">🛩️</div>
+      </div>
+      <button class="mt-button" onclick="checkFigures(true)">¡Son iguales!</button>
+      <button class="mt-button" onclick="checkFigures(false)">No son iguales</button>
+    </div>
+
+    <!-- Ecuaciones -->
+    <div class="mt-section">
+      <h2 class="mt-section-title">¿Es correcta la operación?</h2>
+      <div id="equation" class="mt-equation">2 + 2 = 4</div>
+      <button class="mt-button" onclick="checkEquation(true)">¡Es correcta!</button>
+      <button class="mt-button" onclick="checkEquation(false)">No es correcta</button>
+    </div>
+
+    <!-- Sonido -->
+    <div class="mt-section">
+      <h2 class="mt-section-title">¡Pulsa ESPACIO cuando oigas el sonido!</h2>
+      <div id="sound-feedback" class="mt-sound-feedback"></div>
+    </div>
+
+    <!-- Feedback general -->
+    <div class="mt-feedback" id="feedback"></div>
+  </div>
+
+  <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+  <script>
+    const figures = ['✈️', '🛩️', '🛫', '🛬'];
+    const figure1 = document.getElementById('figure1');
+    const figure2 = document.getElementById('figure2');
+    const equationEl = document.getElementById('equation');
+    const feedback = document.getElementById('feedback');
+    const soundFeedback = document.getElementById('sound-feedback');
+    const beepSound = document.getElementById('beep-sound');
+
+    let currentEquationCorrect = true;
+    let waitingForSpace = false;
+    let figuresAreEqual = false;
+
+    function randomFigure() {
+      return figures[Math.floor(Math.random() * figures.length)];
+    }
+
+    function generateFigures() {
+      const fig1 = randomFigure();
+      const isSame = Math.random() < 0.5;
+      const fig2 = isSame ? fig1 : randomFigure();
+      figuresAreEqual = fig1 === fig2;
+      figure1.textContent = fig1;
+      figure2.textContent = fig2;
+    }
+
+    function generateEquation() {
+      const a = Math.floor(Math.random() * 10);
+      const b = Math.floor(Math.random() * 10);
+      const realResult = a + b;
+      const shownResult = Math.random() < 0.5 ? realResult : realResult + (Math.random() < 0.5 ? 1 : -1);
+      currentEquationCorrect = realResult === shownResult;
+      equationEl.textContent = `${a} + ${b} = ${shownResult}`;
+    }
+
+    function checkFigures(playerThinksEqual) {
+      const isCorrect = playerThinksEqual === figuresAreEqual;
+      feedback.textContent = isCorrect ? '✅ ¡Correcto con los aviones!' : '❌ Los aviones no eran iguales.';
+      setTimeout(resetFigures, 1200);
+    }
+
+    function checkEquation(playerThinksCorrect) {
+      const isCorrect = playerThinksCorrect === currentEquationCorrect;
+      feedback.textContent = isCorrect ? '✅ ¡Correcto con la operación!' : '❌ La operación no era correcta.';
+      setTimeout(resetEquation, 1200);
+    }
+
+    function resetFigures() {
+      feedback.textContent = '';
+      generateFigures();
+    }
+
+    function resetEquation() {
+      feedback.textContent = '';
+      generateEquation();
+    }
+
+    function playBeep() {
+      beepSound.play();
+      waitingForSpace = true;
+      soundFeedback.textContent = '¡Dale a ESPACIO!';
+      setTimeout(() => {
+        if (waitingForSpace) {
+          soundFeedback.textContent = '⏱️ Demasiado tarde...';
+          waitingForSpace = false;
+        }
+      }, 2000);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && waitingForSpace) {
+        soundFeedback.textContent = '✅ ¡Bien hecho!';
+        waitingForSpace = false;
+      }
+    });
+
+    function initGame() {
+      generateFigures();
+      generateEquation();
+      setInterval(playBeep, 9000 + Math.random() * 5000); // cada 9-14 segundos
+    }
+
+    initGame();
+  </script>
+</body>
+</html>
