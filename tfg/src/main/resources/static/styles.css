@@ -280,9 +280,14 @@ footer {
 }
 
 #img-hel{
-  width: 40%;
-  margin-top: 50px;
-  margin-left: 40px;
+  width: 45%;
+  margin-top: 35px;
+  margin-left: -16px;
+}
+#img-exp{
+  width: 85%;
+  margin-top: -83px;
+  margin-left: 127px;
 }
 
 /* TÍTULO */
