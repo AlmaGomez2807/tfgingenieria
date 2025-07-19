@@ -1,36 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Juego de Rumbos y Distancias</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="coor-juego">
-    <h1 class="coor-titulo">¿Cuál es la respuesta correcta?</h1>
-    <div id="coor-pregunta" class="coor-pregunta"></div>
-    <div class="coor-grid" id="coor-grid"></div>
-    <div class="coor-opciones">
-      <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
-      <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
-      <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
-      <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
-    </div>
+{{> fragments/header}}
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-lg-5">
+            <div>
+              <img id="img-hel" src="images\HelicopterPet.png">
+            </div>
+          </div>
+      <div class="col-lg-7">
+        <div class="coor-juego">
+          <h1 class="coor-titulo">¿Cuál es la respuesta correcta?</h1>
+          <div id="coor-pregunta" class="coor-pregunta"></div>
+          <div class="coor-grid" id="coor-grid"></div>
+          <div class="coor-opciones">
+            <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+            <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+            <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+            <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
   </div>
 
   <script>
-    const headings = [0, 45, 90, 135, 180, 225, 270, 315];
     const size = 5;
-    let avion = {}, torre = {}, respuestaCorrecta = "";
-    let tipoPregunta = "distancia"; // alterna entre distancia y heading (rumbo)
+    let respuestaCorrecta = "";
 
     function generarJuego() {
       const grid = document.getElementById("coor-grid");
       grid.innerHTML = "";
 
-      coordenadaAvionX = Math.floor(Math.random() * size);
-      coordenadaAvionY = Math.floor(Math.random() * size);
+      const coordenadaAvionX = Math.floor(Math.random() * size);
+      const coordenadaAvionY = Math.floor(Math.random() * size);
 
+      let coordenadaTorreX, coordenadaTorreY;
       do {
         coordenadaTorreX = Math.floor(Math.random() * size);
         coordenadaTorreY = Math.floor(Math.random() * size);
@@ -52,26 +57,12 @@
       const dx = coordenadaTorreX - coordenadaAvionX;
       const dy = coordenadaTorreY - coordenadaAvionY;
 
-      tipoPregunta = Math.random() > 0.5 ? "distancia" : "heading";
+      document.getElementById("coor-pregunta").textContent = "¿Qué distancia hay desde el avión hasta la meta?";
+      const distancia = calcularDistanciaMN(dx, dy);
+      respuestaCorrecta = distancia.toString();
 
-      if (tipoPregunta === "distancia") {
-        document.getElementById("coor-pregunta").textContent = "¿Qué distancia hay desde el avión hasta la meta?";
-
-        const distancia = calcularDistanciaMN(dx, dy);
-        respuestaCorrecta = distancia.toString();
-
-        const opciones = generarOpcionesDistancia(distancia);
-        asignarOpciones(opciones);
-
-      } else {
-        document.getElementById("coor-pregunta").textContent = "¿Qué rumbo (en grados) debe tomar el avión para llegar a la meta?";
-
-        const heading = calcularHeading(dx, dy);
-        respuestaCorrecta = heading.toString();
-
-        const opciones = generarOpcionesHeading(heading);
-        asignarOpciones(opciones);
-      }
+      const opciones = generarOpcionesDistancia(distancia);
+      asignarOpciones(opciones);
     }
 
     function calcularDistanciaMN(dx, dy) {
@@ -82,27 +73,12 @@
       return diagonales * 14 + rectos * 10;
     }
 
-    function calcularHeading(dx, dy) {
-      const angulo = Math.atan2(-dy, dx) * (180 / Math.PI);
-      const heading = Math.round((angulo + 360) % 360);
-      return headings.reduce((prev, curr) => Math.abs(curr - heading) < Math.abs(prev - heading) ? curr : prev);
-    }
-
     function generarOpcionesDistancia(correcta) {
       const opciones = new Set([correcta]);
       while (opciones.size < 4) {
         const variacion = (Math.floor(Math.random() * 5) - 2) * 10;
         const nueva = parseInt(correcta) + variacion;
         if (nueva > 0) opciones.add(nueva.toString());
-      }
-      return Array.from(opciones).sort(() => Math.random() - 0.5);
-    }
-
-    function generarOpcionesHeading(correcta) {
-      const opciones = new Set([correcta]);
-      while (opciones.size < 4) {
-        const candidata = headings[Math.floor(Math.random() * headings.length)].toString();
-        opciones.add(candidata);
       }
       return Array.from(opciones).sort(() => Math.random() - 0.5);
     }
@@ -124,5 +100,5 @@
 
     generarJuego();
   </script>
-</body>
-</html>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+  {{> fragments/footer}}
