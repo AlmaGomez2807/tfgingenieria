@@ -138,37 +138,6 @@ footer {
 
 
 
-
-.hc-body {
-  font-family: 'Fredoka', sans-serif;
-  background-color: white;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow-y: auto;
-}
-
-.hc-title {
-  font-size: 24px;
-  color: #7ec8e3;
-  margin: 20px 0 10px;
-  text-align: center;
-}
-
-.hc-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1000px;
-  padding: 10px;
-  box-sizing: border-box;
-}
 .hc-body {
   font-family: 'Fredoka', sans-serif;
   background-color: white;
@@ -185,7 +154,7 @@ footer {
 
 .hc-title {
   font-size: 1.8em;
-  margin-bottom: 10px;
+  margin: 20px 0 10px;
   color: #333;
   text-align: center;
 }
@@ -195,6 +164,7 @@ footer {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  margin-top: -4px;
   max-width: 1000px;
   padding: 10px;
   box-sizing: border-box;
@@ -203,14 +173,15 @@ footer {
 .hc-grid {
   display: grid;
   position: relative;
-  grid-template-columns: repeat(10, 32px);  
-  grid-template-rows: repeat(10, 32px);   
-  gap: 4px;
-  background-color: #b2ebf2;
+  grid-template-columns: repeat(15, 32px);
+  grid-template-rows: repeat(10, 32px);
+  gap: 3px;
+  background-color: #7edaf1;
   padding: 8px;
   border-radius: 10px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 12px;
+  margin-right: -25px;
   max-height: 370px;
 }
 
@@ -219,21 +190,23 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
 }
 
 .hc-buttons {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 10px;
+  margin-left: -20px;
+  margin-top: 200px; 
+  align-items: center;
 }
 
 .hc-button {
   padding: 8px 16px;
   font-size: 14px;
-  background-color: #00796b;
+  background-color: #12c1ed;
   color: white;
   border: none;
   border-radius: 6px;
@@ -242,15 +215,16 @@ footer {
 }
 
 .hc-button:hover {
-  background-color: #004d40;
+  background-color: #12c1ed;
 }
 
 .hc-result {
   font-size: 16px;
   font-weight: bold;
   color: #333;
-  margin: 8px 0;
+  margin-bottom: 8px;
   text-align: center;
+  min-height: 24px; /* espacio reservado para evitar saltos bruscos */
 }
 
 .hc-highlight {
@@ -263,7 +237,16 @@ footer {
   pointer-events: none;
   box-sizing: border-box;
 }
-
+#img-plane{
+  width: 60%;
+  margin-top: 35px;
+  margin-left: 20px;
+}
+#img-hc{
+  width: 95%;
+  margin-top: -25px;
+  margin-left: 60px;
+}
 
 /* CONTENEDOR GENERAL */
 .coor-juego {

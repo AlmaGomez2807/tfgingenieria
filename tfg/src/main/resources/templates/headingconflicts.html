@@ -1,151 +1,157 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Conflictos de Rumbos - Infantil</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body class="hc-body">
-    <h1 class="hc-title">¿Ves algún posible choque?</h1>
-  
-    <div class="hc-container">
-      <div class="hc-grid" id="hc-grid"></div>
-  
-      <div class="hc-right-side">
-        <div class="hc-result" id="hc-result"></div>
-        <div class="hc-buttons">
-          <button class="hc-button" onclick="handleAnswer(true)">Hay conflicto</button>
-          <button class="hc-button" onclick="handleAnswer(false)">No hay conflicto</button>
-        </div>
+{{> fragments/header}}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-4">
+      <img id="img-plane" src="images\PlanePet.png">
+      <img id="img-hc" src="images\exp-hc.png">
+    </div>
+
+    <div class="col-lg-6">
+      <h1 class="hc-title">¿Ves algún posible choque?</h1>
+      <div class="hc-container">
+        <div class="hc-grid" id="hc-grid"></div>
       </div>
     </div>
 
-  <script>
-    const directions = ['N', 'E', 'S', 'W'];
-    const directionAngles = { N: 0, E: 90, S: 180, W: 270 };
-    let planes = [];
-    let hasConflict = false;
+    <div class="col-lg-2">
+      <div class="hc-buttons">
+        <div class="hc-result" id="hc-result"></div>
+        <button class="hc-button" onclick="handleAnswer(true)">Hay conflicto</button>
+        <button class="hc-button" onclick="handleAnswer(false)">No hay conflicto</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function generatePlanes() {
-      planes = [];
-      const gridSize = 10; 
-      const totalPlanes = 20;
-      const occupied = new Set();
 
-      while (planes.length < totalPlanes) {
-        const x = Math.floor(Math.random() * gridSize);
-        const y = Math.floor(Math.random() * gridSize);
-        const key = `${x},${y}`;
 
-        if (!occupied.has(key)) {
-          occupied.add(key);
-          planes.push({
-            id: planes.length + 1,
-            x,
-            y,
-            heading: directions[Math.floor(Math.random() * directions.length)]
-          });
-        }
-      }
+<script>
+  const gridCols = 15; // columnas = ancho
+  const gridRows = 10; // filas = alto
+  const directions = ['N', 'E', 'S', 'W'];
+  const directionAngles = { N: 0, E: 90, S: 180, W: 270 };
+  let planes = [];
+  let hasConflict = false;
 
-      // Decidir si habrá conflicto
-      hasConflict = Math.random() < 0.5;
+  function generatePlanes() {
+    planes = [];
+    const totalPlanes = 20;
+    const occupied = new Set();
 
-      if (hasConflict) {
-        insertConflictPair(occupied, gridSize);
+    while (planes.length < totalPlanes) {
+      const x = Math.floor(Math.random() * gridCols);
+      const y = Math.floor(Math.random() * gridRows);
+      const key = `${x},${y}`;
+
+      if (!occupied.has(key)) {
+        occupied.add(key);
+        planes.push({
+          id: planes.length + 1,
+          x,
+          y,
+          heading: directions[Math.floor(Math.random() * directions.length)]
+        });
       }
     }
 
-    function insertConflictPair(occupied, gridSize) {
-      const possiblePairs = [];
+    hasConflict = Math.random() < 0.5;
 
-      for (let x = 0; x < gridSize; x++) {
-        for (let y = 0; y < gridSize; y++) {
-          if (!occupied.has(`${x},${y}`)) {
-            // Conflictos Verticales
-            const pairs = [
-              [[x, y], [x, y + 1], 'N', 'S'], // Conflicto vertical (Norte - Sur)
-              [[x, y], [x, y - 1], 'S', 'N'], // Conflicto vertical (Sur - Norte)
-              [[x, y], [x + 1, y], 'W', 'E'], // Conflicto horizontal (Oeste - Este)
-              [[x, y], [x - 1, y], 'E', 'W']  // Conflicto horizontal (Este - Oeste)
-            ];
+    if (hasConflict) {
+      insertConflictPair(occupied);
+    }
+  }
 
-            for (let [p1, p2, h1, h2] of pairs) {
-              const [x1, y1] = p1;
-              const [x2, y2] = p2;
-              const k1 = `${x1},${y1}`;
-              const k2 = `${x2},${y2}`;
+  function insertConflictPair(occupied) {
+    const possiblePairs = [];
 
-              if (
-                x2 >= 0 && x2 < gridSize && y2 >= 0 && y2 < gridSize &&
-                !occupied.has(k1) && !occupied.has(k2)
-              ) {
-                possiblePairs.push({ p1: [x1, y1, h1], p2: [x2, y2, h2] });
-              }
+    for (let x = 0; x < gridCols; x++) {
+      for (let y = 0; y < gridRows; y++) {
+        if (!occupied.has(`${x},${y}`)) {
+          const pairs = [
+            [[x, y], [x, y + 1], 'N', 'S'],
+            [[x, y], [x, y - 1], 'S', 'N'],
+            [[x, y], [x + 1, y], 'W', 'E'],
+            [[x, y], [x - 1, y], 'E', 'W']
+          ];
+
+          for (let [p1, p2, h1, h2] of pairs) {
+            const [x1, y1] = p1;
+            const [x2, y2] = p2;
+            const k1 = `${x1},${y1}`;
+            const k2 = `${x2},${y2}`;
+
+            if (
+              x2 >= 0 && x2 < gridCols &&
+              y2 >= 0 && y2 < gridRows &&
+              !occupied.has(k1) && !occupied.has(k2)
+            ) {
+              possiblePairs.push({ p1: [x1, y1, h1], p2: [x2, y2, h2] });
             }
           }
         }
       }
-
-      if (possiblePairs.length > 0) {
-        const chosen = possiblePairs[Math.floor(Math.random() * possiblePairs.length)];
-
-        planes.push({
-          id: planes.length + 1,
-          x: chosen.p1[0],
-          y: chosen.p1[1],
-          heading: chosen.p1[2]
-        });
-        planes.push({
-          id: planes.length + 1,
-          x: chosen.p2[0],
-          y: chosen.p2[1],
-          heading: chosen.p2[2]
-        });
-
-        occupied.add(`${chosen.p1[0]},${chosen.p1[1]}`);
-        occupied.add(`${chosen.p2[0]},${chosen.p2[1]}`);
-      } else {
-        hasConflict = false; 
-      }
     }
 
-    function renderPlanes() {
-      const grid = document.getElementById("hc-grid");
-      grid.innerHTML = "";
+    if (possiblePairs.length > 0) {
+      const chosen = possiblePairs[Math.floor(Math.random() * possiblePairs.length)];
 
-      planes.forEach(plane => {
-        const div = document.createElement("div");
-        div.className = "hc-plane";
-        div.style.transform = `rotate(${directionAngles[plane.heading]}deg)`;
-        div.style.gridColumnStart = plane.x + 1;
-        div.style.gridRowStart = plane.y + 1;
-        div.innerHTML = "✈️";
-        grid.appendChild(div);
+      planes.push({
+        id: planes.length + 1,
+        x: chosen.p1[0],
+        y: chosen.p1[1],
+        heading: chosen.p1[2]
       });
-    }
+      planes.push({
+        id: planes.length + 1,
+        x: chosen.p2[0],
+        y: chosen.p2[1],
+        heading: chosen.p2[2]
+      });
 
-    function handleAnswer(playerSaysConflict) {
-      const result = document.getElementById("hc-result");
-      if (playerSaysConflict === hasConflict) {
-        result.textContent = "✅ ¡Correcto!";
-        result.style.color = "green";
-      } else {
-        result.textContent = "❌ Incorrecto.";
-        result.style.color = "red";
-      }
-      setTimeout(() => {
-        result.textContent = "";
-        resetGame();
-      }, 1500);
+      occupied.add(`${chosen.p1[0]},${chosen.p1[1]}`);
+      occupied.add(`${chosen.p2[0]},${chosen.p2[1]}`);
+    } else {
+      hasConflict = false;
     }
+  }
 
-    function resetGame() {
-      generatePlanes();
-      renderPlanes();
+  function renderPlanes() {
+    const grid = document.getElementById("hc-grid");
+    grid.innerHTML = "";
+
+    planes.forEach(plane => {
+      const div = document.createElement("div");
+      div.className = "hc-plane";
+      div.style.transform = `rotate(${directionAngles[plane.heading]}deg)`;
+      div.style.gridColumnStart = plane.x + 1;
+      div.style.gridRowStart = plane.y + 1;
+      div.innerHTML = "✈️";
+      grid.appendChild(div);
+    });
+  }
+
+  function handleAnswer(playerSaysConflict) {
+    const result = document.getElementById("hc-result");
+    if (playerSaysConflict === hasConflict) {
+      result.textContent = "✅ ¡Correcto!";
+      result.style.color = "green";
+    } else {
+      result.textContent = "❌ Incorrecto.";
+      result.style.color = "red";
     }
+    setTimeout(() => {
+      result.textContent = "";
+      resetGame();
+    }, 1500);
+  }
 
-    resetGame();
-  </script>
-</body>
-</html>
+  function resetGame() {
+    generatePlanes();
+    renderPlanes();
+  }
+
+  resetGame();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+{{> fragments/footer}}
