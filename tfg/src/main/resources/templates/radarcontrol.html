@@ -1,83 +1,43 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Radar Kids</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
+{{> fragments/header}}
   <div class="rk-container">
     <h1 class="rk-title">¡Controla el cielo!</h1>
     <div class="rk-radar">
       <div class="rk-plane" id="plane1"></div>
-      <div class="rk-plane" id="plane2"></div>
     </div>
 
     <div class="rk-controls">
-      <h2 class="rk-subtitle">Controles del avión rojo</h2>
+      <h2 class="rk-subtitle">Controles del avión</h2>
       <button onclick="changeDirection('plane1', 'left')">Izquierda</button>
       <button onclick="changeDirection('plane1', 'right')">Derecha</button>
       <button onclick="changeAltitude('plane1', 'up')">Subir</button>
       <button onclick="changeAltitude('plane1', 'down')">Bajar</button>
-
-      <h2 class="rk-subtitle">Controles del avión azul</h2>
-      <button onclick="changeDirection('plane2', 'left')">Izquierda</button>
-      <button onclick="changeDirection('plane2', 'right')">Derecha</button>
-      <button onclick="changeAltitude('plane2', 'up')">Subir</button>
-      <button onclick="changeAltitude('plane2', 'down')">Bajar</button>
     </div>
-
-    <div class="rk-alert" id="collisionAlert">¡Cuidado! Aviones cerca</div>
   </div>
 
   <script>
     const plane1 = document.getElementById('plane1');
-    const plane2 = document.getElementById('plane2');
-    const alertBox = document.getElementById('collisionAlert');
-
     let x1 = 0, y1 = 100;
-    let x2 = 700, y2 = 300;
-    let dir1 = 0.5;
-    let dir2 = -0.5;
+    let dir1 = 0.1; // Velocidad 
 
-    function movePlanes() {
+    function movePlane() {
       x1 += dir1;
-      x2 += dir2;
-
       plane1.style.left = x1 + 'px';
       plane1.style.top = y1 + 'px';
-
-      plane2.style.left = x2 + 'px';
-      plane2.style.top = y2 + 'px';
-
-      // Detectar proximidad en posición horizontal y vertical
-      if (Math.abs(x1 - x2) < 50 && Math.abs(y1 - y2) < 30) {
-        alertBox.style.display = 'block';
-      } else {
-        alertBox.style.display = 'none';
-      }
-
-      requestAnimationFrame(movePlanes);
+      requestAnimationFrame(movePlane);
     }
 
     function changeDirection(planeId, direction) {
       if (planeId === 'plane1') {
-        dir1 = direction === 'left' ? -0.5 : 0.5;
-      } else if (planeId === 'plane2') {
-        dir2 = direction === 'left' ? -0.5 : 0.5;
+        dir1 = direction === 'left' ? -0.1 : 0.1;
       }
     }
 
     function changeAltitude(planeId, direction) {
       if (planeId === 'plane1') {
         y1 += direction === 'up' ? -10 : 10;
-      } else if (planeId === 'plane2') {
-        y2 += direction === 'up' ? -10 : 10;
       }
     }
 
-    movePlanes();
+    movePlane();
   </script>
-</body>
-</html>
+{{> fragments/footer}}
