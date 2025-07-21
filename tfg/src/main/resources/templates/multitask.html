@@ -1,54 +1,57 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Multitarea Infantil</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body class="mt-wrapper">
-  <h1 class="mt-title">¡Multitastk!</h1>
+{{> fragments/header}}
+<div class="mt-container">
+  <!-- FILA 1: Iconos y pregunta -->
+  <div class="mt-figures-row">
+    <div class="mt-figure" id="figure1">✈️</div>
+    <div class="mt-question-block">
+      <h1 class="mt-title">¡Multitask!</h1>
 
-  <div class="mt-container">
-    <!-- Figuras -->
-    <div class="mt-section">
-      <h2 class="mt-section-title">¿Los aviones son iguales?</h2>
-      <div class="mt-figures">
-        <div id="figure1">✈️</div>
-        <div id="figure2">🛩️</div>
+      <!-- Feedback solo para figuras -->
+      <div id="figures-feedback" class="mt-feedback"></div>
+      <h2 class="mt-section-title">¿Las figuras son iguales? </h2>
+      <div class="mt-button-group">
+        <button class="mt-button" onclick="checkFigures(true)">¡Son iguales!</button>
+        <button class="mt-button" onclick="checkFigures(false)">No son iguales</button>
       </div>
-      <button class="mt-button" onclick="checkFigures(true)">¡Son iguales!</button>
-      <button class="mt-button" onclick="checkFigures(false)">No son iguales</button>
     </div>
+    <div class="mt-figure" id="figure2">🛩️</div>
+  </div>
 
-    <!-- Ecuaciones -->
-    <div class="mt-section">
-      <h2 class="mt-section-title">¿Es correcta la operación?</h2>
-      <div id="equation" class="mt-equation">2 + 2 = 4</div>
+  <!-- FILA 2: Operación aritmética -->
+  <div class="mt-section-wide">
+    <!-- Feedback solo para ecuaciones -->
+    <div id="equation-feedback" class="mt-feedback"></div>
+
+    <h2 class="mt-section-title">¿Es correcta la operación?</h2>
+    <div id="equation" class="mt-equation">2 + 2 = 4</div>
+    <div class="mt-button-group">
       <button class="mt-button" onclick="checkEquation(true)">¡Es correcta!</button>
       <button class="mt-button" onclick="checkEquation(false)">No es correcta</button>
     </div>
-
-    <!-- Sonido -->
-    <div class="mt-section">
-      <h2 class="mt-section-title">¡Pulsa ESPACIO cuando oigas el sonido!</h2>
-      <div id="sound-feedback" class="mt-sound-feedback"></div>
-    </div>
-
-    <!-- Feedback general -->
-    <div class="mt-feedback" id="feedback"></div>
   </div>
 
-  <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+  <!-- FILA 3: Sonido -->
+  <div class="mt-section-wide">
+    <h2 class="mt-section-title">¡Pulsa ESPACIO cuando oigas el sonido!</h2>
+    <div id="sound-feedback" class="mt-sound-feedback"></div>
+  </div>
+
+</div>
+
+<audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
 
   <script>
-    const figures = ['✈️', '🛩️', '🛫', '🛬'];
+    const figures = ['✈️', '🛩️', '🛫', '🛬', '🚁​', '🚀​', '👩‍✈️​', '👨‍✈️'];
     const figure1 = document.getElementById('figure1');
     const figure2 = document.getElementById('figure2');
     const equationEl = document.getElementById('equation');
     const feedback = document.getElementById('feedback');
     const soundFeedback = document.getElementById('sound-feedback');
     const beepSound = document.getElementById('beep-sound');
+    const figuresFeedback = document.getElementById('figures-feedback');
+    const equationFeedback = document.getElementById('equation-feedback');
+
 
     let currentEquationCorrect = true;
     let waitingForSpace = false;
@@ -78,15 +81,22 @@
 
     function checkFigures(playerThinksEqual) {
       const isCorrect = playerThinksEqual === figuresAreEqual;
-      feedback.textContent = isCorrect ? '✅ ¡Correcto con los aviones!' : '❌ Los aviones no eran iguales.';
-      setTimeout(resetFigures, 1200);
+      figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto!' : '❌ Incorrecto.';
+      setTimeout(() => {
+        figuresFeedback.textContent = '';
+        generateFigures();
+      }, 1200);
     }
 
     function checkEquation(playerThinksCorrect) {
       const isCorrect = playerThinksCorrect === currentEquationCorrect;
-      feedback.textContent = isCorrect ? '✅ ¡Correcto con la operación!' : '❌ La operación no era correcta.';
-      setTimeout(resetEquation, 1200);
+      equationFeedback.textContent = isCorrect ?'✅ ¡Correcto!' : '❌ Incorrecto.';
+      setTimeout(() => {
+        equationFeedback.textContent = '';
+        generateEquation();
+      }, 1200);
     }
+
 
     function resetFigures() {
       feedback.textContent = '';
@@ -111,9 +121,14 @@
     }
 
     document.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' && waitingForSpace) {
+    if (e.code === 'Space') {
+      // Previene la acción por defecto (como activar botones enfocados)
+      e.preventDefault();
+      // Solo actúa si estamos esperando el espacio
+      if (waitingForSpace) {
         soundFeedback.textContent = '✅ ¡Bien hecho!';
         waitingForSpace = false;
+      }
       }
     });
 
@@ -125,5 +140,4 @@
 
     initGame();
   </script>
-</body>
-</html>
+{{> fragments/footer}}

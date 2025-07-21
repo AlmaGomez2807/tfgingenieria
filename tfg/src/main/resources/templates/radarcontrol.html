@@ -1,18 +1,36 @@
 {{> fragments/header}}
-  <div class="rk-container">
-    <h1 class="rk-title">¡Controla el cielo!</h1>
-    <div class="rk-radar">
-      <div class="rk-plane" id="plane1"></div>
+<div class="container-fluid">
+  <h1 class="rk-title">¡Controla el cielo!</h1>
+  <div class="row">
+    <div class="col-lg-4">
+
+
     </div>
 
-    <div class="rk-controls">
-      <h2 class="rk-subtitle">Controles del avión</h2>
-      <button onclick="changeDirection('plane1', 'left')">Izquierda</button>
-      <button onclick="changeDirection('plane1', 'right')">Derecha</button>
-      <button onclick="changeAltitude('plane1', 'up')">Subir</button>
-      <button onclick="changeAltitude('plane1', 'down')">Bajar</button>
+    <div class="col-lg-5">
+      <div class="rk-container">
+        
+        <div class="rk-radar">
+            <div class="rk-plane" id="plane1"></div>
+        </div>
+      </div>
+    </div>
+      
+
+    <div class="col-lg-3">
+      <div class="rk-controls">
+        <h2 class="rk-subtitle">Mandos</h2>
+        <button onclick="changeDirection('plane1', 'left')">I</button>
+        <button onclick="changeDirection('plane1', 'right')">D</button>
+        <button onclick="changeAltitude('plane1', 'up')">A</button>
+        <button onclick="changeAltitude('plane1', 'down')">B</button>
+      </div>
     </div>
   </div>
+ 
+
+    
+  
 
   <script>
     const plane1 = document.getElementById('plane1');
