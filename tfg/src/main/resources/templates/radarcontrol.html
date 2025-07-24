@@ -2,60 +2,111 @@
 <div class="container-fluid">
   <h1 class="rk-title">¡Controla el cielo!</h1>
   <div class="row">
-    <div class="col-lg-4">
-
-
+    
+    <!-- Zona izquierda: Controles avión 2 -->
+    <div class="col-lg-3">
+      <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
+      <div class="rk-controls">
+        <h2 class="rk-subtitle">Mandos Avión 2</h2>
+        <button onclick="changeDirection('plane2', 'left')">⬅️</button>
+        <button onclick="changeDirection('plane2', 'right')">➡️</button>
+        <button onclick="changeAltitude('plane2', 'up')">⬆️</button>
+        <button onclick="changeAltitude('plane2', 'down')">⬇️</button>
+      </div>
     </div>
 
-    <div class="col-lg-5">
+    <!-- Zona central: Radar con dos aviones -->
+    <div class="col-lg-6">
       <div class="rk-container">
-        
         <div class="rk-radar">
-            <div class="rk-plane" id="plane1"></div>
+          <div class="rk-plane" id="plane1"></div>
+          <div class="rk-plane rk-plane2" id="plane2"></div>
         </div>
       </div>
     </div>
-      
 
+    <!-- Zona derecha: Temporizador, puntuación y controles avión 1 -->
     <div class="col-lg-3">
+      <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
+      </div>
+
       <div class="rk-controls">
-        <h2 class="rk-subtitle">Mandos</h2>
-        <button onclick="changeDirection('plane1', 'left')">I</button>
-        <button onclick="changeDirection('plane1', 'right')">D</button>
-        <button onclick="changeAltitude('plane1', 'up')">A</button>
-        <button onclick="changeAltitude('plane1', 'down')">B</button>
+        <h2 class="rk-subtitle">Mandos Avión 1</h2>
+        <button onclick="changeDirection('plane1', 'left')">⬅️</button>
+        <button onclick="changeDirection('plane1', 'right')">➡️​</button>
+        <button onclick="changeAltitude('plane1', 'up')">⬆️​</button>
+        <button onclick="changeAltitude('plane1', 'down')">⬇️</button>
       </div>
     </div>
   </div>
- 
+</div>
 
-    
-  
+<script>
+  const plane1 = document.getElementById('plane1');
+  const plane2 = document.getElementById('plane2');
+  const timerEl = document.getElementById('rk-timer');
+  const pointsEl = document.getElementById('rk-points');
 
-  <script>
-    const plane1 = document.getElementById('plane1');
-    let x1 = 0, y1 = 100;
-    let dir1 = 0.1; // Velocidad 
+  let x1 = 0, y1 = 100, dir1 = 0.1;
+  let x2 = 0, y2 = 200, dir2 = 0.1;
 
-    function movePlane() {
-      x1 += dir1;
-      plane1.style.left = x1 + 'px';
-      plane1.style.top = y1 + 'px';
-      requestAnimationFrame(movePlane);
+  let puntos = 0;
+  let tiempoRestante = 90;
+  let temporizadorActivo = false;
+
+  function movePlanes() {
+    x1 += dir1;
+    x2 += dir2;
+    plane1.style.left = x1 + 'px';
+    plane1.style.top = y1 + 'px';
+    plane2.style.left = x2 + 'px';
+    plane2.style.top = y2 + 'px';
+    requestAnimationFrame(movePlanes);
+  }
+
+  function changeDirection(planeId, direction) {
+    if (planeId === 'plane1') {
+      dir1 = direction === 'left' ? -0.1 : 0.1;
+    } else if (planeId === 'plane2') {
+      dir2 = direction === 'left' ? -0.1 : 0.1;
     }
+  }
 
-    function changeDirection(planeId, direction) {
-      if (planeId === 'plane1') {
-        dir1 = direction === 'left' ? -0.1 : 0.1;
-      }
+  function changeAltitude(planeId, direction) {
+    if (planeId === 'plane1') {
+      y1 += direction === 'up' ? -10 : 10;
+    } else if (planeId === 'plane2') {
+      y2 += direction === 'up' ? -10 : 10;
     }
+  }
 
-    function changeAltitude(planeId, direction) {
-      if (planeId === 'plane1') {
-        y1 += direction === 'up' ? -10 : 10;
-      }
+  function actualizarTemporizador() {
+    tiempoRestante--;
+    timerEl.textContent = `⏱️ Tiempo: ${tiempoRestante}s`;
+    if (tiempoRestante <= 0) {
+      clearInterval(temporizadorActivo);
+      alert(`⏰ ¡Tiempo agotado! Puntuación final: ${puntos} puntos`);
+      resetGame();
     }
+  }
 
-    movePlane();
-  </script>
+  function resetGame() {
+    puntos = 0;
+    tiempoRestante = 90;
+    timerEl.textContent = '⏱️ Tiempo: 90s';
+    pointsEl.textContent = '⭐ Puntos: 0';
+  }
+
+  function sumarPuntos(valor) {
+    puntos += valor;
+    pointsEl.textContent = `⭐ Puntos: ${puntos}`;
+  }
+
+  function iniciarJuego() {
+    movePlanes();
+    temporizadorActivo = setInterval(actualizarTemporizador, 1000);
+  }
+
+  iniciarJuego();
+</script>
 {{> fragments/footer}}

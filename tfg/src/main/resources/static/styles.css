@@ -440,7 +440,6 @@ footer {
 }
 
 .coor-puntos.marcador, .coor-timer.marcador {
-  min-width: 120px;
   min-height: 60px;
   padding: 15px 20px;
   background-color: #ffffff;
@@ -453,7 +452,7 @@ footer {
 }
 
 .coor-popup {
-  display: none; /* oculto por defecto */
+  display: none; 
   position: fixed;
   top: 0;
   left: 0;
@@ -481,15 +480,12 @@ footer {
 
 /*HASTA AQUÍ COORDINATE*/
 
-/* Estilos para Radar Kids - aislados con prefijo rk- */
 
+/* RADAR CONTROL */
 .rk-container {
-  font-family: Arial, sans-serif;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: flex-start;
-  gap: 30px;
   padding: 20px;
   flex-wrap: wrap;
 }
@@ -509,7 +505,6 @@ footer {
   border: 4px dashed #3399cc;
   overflow: hidden;
   border-radius: 10px;
-  flex-shrink: 0;
 }
 
 .rk-plane {
@@ -522,36 +517,21 @@ footer {
   background-position: center;
 }
 
-
-.rk-alert {
-  display: none;
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #ffcc00;
-  color: #000;
-  font-weight: bold;
-  border-radius: 8px;
-  animation: rk-blink 1s infinite;
-  width: 100%;
-  text-align: center;
-}
-
-@keyframes rk-blink {
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
+.rk-plane2 {
+  top: 200px;
+  left: 0px;
+  background-image: url('images/plane.png'); 
 }
 
 .rk-controls {
-  flex: 1;
-  max-width: 350px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .rk-subtitle {
-  margin-top: 20px;
+  margin-bottom: 10px;
   color: #444;
 }
 
@@ -570,8 +550,16 @@ footer {
   background-color: #cceeff;
 }
 
-/* Estilos específicos para el test de multitarea infantil */
-/* Multitarea - Estilos aislados con .mt- prefix */
+.rk-score-timer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #333;
+}
+
+
+
+/* MULTITASK */
 .mt-wrapper {
   display: flex;
   justify-content: center;
@@ -599,12 +587,10 @@ footer {
   width: 40rem;
 }
 
-/* TÍTULO */
 .mt-title {
   font-size: 30px;
 }
 
-/* FILA DE FIGURAS */
 .mt-figures-row {
   display: flex;
   justify-content: space-between;
@@ -613,7 +599,6 @@ footer {
   max-width: 40rem;
 }
 
-/* FIGURA */
 .mt-figure {
   font-size: 4rem;
   flex: 1;
@@ -621,13 +606,11 @@ footer {
   text-align: center;
 }
 
-/* BLOQUE DE PREGUNTA */
 .mt-question-block {
   flex: 2;
   text-align: center;
 }
 
-/* BOTONES */
 .mt-button-group {
   display: flex;
   justify-content: center;
@@ -650,7 +633,6 @@ footer {
   background-color: #0ea7cb;
 }
 
-/* SECCIÓN DE OPERACIONES Y SONIDO */
 .mt-section-wide {
   background-color: #dbeeff;
   border: 2px solid #003366;
@@ -661,13 +643,11 @@ footer {
   margin-bottom: 12px;
 }
 
-/* TÍTULO DE CADA SECCIÓN */
 .mt-section-title {
   font-family: 'Fredoka', sans-serif;
   font-size: 20px;
 }
 
-/* FEEDBACK DE FIGURAS Y OPERACIONES */
 .mt-feedback {
   font-size: 1.2em;
   font-weight: bold;
@@ -676,7 +656,6 @@ footer {
   height: 24px;
 }
 
-/* FEEDBACK DEL SONIDO */
 .mt-sound-feedback {
   font-size: 1.2em;
   font-weight: bold;
@@ -686,6 +665,7 @@ footer {
 }
 
 
+/*FIGURES*/
 .fig-wrapper {
   font-family: Arial, sans-serif;
   text-align: center;
