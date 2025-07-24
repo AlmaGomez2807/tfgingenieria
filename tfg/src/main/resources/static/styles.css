@@ -315,16 +315,7 @@ footer {
   width: 100%;
 }
 
-/* Marcador estilo */
-.coor-puntos {
-  min-width: 120px;
-  padding: 10px 15px;
-  background-color: #12c1ed;
-  color: white;
-  border-radius: 8px;
-  font-weight: bold;
-  text-align: center;
-}
+
 
 
 
@@ -431,7 +422,7 @@ footer {
   transition: opacity 0.3s ease;
 }
 
-#coor-puntos {
+#coor-puntos, .coor-timer {
   min-height: 1.5rem;
   font-size: 1.1rem;
   font-weight: 500;
@@ -448,7 +439,7 @@ footer {
   margin-top: -3rem;
 }
 
-.coor-puntos.marcador {
+.coor-puntos.marcador, .coor-timer.marcador {
   min-width: 120px;
   min-height: 60px;
   padding: 15px 20px;
@@ -456,9 +447,8 @@ footer {
   border: 2px solid #12c1ed;
   border-radius: 10px;
   font-size: 1.1rem;
-  font-weight: bold;
   text-align: center;
-  color: #12c1ed;
+  color: #000000;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -582,24 +572,48 @@ footer {
 
 /* Estilos específicos para el test de multitarea infantil */
 /* Multitarea - Estilos aislados con .mt- prefix */
+.mt-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.mt-flex {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* CONTENEDOR PRINCIPAL DEL JUEGO */
 .mt-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  background-color: #f9f9f9;
+  padding: 4px 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 40rem;
 }
-.mt-title{
+
+/* TÍTULO */
+.mt-title {
   font-size: 30px;
 }
 
+/* FILA DE FIGURAS */
 .mt-figures-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 900px;
+  max-width: 40rem;
 }
 
+/* FIGURA */
 .mt-figure {
   font-size: 4rem;
   flex: 1;
@@ -607,11 +621,13 @@ footer {
   text-align: center;
 }
 
+/* BLOQUE DE PREGUNTA */
 .mt-question-block {
   flex: 2;
   text-align: center;
 }
 
+/* BOTONES */
 .mt-button-group {
   display: flex;
   justify-content: center;
@@ -619,19 +635,39 @@ footer {
   margin-top: 15px;
 }
 
+.mt-button {
+  background-color: #12c1ed;
+  color: white;
+  font-size: 1em;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.mt-button:hover {
+  background-color: #0ea7cb;
+}
+
+/* SECCIÓN DE OPERACIONES Y SONIDO */
 .mt-section-wide {
   background-color: #dbeeff;
   border: 2px solid #003366;
   border-radius: 15px;
-  padding: 15px;
-  width: 40%;
+  padding: 0.5rem;
+  width: 28rem;
   text-align: center;
   margin-bottom: 12px;
 }
-.mt-section-title{
+
+/* TÍTULO DE CADA SECCIÓN */
+.mt-section-title {
   font-family: 'Fredoka', sans-serif;
   font-size: 20px;
 }
+
+/* FEEDBACK DE FIGURAS Y OPERACIONES */
 .mt-feedback {
   font-size: 1.2em;
   font-weight: bold;
@@ -639,13 +675,16 @@ footer {
   margin-bottom: 10px;
   height: 24px;
 }
+
+/* FEEDBACK DEL SONIDO */
 .mt-sound-feedback {
   font-size: 1.2em;
   font-weight: bold;
   color: #004488;
   margin-bottom: 10px;
-  min-height: 24px; /* ✅ evita que el contenedor se contraiga o expanda */
+  min-height: 24px;
 }
+
 
 .fig-wrapper {
   font-family: Arial, sans-serif;

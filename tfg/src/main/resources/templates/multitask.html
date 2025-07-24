@@ -1,143 +1,216 @@
 {{> fragments/header}}
-<div class="mt-container">
-  <!-- FILA 1: Iconos y pregunta -->
-  <div class="mt-figures-row">
-    <div class="mt-figure" id="figure1">✈️</div>
-    <div class="mt-question-block">
-      <h1 class="mt-title">¡Multitask!</h1>
 
-      <!-- Feedback solo para figuras -->
-      <div id="figures-feedback" class="mt-feedback"></div>
-      <h2 class="mt-section-title">¿Las figuras son iguales? </h2>
-      <div class="mt-button-group">
-        <button class="mt-button" onclick="checkFigures(true)">¡Son iguales!</button>
-        <button class="mt-button" onclick="checkFigures(false)">No son iguales</button>
+<div class="mt-wrapper">
+  <!-- Juego y marcador en layout flexible -->
+  <div class="mt-flex">
+    <!-- Juego principal -->
+     
+    <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
+    <div class="mt-container">
+      
+      <!-- FILA 1: Iconos y pregunta -->
+      <div class="mt-figures-row">
+        <div class="mt-figure" id="figure1">✈️</div>
+        <div class="mt-question-block">
+          <h1 class="mt-title">¡Multitask!</h1>
+
+          <!-- Feedback solo para figuras -->
+          <div id="figures-feedback" class="mt-feedback"></div>
+          <h2 class="mt-section-title">¿Las figuras son iguales? </h2>
+          <div class="mt-button-group">
+            <button class="mt-button" onclick="checkFigures(true)">¡Son iguales!</button>
+            <button class="mt-button" onclick="checkFigures(false)">No son iguales</button>
+          </div>
+        </div>
+        <div class="mt-figure" id="figure2">🛩️</div>
+      </div>
+
+      <!-- FILA 2: Operación aritmética -->
+      <div class="mt-section-wide">
+        <!-- Feedback solo para ecuaciones -->
+        <div id="equation-feedback" class="mt-feedback"></div>
+
+        <h2 class="mt-section-title">¿Es correcta la operación?</h2>
+        <div id="equation" class="mt-equation">2 + 2 = 4</div>
+        <div class="mt-button-group">
+          <button class="mt-button" onclick="checkEquation(true)">¡Es correcta!</button>
+          <button class="mt-button" onclick="checkEquation(false)">No es correcta</button>
+        </div>
+      </div>
+
+      <!-- FILA 3: Sonido -->
+      <div class="mt-section-wide">
+        <h2 class="mt-section-title">¡Pulsa ESPACIO cuando oigas el sonido!</h2>
+        <div id="sound-feedback" class="mt-sound-feedback"></div>
       </div>
     </div>
-    <div class="mt-figure" id="figure2">🛩️</div>
+
+    <!-- Marcador -->
+    <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
   </div>
-
-  <!-- FILA 2: Operación aritmética -->
-  <div class="mt-section-wide">
-    <!-- Feedback solo para ecuaciones -->
-    <div id="equation-feedback" class="mt-feedback"></div>
-
-    <h2 class="mt-section-title">¿Es correcta la operación?</h2>
-    <div id="equation" class="mt-equation">2 + 2 = 4</div>
-    <div class="mt-button-group">
-      <button class="mt-button" onclick="checkEquation(true)">¡Es correcta!</button>
-      <button class="mt-button" onclick="checkEquation(false)">No es correcta</button>
-    </div>
+</div>
+<div id="popup-final" class="coor-popup">
+  <div class="coor-popup-content">
+    <h2>🎉 Juego Terminado 🎉</h2>
+    <p id="popup-puntos">Puntuación Total: 0 puntos</p>
   </div>
-
-  <!-- FILA 3: Sonido -->
-  <div class="mt-section-wide">
-    <h2 class="mt-section-title">¡Pulsa ESPACIO cuando oigas el sonido!</h2>
-    <div id="sound-feedback" class="mt-sound-feedback"></div>
-  </div>
-
 </div>
 
 <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<script>
+  const figures = ['✈️', '🛩️', '🛫', '🛬', '🚁​', '🚀​', '👩‍✈️​', '👨‍✈️'];
+  const figure1 = document.getElementById('figure1');
+  const figure2 = document.getElementById('figure2');
+  const equationEl = document.getElementById('equation');
+  const soundFeedback = document.getElementById('sound-feedback');
+  const beepSound = document.getElementById('beep-sound');
+  const figuresFeedback = document.getElementById('figures-feedback');
+  const equationFeedback = document.getElementById('equation-feedback');
+  const puntosEl = document.getElementById('coor-puntos');
+  const timerEl = document.getElementById('coor-timer');
+  const popup = document.getElementById("popup-final");
+  const popupTexto = document.getElementById("popup-puntos");
 
+  let currentEquationCorrect = true;
+  let waitingForSpace = false;
+  let figuresAreEqual = false;
+  let puntos = 0;
+  let tiempoRestante = 90;
+  let timerInterval = null;
+  let beepInterval = null;
+  let juegoTerminado = false;
 
-  <script>
-    const figures = ['✈️', '🛩️', '🛫', '🛬', '🚁​', '🚀​', '👩‍✈️​', '👨‍✈️'];
-    const figure1 = document.getElementById('figure1');
-    const figure2 = document.getElementById('figure2');
-    const equationEl = document.getElementById('equation');
-    const feedback = document.getElementById('feedback');
-    const soundFeedback = document.getElementById('sound-feedback');
-    const beepSound = document.getElementById('beep-sound');
-    const figuresFeedback = document.getElementById('figures-feedback');
-    const equationFeedback = document.getElementById('equation-feedback');
+  function actualizarPuntos(valor) {
+    puntos += valor;
+    if (puntos < 0) puntos = 0;
+    puntosEl.textContent = `Puntos: ${puntos}`;
+  }
 
+  function randomFigure() {
+    return figures[Math.floor(Math.random() * figures.length)];
+  }
 
-    let currentEquationCorrect = true;
-    let waitingForSpace = false;
-    let figuresAreEqual = false;
+  function generateFigures() {
+    const fig1 = randomFigure();
+    const isSame = Math.random() < 0.5;
+    const fig2 = isSame ? fig1 : randomFigure();
+    figuresAreEqual = fig1 === fig2;
+    figure1.textContent = fig1;
+    figure2.textContent = fig2;
+  }
 
-    function randomFigure() {
-      return figures[Math.floor(Math.random() * figures.length)];
-    }
+  function generateEquation() {
+    const a = Math.floor(Math.random() * 10);
+    const b = Math.floor(Math.random() * 10);
+    const realResult = a + b;
+    const shownResult = Math.random() < 0.5 ? realResult : realResult + (Math.random() < 0.5 ? 1 : -1);
+    currentEquationCorrect = realResult === shownResult;
+    equationEl.textContent = `${a} + ${b} = ${shownResult}`;
+  }
 
-    function generateFigures() {
-      const fig1 = randomFigure();
-      const isSame = Math.random() < 0.5;
-      const fig2 = isSame ? fig1 : randomFigure();
-      figuresAreEqual = fig1 === fig2;
-      figure1.textContent = fig1;
-      figure2.textContent = fig2;
-    }
-
-    function generateEquation() {
-      const a = Math.floor(Math.random() * 10);
-      const b = Math.floor(Math.random() * 10);
-      const realResult = a + b;
-      const shownResult = Math.random() < 0.5 ? realResult : realResult + (Math.random() < 0.5 ? 1 : -1);
-      currentEquationCorrect = realResult === shownResult;
-      equationEl.textContent = `${a} + ${b} = ${shownResult}`;
-    }
-
-    function checkFigures(playerThinksEqual) {
-      const isCorrect = playerThinksEqual === figuresAreEqual;
-      figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto!' : '❌ Incorrecto.';
-      setTimeout(() => {
-        figuresFeedback.textContent = '';
-        generateFigures();
-      }, 1200);
-    }
-
-    function checkEquation(playerThinksCorrect) {
-      const isCorrect = playerThinksCorrect === currentEquationCorrect;
-      equationFeedback.textContent = isCorrect ?'✅ ¡Correcto!' : '❌ Incorrecto.';
-      setTimeout(() => {
-        equationFeedback.textContent = '';
-        generateEquation();
-      }, 1200);
-    }
-
-
-    function resetFigures() {
-      feedback.textContent = '';
+  function checkFigures(playerThinksEqual) {
+    if (juegoTerminado) return; // bloquear si terminó
+    const isCorrect = playerThinksEqual === figuresAreEqual;
+    figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos' : '❌ Incorrecto -5 puntos';
+    actualizarPuntos(isCorrect ? 10 : -5);
+    setTimeout(() => {
+      figuresFeedback.textContent = '';
       generateFigures();
-    }
+    }, 1200);
+  }
 
-    function resetEquation() {
-      feedback.textContent = '';
+  function checkEquation(playerThinksCorrect) {
+    if (juegoTerminado) return;
+    const isCorrect = playerThinksCorrect === currentEquationCorrect;
+    equationFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos' : '❌ Incorrecto -5 puntos';
+    actualizarPuntos(isCorrect ? 10 : -5);
+    setTimeout(() => {
+      equationFeedback.textContent = '';
       generateEquation();
-    }
+    }, 1200);
+  }
 
-    function playBeep() {
-      beepSound.play();
-      waitingForSpace = true;
-      soundFeedback.textContent = '¡Dale a ESPACIO!';
-      setTimeout(() => {
-        if (waitingForSpace) {
-          soundFeedback.textContent = '⏱️ Demasiado tarde...';
-          waitingForSpace = false;
-        }
-      }, 2000);
-    }
-
-    document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-      // Previene la acción por defecto (como activar botones enfocados)
-      e.preventDefault();
-      // Solo actúa si estamos esperando el espacio
+  function playBeep() {
+    if (tiempoRestante <= 0 || juegoTerminado) return;
+    beepSound.play();
+    waitingForSpace = true;
+    soundFeedback.textContent = '¡Dale a ESPACIO!';
+    setTimeout(() => {
       if (waitingForSpace) {
-        soundFeedback.textContent = '✅ ¡Bien hecho!';
+        soundFeedback.textContent = '⏱️ Demasiado tarde... -5 puntos';
+        actualizarPuntos(-5);
         waitingForSpace = false;
       }
+    }, 2000);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (waitingForSpace && !juegoTerminado) {
+        soundFeedback.textContent = '✅ ¡Bien hecho! +10 puntos';
+        actualizarPuntos(10);
+        waitingForSpace = false;
       }
-    });
-
-    function initGame() {
-      generateFigures();
-      generateEquation();
-      setInterval(playBeep, 9000 + Math.random() * 5000); // cada 9-14 segundos
     }
+  });
 
-    initGame();
-  </script>
+  function actualizarTemporizador() {
+    if (tiempoRestante > 0) {
+      tiempoRestante--;
+      timerEl.textContent = `Tiempo: ${tiempoRestante}s`;
+    }
+    if (tiempoRestante <= 0 && !juegoTerminado) {
+      terminarJuego();
+    }
+  }
+
+  function terminarJuego() {
+    juegoTerminado = true;
+    clearInterval(timerInterval);
+    clearInterval(beepInterval);
+
+    // Mostrar popup con puntos
+    popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+    popup.style.display = "flex";
+
+    // Opcional: bloquear botones o interacciones si es necesario
+
+    // Después de 4 segundos, cerrar popup y reiniciar
+    setTimeout(() => {
+      popup.style.display = "none";
+      reiniciarJuego();
+    }, 4000);
+  }
+
+  function reiniciarJuego() {
+    puntos = 0;
+    tiempoRestante = 90;
+    puntosEl.textContent = 'Puntos: 0';
+    timerEl.textContent = 'Tiempo: 90s';
+    soundFeedback.textContent = '';
+    equationFeedback.textContent = '';
+    figuresFeedback.textContent = '';
+    waitingForSpace = false;
+    juegoTerminado = false;
+    generateFigures();
+    generateEquation();
+    timerInterval = setInterval(actualizarTemporizador, 1000);
+    beepInterval = setInterval(playBeep, 9000 + Math.random() * 5000);
+  }
+
+  function initGame() {
+    puntos = 0;
+    tiempoRestante = 90;
+    puntosEl.textContent = 'Puntos: 0';
+    timerEl.textContent = 'Tiempo: 90s';
+    juegoTerminado = false;
+    generateFigures();
+    generateEquation();
+    timerInterval = setInterval(actualizarTemporizador, 1000);
+    beepInterval = setInterval(playBeep, 9000 + Math.random() * 5000);
+  }
+
+  initGame();
+</script>
 {{> fragments/footer}}
