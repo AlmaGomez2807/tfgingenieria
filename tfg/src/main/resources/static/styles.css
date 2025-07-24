@@ -7,12 +7,18 @@ body {
 }
 /* Footer */
 footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   background-color: #7ec8e3;
   text-align: center;
   padding: 0.18rem;
   color: #000000;
   font-size: 1rem;
+  z-index: 1000;
 }
+
 
 /* Fondo con imagen en la esquina inferior derecha */
 .fondo-imagen {
@@ -22,8 +28,6 @@ footer {
   background-repeat: no-repeat;
   background-size: auto 50%;
 }
-
-
 
 .custom-navbar {
   display: flex;
@@ -55,25 +59,113 @@ footer {
   cursor: pointer;
 }
 
-/* Contenedor principal de botones */
-.contenedor-botones {
-  padding: 3rem 2rem;
+/* Estilo general del fondo de la página */
+.home-page {
+  min-height: 100vh;
+  background-image: url('/images/avionestorre.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 3rem;
+  flex-direction: column;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
-/* Botón general */
+
+/* Contenedor del formulario de login */
+.login-container {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 2rem;
+  text-align: center;
+  width: 90%;
+  margin-top: -7rem;
+  max-width: 400px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Título del formulario */
+.login-title {
+  font-size: 2.25rem; /* 36px */
+  color: #ffc400;
+  margin-bottom: 1.5rem;
+  font-family: 'Fredoka', sans-serif;
+}
+
+/* Input del nombre de usuario */
+.username-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+  border: 2px solid #ffc400;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Botón de enviar */
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #ffc400;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1.125rem; /* 18px */
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #ffb700;
+}
+
+
+
+/* PANTALLA PRINCIPAL JUEGOS */
+
+/* CONTENEDOR PRINCIPAL */
+.contenedor-botones {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centrado vertical por defecto */
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 1rem;
+  min-height: 100dvh;
+}
+
+/* FILAS */
+.fila-superior,
+.fila-inferior {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* BOTONES */
 .boton-juego {
-  width: 250px;
-  height: 150px;
+  flex: 1 1 240px;
+  max-width: 260px;
+  height: 120px;
   background-color: #ffce00;
   border: none;
   border-radius: 16px;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
 }
 
 .boton-juego:hover {
@@ -81,78 +173,36 @@ footer {
   transform: scale(1.05);
 }
 
-/* Fila superior: 3 botones distribuidos en horizontal */
-.fila-superior {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
+/* 🛠️ SI LA ALTURA DE LA VENTANA ES BAJA (como en portátiles), EVITA EL CENTRADO VERTICAL */
+@media (max-height: 750px) {
+  .contenedor-botones {
+    justify-content: flex-start;
+    margin-top: 4rem;
+  }
 }
 
-/* Fila inferior: 2 botones centrados */
-.fila-inferior {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
+/* TABLETS Y MÓVILES */
+@media (max-width: 768px) {
+  .contenedor-botones {
+    padding: 3.5rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .fila-superior,
+  .fila-inferior {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .boton-juego {
+    width: 90%;
+    max-width: 300px;
+    height: 100px;
+    font-size: 1.1rem;
+  }
 }
-
-.home-page{
-  height: 50%;
-  background-image: url('/images/avionestorre.jpg');
-  margin-bottom: 5%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100%;
-}
-
-
-/* Contenedor del formulario */
-.login-container {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  margin: 82px auto 82px auto;
-  padding: 40px;
-  text-align: center;
-  width: 320px; /* Ancho adecuado */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Título del formulario */
-.login-title {
-  font-size: 36px;
-  color: #ffc400;
-  margin-bottom: 20px;
-  font-family: 'Fredoka', sans-serif;
-}
-
-/* Estilos para los campos del formulario */
-.username-input {
-  width: 91%;
-  padding: 12px;
-  margin: 10px 0;
-  border: 2px solid #ffc400;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.submit-button {
-  width: 100%;
-  padding: 12px;
-  background-color: #ffc400;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-/* Hover sobre el botón de entrada */
-.submit-button:hover {
-  background-color: #ffc400;
-}
-
-<!--PAGINA PRICIPAL HASTA AQUI
+<!--PAGINA PRICIPAL JUEGOS HASTA AQUI
 
 
 
@@ -266,12 +316,14 @@ footer {
   margin-left: 60px;
 }
 
-/* CONTENEDOR GENERAL */
+
+/*DESCE AQUÍ COORDINATE*/
 .coor-juego {
   max-width: 600px;
   width: 550px;
   height: 410px;
-  margin: 23px;
+  margin: auto;
+  margin-top: 0rem;
   padding: 20px;
   text-align: center;
   font-family: 'Arial', sans-serif;
@@ -280,18 +332,6 @@ footer {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#img-hel{
-  width: 45%;
-  margin-top: 35px;
-  margin-left: -16px;
-}
-#img-exp{
-  width: 85%;
-  margin-top: -83px;
-  margin-left: 127px;
-}
-
-/* TÍTULO */
 .coor-titulo {
   font-size: 1.8em;
   margin-top: -10px;
@@ -299,14 +339,12 @@ footer {
   color: #333;
 }
 
-/* PREGUNTA */
 .coor-pregunta {
-  font-size: 1.2em;
+  font-size: 1em;
   margin-bottom: 10px;
   color: #444;
 }
 
-/* CUADRÍCULA */
 .coor-grid {
   display: grid;
   width: 500px;
@@ -317,12 +355,11 @@ footer {
   justify-content: center;
   align-items: center;
   margin: 0 auto 30px auto;
-  background-color: #12c1ed; /* Azul de fondo para la cuadrícula */
+  background-color: #12c1ed;
   padding: 7px;
   border-radius: 10px;
 }
 
-/* CELDAS DE LA CUADRÍCULA */
 .coor-celda {
   width: 45px;
   height: 45px;
@@ -336,16 +373,15 @@ footer {
   transition: background-color 0.3s;
 }
 
-/* OPCIONES DE RESPUESTA */
 .coor-opciones {
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
   justify-content: center;
   margin-top: -18px;
+  margin-bottom: 2rem;
 }
 
-/* BOTONES */
 .coor-boton {
   background-color: #12c1ed;
   color: white;
@@ -366,7 +402,83 @@ footer {
   font-size: 1.2em;
 }
 
+.coor-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: #e0f7ff;
+}
 
+#coor-feedback {
+  min-height: 2rem; 
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: opacity 0.3s ease;
+}
+
+#coor-puntos {
+  min-height: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 5px;
+  color: #333;
+}
+
+.coor-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 4rem;
+  position: relative;
+  margin-top: -3rem;
+}
+
+.coor-puntos.marcador {
+  min-width: 120px;
+  min-height: 60px;
+  padding: 15px 20px;
+  background-color: #ffffff;
+  border: 2px solid #12c1ed;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #12c1ed;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.coor-popup {
+  display: none; /* oculto por defecto */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.coor-popup-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.3rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.coor-popup-content h2 {
+  margin-bottom: 0.5rem;
+  color: #12c1ed;
+}
+
+/*HASTA AQUÍ COORDINATE*/
 
 /* Estilos para Radar Kids - aislados con prefijo rk- */
 
@@ -562,7 +674,7 @@ footer {
 }
 
 .fig-button {
-  background-color: #ffeb3b;
+  background-color: #ffc400;
   border: 2px solid #005bab;
   border-radius: 10px;
   padding: 15px;
@@ -573,11 +685,122 @@ footer {
 
 .fig-button:hover {
   transform: scale(1.1);
-  background-color: #fff176;
+  background-color: #ffc400;
 }
 
 .fig-feedback {
   font-size: 1.5em;
   margin-top: 20px;
   color: #333;
+}
+
+
+
+
+.estela {
+  background-color: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  padding: 3.5rem 1.5rem 2rem 1.5rem;
+  margin-top: 1rem;
+  z-index: 10;
+  margin: auto;
+  width: 45rem;
+  margin-top: 4rem;
+  height: 25rem;
+}
+
+.estela h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: -3rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.estela ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.estela ul li {
+  margin-bottom: 0.5rem;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.boton-jugar {
+  display: inline-block;
+  background-color: #ffc400;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-family: 'Fredoka', sans-serif;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.boton-jugar:hover {
+  background-color: #ffc400;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* TABLET */
+@media (max-width: 768px) {
+  .avion-img {
+    width: 5rem;
+    top: -1.5rem;
+  }
+
+  .estela {
+    padding: 3rem 1.25rem 1.5rem 1.25rem;
+  }
+
+  .estela h1 {
+    font-size: 1.75rem;
+  }
+
+  .estela ul {
+    font-size: 1rem;
+  }
+
+  .boton-jugar {
+    font-size: 1.1rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+/* MÓVIL */
+@media (max-width: 480px) {
+  .avion-img {
+    width: 4rem;
+    top: -1rem;
+  }
+
+  .estela {
+    padding: 2.5rem 1rem 1.5rem 1rem;
+  }
+
+  .estela h1 {
+    font-size: 1.5rem;
+  }
+
+  .estela ul {
+    font-size: 0.95rem;
+    padding-left: 1.2rem;
+  }
+
+  .boton-jugar {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
 }

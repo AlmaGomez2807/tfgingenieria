@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"/>-->
-  <title>SkyTest Kids</title>
-  <link rel="stylesheet" href="styles.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
-</head>
-<body class="home-page">
-    <nav class="navbar">
-        <h1>✈️ SkyTest Kids ✈️</h1>
-    </nav>
+{{> fragments/header}}
+<div class="home-page">
     <div class="login-container">
         <h1 class="login-title">Inicia sesión</h1>
         <form class="login-form"  action="principalJuegos">
@@ -18,8 +7,5 @@
             <input class="submit-button" type="submit" value="Entrar">
         </form>
     </div>
-    <footer>
-        <p>&copy; 2025 SkyTest Kids</p>
-    </footer>
-</body>
-</html>
+</div>
+{{> fragments/footer}}

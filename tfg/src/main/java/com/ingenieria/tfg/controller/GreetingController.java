@@ -40,4 +40,29 @@ public class GreetingController {
     public String greeting7() {
         return "figures";
     }
+
+    @RequestMapping("/instruccionesCoord")
+    public String greeting8() {
+        return "instruccionesCoord";
+    }
+
+    @RequestMapping("/instruccionesHC")
+    public String greeting9() {
+        return "instruccionesHC";
+    }
+
+    @RequestMapping("/instruccionesRC")
+    public String greeting10() {
+        return "instruccionesRC";
+    }
+
+    @RequestMapping("/instruccionesMT")
+    public String greeting11() {
+        return "instruccionesMT";
+    }
+
+    @RequestMapping("/instruccionesF")
+    public String greeting12() {
+        return "instruccionesF";
+    }
 }

@@ -1,104 +1,152 @@
 {{> fragments/header}}
-  <div class="container-fluid">
-      <div class="row">
-          <div class="col-lg-5">
-            <div>
-              <img id="img-hel" src="images\HelicopterPet.png">
-              <img id="img-exp" src="images\exp-coor.png">
-            </div>
-          </div>
-      <div class="col-lg-7">
-        <div class="coor-juego">
-          <h1 class="coor-titulo">¿Cuál es la respuesta correcta?</h1>
-          <div id="coor-pregunta" class="coor-pregunta"></div>
-          <div class="coor-grid" id="coor-grid"></div>
-          <div class="coor-opciones">
-            <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
-            <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
-            <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
-            <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
-          </div>
-        </div>
+<div class="coor-wrapper">
+  <div class="coor-layout">
+    <div class="coor-juego">
+      <h1 class="coor-titulo">¿Cuál es la respuesta correcta?</h1>
+      <div id="coor-pregunta" class="coor-pregunta"></div>
+      <div class="coor-grid" id="coor-grid"></div>
+      <div class="coor-opciones">
+        <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+        <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+        <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
+        <button class="coor-boton" onclick="verificarRespuesta(this)"></button>
       </div>
+      <div id="coor-feedback" class="coor-feedback"></div>
+    </div>
 
+    <div id="coor-puntos" class="coor-puntos marcador"></div>
   </div>
+</div>
 
+<div id="popup-final" class="coor-popup">
+  <div class="coor-popup-content">
+    <h2>🎉 Juego Terminado 🎉</h2>
+    <p id="popup-puntos">Puntuación Total: 0 puntos</p>
   </div>
+</div>
 
   <script>
-    const size = 5;
-    let respuestaCorrecta = "";
+  const size = 5;
+  let respuestaCorrecta = "";
+  let puntos = 0;
+  let ronda = 0;
+  const totalRondas = 10;
 
-    function generarJuego() {
-      const grid = document.getElementById("coor-grid");
-      grid.innerHTML = "";
+  function generarJuego() {
+    if (ronda >= totalRondas) {
+      mostrarMensajeFinal();
+      return;
+    }
 
-      const coordenadaAvionX = Math.floor(Math.random() * size);
-      const coordenadaAvionY = Math.floor(Math.random() * size);
+    const grid = document.getElementById("coor-grid");
+    grid.innerHTML = "";
 
-      let coordenadaTorreX, coordenadaTorreY;
-      do {
-        coordenadaTorreX = Math.floor(Math.random() * size);
-        coordenadaTorreY = Math.floor(Math.random() * size);
-      } while (coordenadaTorreX === coordenadaAvionX && coordenadaTorreY === coordenadaAvionY);
+    const coordenadaAvionX = Math.floor(Math.random() * size);
+    const coordenadaAvionY = Math.floor(Math.random() * size);
 
-      for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
-          const cell = document.createElement("div");
-          cell.className = "coor-celda";
-          if (x === coordenadaAvionX && y === coordenadaAvionY) {
-            cell.textContent = "✈️";
-          } else if (x === coordenadaTorreX && y === coordenadaTorreY) {
-            cell.textContent = "🏁";
-          }
-          grid.appendChild(cell);
+    let coordenadaTorreX, coordenadaTorreY;
+    do {
+      coordenadaTorreX = Math.floor(Math.random() * size);
+      coordenadaTorreY = Math.floor(Math.random() * size);
+    } while (coordenadaTorreX === coordenadaAvionX && coordenadaTorreY === coordenadaAvionY);
+
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const cell = document.createElement("div");
+        cell.className = "coor-celda";
+        if (x === coordenadaAvionX && y === coordenadaAvionY) {
+          cell.textContent = "✈️";
+        } else if (x === coordenadaTorreX && y === coordenadaTorreY) {
+          cell.textContent = "🏁";
         }
+        grid.appendChild(cell);
       }
-
-      const dx = coordenadaTorreX - coordenadaAvionX;
-      const dy = coordenadaTorreY - coordenadaAvionY;
-
-      document.getElementById("coor-pregunta").textContent = "¿Qué distancia hay desde el avión hasta la meta?";
-      const distancia = calcularDistanciaMN(dx, dy);
-      respuestaCorrecta = distancia.toString();
-
-      const opciones = generarOpcionesDistancia(distancia);
-      asignarOpciones(opciones);
     }
 
-    function calcularDistanciaMN(dx, dy) {
-      const pasosHoriz = Math.abs(dx);
-      const pasosVert = Math.abs(dy);
-      const diagonales = Math.min(pasosHoriz, pasosVert);
-      const rectos = Math.abs(pasosHoriz - pasosVert);
-      return diagonales * 14 + rectos * 10;
-    }
+    const dx = coordenadaTorreX - coordenadaAvionX;
+    const dy = coordenadaTorreY - coordenadaAvionY;
 
-    function generarOpcionesDistancia(correcta) {
-      const opciones = new Set([correcta]);
-      while (opciones.size < 4) {
-        const variacion = (Math.floor(Math.random() * 5) - 2) * 10;
-        const nueva = parseInt(correcta) + variacion;
-        if (nueva > 0) opciones.add(nueva.toString());
+    document.getElementById("coor-pregunta").textContent = `Ronda ${ronda + 1} de ${totalRondas}: ¿Qué distancia hay desde el avión hasta la meta?`;
+    const distancia = calcularDistanciaMN(dx, dy);
+    respuestaCorrecta = distancia.toString();
+
+    const opciones = generarOpcionesDistancia(parseInt(distancia));
+    asignarOpciones(opciones);
+    actualizarPuntos();
+    limpiarFeedback();
+  }
+
+  function calcularDistanciaMN(dx, dy) {
+    const pasosHoriz = Math.abs(dx);
+    const pasosVert = Math.abs(dy);
+    const diagonales = Math.min(pasosHoriz, pasosVert);
+    const rectos = Math.abs(pasosHoriz - pasosVert);
+    return diagonales * 14 + rectos * 10;
+  }
+
+  function generarOpcionesDistancia(correcta) {
+    const opciones = new Set([correcta]);
+    while (opciones.size < 4) {
+      const variacion = (Math.floor(Math.random() * 7) - 3) * 10;
+      const nueva = correcta + variacion;
+      if (nueva > 0 && nueva !== correcta) {
+        opciones.add(nueva);
       }
-      return Array.from(opciones).sort(() => Math.random() - 0.5);
+    }
+    return Array.from(opciones).sort(() => Math.random() - 0.5);
+  }
+
+  function asignarOpciones(opciones) {
+    document.querySelectorAll(".coor-boton").forEach((btn, i) => {
+      btn.disabled = false;
+      btn.textContent = opciones[i];
+    });
+  }
+
+  function verificarRespuesta(boton) {
+    const feedback = document.getElementById("coor-feedback");
+
+    if (boton.textContent === respuestaCorrecta) {
+      puntos += 10;
+      feedback.textContent = "¡Correcto! +10 puntos 🎉";
+      feedback.style.color = "green";
+    } else {
+      puntos -= 5;
+      feedback.textContent = `¡Incorrecto! -5 puntos ❌ (Respuesta: ${respuestaCorrecta})`;
+      feedback.style.color = "red";
     }
 
-    function asignarOpciones(opciones) {
-      document.querySelectorAll(".coor-boton").forEach((btn, i) => {
-        btn.textContent = opciones[i];
-      });
-    }
+    ronda++;
+    document.querySelectorAll(".coor-boton").forEach(b => b.disabled = true);
 
-    function verificarRespuesta(boton) {
-      if (boton.textContent === respuestaCorrecta) {
-        alert("¡Correcto! 🎉");
-      } else {
-        alert(`¡Incorrecto! Era ${respuestaCorrecta}.`);
-      }
-      generarJuego();
-    }
+    setTimeout(generarJuego, 1500);
+  }
 
+  function actualizarPuntos() {
+    const puntosDiv = document.getElementById("coor-puntos");
+    puntosDiv.textContent = `Puntos: ${puntos}`;
+  }
+
+  function limpiarFeedback() {
+    document.getElementById("coor-feedback").textContent = "";
+  }
+
+  function mostrarMensajeFinal() {
+  // Mostrar popup con puntos
+  const popup = document.getElementById("popup-final");
+  const popupTexto = document.getElementById("popup-puntos");
+
+  popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+  popup.style.display = "flex"; // mostrar
+
+  // Esperar y reiniciar
+  setTimeout(() => {
+    popup.style.display = "none";
+    puntos = 0;
+    ronda = 0;
     generarJuego();
-  </script>
-  {{> fragments/footer}}
+  }, 4000);
+}
+  generarJuego();
+</script>
+{{> fragments/footer}}
