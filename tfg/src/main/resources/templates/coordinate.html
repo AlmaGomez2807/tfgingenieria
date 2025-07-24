@@ -104,22 +104,27 @@
   }
 
   function verificarRespuesta(boton) {
-    const feedback = document.getElementById("coor-feedback");
+  const feedback = document.getElementById("coor-feedback");
 
-    if (boton.textContent === respuestaCorrecta) {
-      puntos += 10;
-      feedback.textContent = "¡Correcto! +10 puntos 🎉";
-      feedback.style.color = "green";
-    } else {
-      puntos -= 5;
-      feedback.textContent = `¡Incorrecto! -5 puntos ❌ (Respuesta: ${respuestaCorrecta})`;
-      feedback.style.color = "red";
-    }
+  if (boton.textContent === respuestaCorrecta) {
+    puntos += 10;
+    feedback.textContent = "¡Correcto! +10 puntos 🎉";
+    feedback.style.color = "green";
+  } else {
+    puntos -= 5;
+    feedback.textContent = `¡Incorrecto! -5 puntos ❌ (Respuesta: ${respuestaCorrecta})`;
+    feedback.style.color = "red";
+  }
 
-    ronda++;
-    document.querySelectorAll(".coor-boton").forEach(b => b.disabled = true);
+  ronda++;
+  actualizarPuntos(); // Asegúrate de que se actualizan los puntos en pantalla también aquí
+  document.querySelectorAll(".coor-boton").forEach(b => b.disabled = true);
 
-    setTimeout(generarJuego, 1500);
+  if (ronda >= totalRondas) {
+    setTimeout(mostrarMensajeFinal, 1500); // Espera a mostrar el mensaje final
+  } else {
+    setTimeout(generarJuego, 1500); // Continúa normalmente
+  }
   }
 
   function actualizarPuntos() {

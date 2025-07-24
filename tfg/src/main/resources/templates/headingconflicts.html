@@ -1,37 +1,48 @@
 {{> fragments/header}}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-4">
-      <img id="img-plane" src="images\PlanePet.png">
-      <img id="img-hc" src="images\exp-hc.png">
+
+<div class="hc-wrapper">
+  <div class="hc-contenedor-flex">
+    <div class="hc-juego">
+      <h1 class="hc-titulo">¿Ves algún posible choque?</h1>
+      <div class="hc-ronda" id="hc-ronda">Ronda 1 de 10</div>
+
+      <div class="hc-grid" id="hc-grid"></div>
+
+      
     </div>
 
-    <div class="col-lg-6">
-      <h1 class="hc-title">¿Ves algún posible choque?</h1>
-      <div class="hc-container">
-        <div class="hc-grid" id="hc-grid"></div>
+    <!-- Lateral derecho: marcador + botones -->
+    <div class="hc-lateral-derecha">
+      <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
+      <div id="hc-feedback" class="hc-feedback"></div>
+      <div class="hc-opciones">
+        <button class="hc-boton" onclick="handleAnswer(true)">Hay conflicto</button>
+        <button class="hc-boton" onclick="handleAnswer(false)">No hay conflicto</button>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="col-lg-2"> 
-      <div class="hc-buttons">
-        <div class="hc-result" id="hc-result"></div>
-        <button class="hc-button" onclick="handleAnswer(true)">Hay conflicto</button>
-        <button class="hc-button" onclick="handleAnswer(false)">No hay conflicto</button>
-      </div>
-    </div>
+<div id="popup-final" class="coor-popup">
+  <div class="coor-popup-content">
+    <h2>🎉 Juego Terminado 🎉</h2>
+    <p id="popup-puntos">Puntuación Total: 0 puntos</p>
   </div>
 </div>
 
 
 
 <script>
-  const gridCols = 15; // columnas = ancho
-  const gridRows = 10; // filas = alto
+  const gridCols = 15;
+  const gridRows = 10;
   const directions = ['N', 'E', 'S', 'W'];
   const directionAngles = { N: 0, E: 90, S: 180, W: 270 };
+
   let planes = [];
   let hasConflict = false;
+  let puntos = 0;
+  let ronda = 1;
+  const totalRondas = 10;
 
   function generatePlanes() {
     planes = [];
@@ -42,7 +53,6 @@
       const x = Math.floor(Math.random() * gridCols);
       const y = Math.floor(Math.random() * gridRows);
       const key = `${x},${y}`;
-
       if (!occupied.has(key)) {
         occupied.add(key);
         planes.push({
@@ -55,15 +65,11 @@
     }
 
     hasConflict = Math.random() < 0.5;
-
-    if (hasConflict) {
-      insertConflictPair(occupied);
-    }
+    if (hasConflict) insertConflictPair(occupied);
   }
 
   function insertConflictPair(occupied) {
     const possiblePairs = [];
-
     for (let x = 0; x < gridCols; x++) {
       for (let y = 0; y < gridRows; y++) {
         if (!occupied.has(`${x},${y}`)) {
@@ -73,17 +79,14 @@
             [[x, y], [x + 1, y], 'W', 'E'],
             [[x, y], [x - 1, y], 'E', 'W']
           ];
-
           for (let [p1, p2, h1, h2] of pairs) {
             const [x1, y1] = p1;
             const [x2, y2] = p2;
-            const k1 = `${x1},${y1}`;
-            const k2 = `${x2},${y2}`;
-
             if (
               x2 >= 0 && x2 < gridCols &&
               y2 >= 0 && y2 < gridRows &&
-              !occupied.has(k1) && !occupied.has(k2)
+              !occupied.has(`${x1},${y1}`) &&
+              !occupied.has(`${x2},${y2}`)
             ) {
               possiblePairs.push({ p1: [x1, y1, h1], p2: [x2, y2, h2] });
             }
@@ -94,20 +97,8 @@
 
     if (possiblePairs.length > 0) {
       const chosen = possiblePairs[Math.floor(Math.random() * possiblePairs.length)];
-
-      planes.push({
-        id: planes.length + 1,
-        x: chosen.p1[0],
-        y: chosen.p1[1],
-        heading: chosen.p1[2]
-      });
-      planes.push({
-        id: planes.length + 1,
-        x: chosen.p2[0],
-        y: chosen.p2[1],
-        heading: chosen.p2[2]
-      });
-
+      planes.push({ id: planes.length + 1, x: chosen.p1[0], y: chosen.p1[1], heading: chosen.p1[2] });
+      planes.push({ id: planes.length + 1, x: chosen.p2[0], y: chosen.p2[1], heading: chosen.p2[2] });
       occupied.add(`${chosen.p1[0]},${chosen.p1[1]}`);
       occupied.add(`${chosen.p2[0]},${chosen.p2[1]}`);
     } else {
@@ -118,7 +109,6 @@
   function renderPlanes() {
     const grid = document.getElementById("hc-grid");
     grid.innerHTML = "";
-
     planes.forEach(plane => {
       const div = document.createElement("div");
       div.className = "hc-plane";
@@ -131,18 +121,34 @@
   }
 
   function handleAnswer(playerSaysConflict) {
-    const result = document.getElementById("hc-result");
+    const feedback = document.getElementById("hc-feedback");
+
     if (playerSaysConflict === hasConflict) {
-      result.textContent = "✅ ¡Correcto!";
-      result.style.color = "green";
+      puntos += 10;
+      feedback.textContent = "¡Correcto! +10 puntos 🎉";
+      feedback.style.color = "green";
     } else {
-      result.textContent = "❌ Incorrecto.";
-      result.style.color = "red";
+      puntos -= 5;
+      feedback.textContent = "¡Incorrecto! -5 puntos ❌";
+      feedback.style.color = "red";
     }
-    setTimeout(() => {
-      result.textContent = "";
-      resetGame();
-    }, 1500);
+
+    ronda++;
+    actualizarUI();
+
+    if (ronda >= totalRondas) {
+      setTimeout(mostrarMensajeFinal, 1500);
+    } else {
+      setTimeout(() => {
+        feedback.textContent = "";
+        resetGame();
+      }, 1500);
+    }
+  }
+
+  function actualizarUI() {
+    document.getElementById("coor-puntos").textContent = `Puntos: ${puntos}`;
+    document.getElementById("hc-ronda").textContent = `Ronda ${ronda} de ${totalRondas}`;
   }
 
   function resetGame() {
@@ -150,6 +156,25 @@
     renderPlanes();
   }
 
+  function mostrarMensajeFinal() {
+    const popup = document.getElementById("popup-final");
+    const popupTexto = document.getElementById("popup-puntos");
+
+    popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+    popup.style.display = "flex";
+
+    setTimeout(() => {
+      popup.style.display = "none";
+      puntos = 0;
+      ronda = 1;
+      actualizarUI();
+      resetGame();
+    }, 4000);
+  }
+
+  // Iniciar juego
+  actualizarUI();
   resetGame();
 </script>
+
 {{> fragments/footer}}

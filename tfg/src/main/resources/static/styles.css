@@ -204,117 +204,128 @@ footer {
 }
 <!--PAGINA PRICIPAL JUEGOS HASTA AQUI
 
-
-
-.hc-body {
-  font-family: 'Fredoka', sans-serif;
-  background-color: white;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  box-sizing: border-box;
+/*JUEGO HEADING CONFLICTS*/
+/* Centrado del juego */
+.hc-wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  overflow-y: auto;
+  align-items: center;
+  padding-top: 10px;
 }
 
-.hc-title {
-  font-size: 1.8em;
-  margin: 20px 0 10px;
-  color: #333;
+/* Contenedor flexible principal: juego a la izquierda, lateral (marcador+botones) a la derecha */
+.hc-contenedor-flex {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 65px;
+  flex-wrap: wrap;
+}
+
+/* Tarjeta principal del juego */
+.hc-juego {
+  background-color: #f9f9f9;
+  padding: 4px 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  width: 36rem;
+  margin-top: 1rem;
 }
 
-.hc-container {
+/* Contenedor vertical para marcador + botones a la derecha */
+.hc-lateral-derecha {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  min-width: 16rem; 
   align-items: center;
-  width: 100%;
-  margin-top: -4px;
-  max-width: 1000px;
-  padding: 10px;
-  box-sizing: border-box;
+  margin-top: 1rem;
 }
 
+/* Título y ronda */
+.hc-titulo {
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.hc-ronda {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Grid de aviones */
 .hc-grid {
   display: grid;
-  position: relative;
-  grid-template-columns: repeat(15, 32px);
-  grid-template-rows: repeat(10, 32px);
+  grid-template-columns: repeat(15, 30px);
+  grid-template-rows: repeat(10, 30px);
   gap: 3px;
   background-color: #7edaf1;
   padding: 8px;
   border-radius: 10px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 12px;
-  margin-right: -25px;
-  max-height: 370px;
+  margin: auto;
+  margin-bottom: 1rem;
 }
 
+/* Icono avión */
 .hc-plane {
   font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
 }
 
-.hc-buttons {
+/* Botones apilados verticalmente en el lateral derecho */
+.hc-opciones {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-left: -20px;
-  margin-top: 200px; 
-  align-items: center;
+  gap: 15px;
+  width: 100%;
+  margin-top: 12.5rem;
 }
 
-.hc-button {
-  padding: 8px 16px;
-  font-size: 14px;
+/* Botones estilo */
+.hc-boton {
   background-color: #12c1ed;
   color: white;
+  font-size: 1em;
+  padding: 8px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s;
+  width: 100%;
 }
 
-.hc-button:hover {
-  background-color: #12c1ed;
+.hc-boton:hover {
+  background-color: #0ea7cb;
 }
 
-.hc-result {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 8px;
+/* Feedback debajo del juego, ocupa todo el ancho del contenedor juego */
+.hc-feedback {
   text-align: center;
-  min-height: 24px; /* espacio reservado para evitar saltos bruscos */
+  font-size: 1.4rem;
+  font-weight: bold;
+  min-height: 2rem;
+  margin-top: 12rem;
+  margin-bottom: -10.9rem;
+  color: #333;
+  width: 100%;
 }
 
-.hc-highlight {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border: 3px solid red;
-  border-radius: 50%;
-  z-index: 1;
-  pointer-events: none;
-  box-sizing: border-box;
+/* Marcador estilo */
+.coor-puntos {
+  min-width: 120px;
+  padding: 10px 15px;
+  background-color: #12c1ed;
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
 }
-#img-plane{
-  width: 60%;
-  margin-top: 35px;
-  margin-left: 20px;
-}
-#img-hc{
-  width: 95%;
-  margin-top: -25px;
-  margin-left: 60px;
-}
+
 
 
 /*DESCE AQUÍ COORDINATE*/
