@@ -666,26 +666,62 @@ footer {
 
 
 /*FIGURES*/
+/* FIGURES LAYOUT GENERAL */
 .fig-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
   font-family: Arial, sans-serif;
-  text-align: center;
   background-color: #f0f8ff;
-  padding: 20px;
   min-height: 100vh;
 }
 
-.fig-title {
-  color: #005bab;
-  font-size: 2em;
-  margin-bottom: 10px;
+/* Contenedor flexible principal: juego a la izquierda, lateral (marcador+feedback) a la derecha */
+.fig-contenedor-flex {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
+/* Tarjeta principal del juego */
+.fig-juego {
+  background-color: #f9f9f9;
+  padding: 4px 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 36rem;
+  margin-top: 1rem;
+  height: 24rem;
+}
+
+/* Contenedor vertical para marcador y feedback */
+.fig-lateral-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 16rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+/* Título */
+.fig-titulo {
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Descripción */
 .fig-description {
   font-size: 1.2em;
   color: #333;
   margin-bottom: 20px;
 }
 
+/* Figura central */
 .fig-center-container {
   margin: 20px 0;
 }
@@ -695,34 +731,84 @@ footer {
   padding: 10px;
 }
 
+/* Opciones de figuras */
 .fig-options {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 2rem;
+  margin-top: 1rem;
 }
 
 .fig-button {
-  background-color: #ffc400;
-  border: 2px solid #005bab;
-  border-radius: 10px;
-  padding: 15px;
+  background-color: #12c1ed;
+  color: white;
+  font-size: 3em;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  transition: transform 0.2s ease;
-  font-size: 2.5rem;
+  transition: background-color 0.3s;
 }
 
 .fig-button:hover {
   transform: scale(1.1);
-  background-color: #ffc400;
+  background-color: #ffda4d;
+}
+
+/* Marcador y feedback */
+.fig-puntos {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #005bab;
 }
 
 .fig-feedback {
-  font-size: 1.5em;
-  margin-top: 20px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  min-height: 2rem;
+  margin-top: 1rem;
   color: #333;
+  width: 100%;
 }
+
+
+/* Popup final */
+.fig-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.fig-popup-content {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.5em;
+  color: #005bab;
+}
+.fig-ronda {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
 
 
 

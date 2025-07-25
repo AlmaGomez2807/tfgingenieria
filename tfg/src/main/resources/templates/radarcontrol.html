@@ -80,13 +80,14 @@
     }
   }
 
+  
   function actualizarTemporizador() {
-    tiempoRestante--;
-    timerEl.textContent = `⏱️ Tiempo: ${tiempoRestante}s`;
-    if (tiempoRestante <= 0) {
-      clearInterval(temporizadorActivo);
-      alert(`⏰ ¡Tiempo agotado! Puntuación final: ${puntos} puntos`);
-      resetGame();
+    if (tiempoRestante > 0) {
+      tiempoRestante--;
+      timerEl.textContent = `Tiempo: ${tiempoRestante}s`;
+    }
+    if (tiempoRestante <= 0 && !juegoTerminado) {
+      terminarJuego();
     }
   }
 

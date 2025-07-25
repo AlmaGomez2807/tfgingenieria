@@ -199,18 +199,6 @@
     beepInterval = setInterval(playBeep, 9000 + Math.random() * 5000);
   }
 
-  function initGame() {
-    puntos = 0;
-    tiempoRestante = 90;
-    puntosEl.textContent = 'Puntos: 0';
-    timerEl.textContent = 'Tiempo: 90s';
-    juegoTerminado = false;
-    generateFigures();
-    generateEquation();
-    timerInterval = setInterval(actualizarTemporizador, 1000);
-    beepInterval = setInterval(playBeep, 9000 + Math.random() * 5000);
-  }
-
-  initGame();
+  reiniciarJuego();
 </script>
 {{> fragments/footer}}

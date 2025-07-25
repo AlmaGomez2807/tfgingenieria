@@ -1,127 +1,174 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Juego de Figuras</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body class="fig-wrapper">
-  <h1 class="fig-title">¡Elige la figura correcta!</h1>
-  <div id="fig-description" class="fig-description"></div>
-  <div class="fig-center-container">
-    <div id="main-figure" class="fig-main"></div>
+{{> fragments/header}}
+
+<div class="fig-wrapper">
+  <div class="fig-contenedor-flex">
+    
+    <!-- Zona izquierda: juego -->
+    <div class="fig-juego">
+      <h1 class="fig-titulo">¡Elige la figura correcta!</h1>
+      <div id="fig-ronda" class="fig-ronda">Ronda 1 de 10</div>
+      <div id="fig-description" class="fig-description"></div>
+
+      <div class="fig-center-container">
+        <div id="main-figure" class="fig-main"></div>
+      </div>
+
+      <div class="fig-options" id="fig-options"></div>
+    </div>
+
+    <!-- Zona derecha: marcador y feedback -->
+    <div class="fig-lateral-derecha">
+      <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
+      <div id="fig-feedback" class="fig-feedback"></div>
+    </div>
   </div>
-  <div class="fig-options" id="fig-options"></div>
-  <div id="fig-feedback" class="fig-feedback"></div>
+</div>
 
-  <script>
-    const shapes = ['⬛', '⚪', '🔺', '⭐', '❤️'];
-    const colors = ['black', 'white', 'green', 'yellow', 'red'];
+<div id="popup-final" class="coor-popup">
+  <div class="coor-popup-content">
+    <h2>🎉 Juego Terminado 🎉</h2>
+    <p id="popup-puntos">Puntuación Total: 0 puntos</p>
+  </div>
+</div>
 
-    let mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
-    let round = 0;
-    const maxRounds = 10;
+<script>
+  const shapes = ['⬛', '⚪', '💜​', '⭐', '❤️'];
+  const colors = ['black', 'white', 'purple', 'yellow', 'red'];
 
-    const description = document.getElementById('fig-description');
-    const mainFigure = document.getElementById('main-figure');
-    const optionsContainer = document.getElementById('fig-options');
-    const feedback = document.getElementById('fig-feedback');
+  let mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
+  let round = 0;
+  const maxRounds = 10;
+  let score = 0;
 
-    function getRandomItem(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
+  const description = document.getElementById('fig-description');
+  const mainFigure = document.getElementById('main-figure');
+  const optionsContainer = document.getElementById('fig-options');
+  const scoreDisplay = document.getElementById('coor-puntos');
+  const popup = document.getElementById('popup-final');
+  const popupPuntos = document.getElementById('popup-puntos');
+  const feedback = document.getElementById('fig-feedback');
+  const rondaDisplay = document.getElementById('fig-ronda');
 
-    function createFigure(shape, color) {
-      const span = document.createElement('span');
-      span.textContent = shape;
-      span.style.color = color;
-      span.classList.add('fig-shape');
-      return span;
-    }
+  function getRandomItem(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
 
-    function isUniqueCombination(list, shape, color) {
-      return !list.some(item => item.shape === shape && item.color === color);
-    }
+  function createFigure(shape, color) {
+    const span = document.createElement('span');
+    span.textContent = shape;
+    span.style.color = color;
+    span.classList.add('fig-shape');
+    return span;
+  }
 
-    function newRound() {
-      if (round >= maxRounds) {
-        feedback.textContent = "🏁 ¡Juego terminado!";
-        mainFigure.innerHTML = '';
-        optionsContainer.innerHTML = '';
-        description.textContent = '';
-        return;
-      }
+  function isUniqueCombination(list, shape, color) {
+    return !list.some(item => item.shape === shape && item.color === color);
+  }
 
-      feedback.textContent = '';
-      optionsContainer.innerHTML = '';
-      round++;
+  function updateScoreDisplay() {
+    scoreDisplay.textContent = `Puntos: ${score}`;
+  }
 
-      const baseShape = getRandomItem(shapes);
-      const baseColor = getRandomItem(colors);
-      mainFigure.innerHTML = '';
-      mainFigure.appendChild(createFigure(baseShape, baseColor));
+  function updateRondaDisplay() {
+    rondaDisplay.textContent = `Ronda ${round} de ${maxRounds}`;
+  }
 
-      let correctOption;
-      const options = [];
-
-      if (mode === 'same-shape') {
-        description.textContent = "Selecciona la figura que sea IGUAL a la del centro.";
-        correctOption = { shape: baseShape, color: baseColor };
-        options.push(correctOption);
-
-        while (options.length < 4) {
-          const shape = getRandomItem(shapes);
-          const color = getRandomItem(colors);
-          if (isUniqueCombination(options, shape, color)) {
-            options.push({ shape, color });
-          }
-        }
-
-      } else {
-        description.textContent = "Selecciona la figura con el MISMO COLOR pero forma DIFERENTE.";
-        let diffShape;
-        do {
-          diffShape = getRandomItem(shapes);
-        } while (diffShape === baseShape);
-        correctOption = { shape: diffShape, color: baseColor };
-        options.push(correctOption);
-
-        while (options.length < 4) {
-          const shape = getRandomItem(shapes);
-          const color = getRandomItem(colors);
-          // Aseguramos que no se repita la misma combinación ya usada
-          if (isUniqueCombination(options, shape, color)) {
-            options.push({ shape, color });
-          }
-        }
-      }
-
-      // Mezclar las opciones
-      options.sort(() => Math.random() - 0.5);
-
-      // Renderizar opciones
-      options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.appendChild(createFigure(opt.shape, opt.color));
-        btn.className = 'fig-button';
-        btn.onclick = () => {
-          let isCorrect = false;
-
-          if (mode === 'same-shape') {
-            isCorrect = opt.shape === baseShape && opt.color === baseColor;
-          } else {
-            isCorrect = opt.color === baseColor && opt.shape !== baseShape;
-          }
-
-          feedback.textContent = isCorrect ? '✅ ¡Correcto!' : '❌ Ups, era otra.';
-          setTimeout(newRound, 1000);
-        };
-        optionsContainer.appendChild(btn);
-      });
-    }
-
+  function resetGame() {
+    score = 0;
+    round = 0;
+    updateScoreDisplay();
+    popup.style.display = 'none';
     newRound();
-  </script>
-</body>
-</html>
+  }
+
+  function newRound() {
+    if (round >= maxRounds) {
+      popup.style.display = 'flex';
+      popupPuntos.textContent = `Puntuación Total: ${score} puntos`;
+      mainFigure.innerHTML = '';
+      optionsContainer.innerHTML = '';
+      description.textContent = '';
+      rondaDisplay.textContent = '';
+      setTimeout(resetGame, 3000);
+      return;
+    }
+
+    feedback.textContent = '';
+    optionsContainer.innerHTML = '';
+    round++;
+    updateRondaDisplay();
+
+    mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
+
+    const baseShape = getRandomItem(shapes);
+    const baseColor = getRandomItem(colors);
+    mainFigure.innerHTML = '';
+    mainFigure.appendChild(createFigure(baseShape, baseColor));
+
+    let correctOption;
+    const options = [];
+
+    if (mode === 'same-shape') {
+      description.textContent = "Selecciona la figura que sea IGUAL a la del centro.";
+      correctOption = { shape: baseShape, color: baseColor };
+      options.push(correctOption);
+
+      while (options.length < 4) {
+        const shape = getRandomItem(shapes);
+        const color = getRandomItem(colors);
+        if (isUniqueCombination(options, shape, color)) {
+          options.push({ shape, color });
+        }
+      }
+
+    } else {
+      description.textContent = "Selecciona la figura con el MISMO COLOR.";
+      correctOption = { shape: getRandomItem(shapes), color: baseColor };
+      options.push(correctOption);
+
+      while (options.length < 4) {
+        const shape = getRandomItem(shapes);
+        const color = getRandomItem(colors);
+        if (isUniqueCombination(options, shape, color)) {
+          options.push({ shape, color });
+        }
+      }
+    }
+
+    options.sort(() => Math.random() - 0.5);
+
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.appendChild(createFigure(opt.shape, opt.color));
+      btn.className = 'fig-button';
+      btn.onclick = () => {
+        let isCorrect = false;
+
+        if (mode === 'same-shape') {
+          isCorrect = opt.shape === baseShape && opt.color === baseColor;
+        } else {
+          isCorrect = opt.color === baseColor;
+        }
+
+        if (isCorrect) {
+          score += 10;
+          feedback.textContent = '✅ ¡Correcto! +10 puntos';
+        } else {
+          score -= 5;
+          feedback.textContent = '❌ Incorrecto -5 puntos';
+        }
+
+        updateScoreDisplay();
+        setTimeout(newRound, 1000);
+      };
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  updateScoreDisplay();
+  newRound();
+</script>
+
+
+
+{{> fragments/footer}}
