@@ -396,7 +396,7 @@ footer {
 }
 
 .coor-boton:hover {
-  background-color: #12c1ed;
+  background-color: #0ea7cb;
 }
 .avion {
   display: inline-block;
@@ -676,7 +676,6 @@ footer {
   min-height: 100vh;
 }
 
-/* Contenedor flexible principal: juego a la izquierda, lateral (marcador+feedback) a la derecha */
 .fig-contenedor-flex {
   display: flex;
   justify-content: center;
@@ -685,43 +684,47 @@ footer {
   flex-wrap: wrap;
 }
 
-/* Tarjeta principal del juego */
 .fig-juego {
   background-color: #f9f9f9;
   padding: 4px 30px;
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 36rem;
+  width: 33rem;
   margin-top: 1rem;
   height: 24rem;
 }
 
-/* Contenedor vertical para marcador y feedback */
 .fig-lateral-derecha {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 16rem;
+  min-width: 8rem;
   align-items: center;
   margin-top: 1rem;
 }
 
-/* Título */
+.fig-timer-lateral{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 8rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
 .fig-titulo {
   font-size: 1.7rem;
   margin-bottom: 10px;
   color: #333;
 }
 
-/* Descripción */
 .fig-description {
   font-size: 1.2em;
   color: #333;
   margin-bottom: 20px;
 }
 
-/* Figura central */
 .fig-center-container {
   margin: 20px 0;
 }
@@ -731,7 +734,6 @@ footer {
   padding: 10px;
 }
 
-/* Opciones de figuras */
 .fig-options {
   display: flex;
   justify-content: center;
@@ -752,11 +754,9 @@ footer {
 }
 
 .fig-button:hover {
-  transform: scale(1.1);
-  background-color: #ffda4d;
+  background-color: #0ea7cb;
 }
 
-/* Marcador y feedback */
 .fig-puntos {
   font-size: 1.3em;
   font-weight: bold;
@@ -773,8 +773,6 @@ footer {
   width: 100%;
 }
 
-
-/* Popup final */
 .fig-popup {
   position: fixed;
   top: 0;
@@ -802,6 +800,16 @@ footer {
   margin-bottom: 10px;
 }
 
+.fig-shape {
+  display: inline-block;
+  font-size: 60px;      
+  width: 60px;          
+  height: 60px;         
+  line-height: 60px;    
+  text-align: center;   
+  user-select: none;    
+  pointer-events: none; 
+}
 
 
 

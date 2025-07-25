@@ -2,8 +2,11 @@
 
 <div class="fig-wrapper">
   <div class="fig-contenedor-flex">
-    
-    <!-- Zona izquierda: juego -->
+    <div class="fig-timer-lateral">
+      <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
+    </div>
+
+    <!-- Zona central: juego -->
     <div class="fig-juego">
       <h1 class="fig-titulo">¡Elige la figura correcta!</h1>
       <div id="fig-ronda" class="fig-ronda">Ronda 1 de 10</div>
@@ -14,36 +17,43 @@
       </div>
 
       <div class="fig-options" id="fig-options"></div>
+      <div id="fig-feedback" class="fig-feedback"></div>
     </div>
 
     <!-- Zona derecha: marcador y feedback -->
     <div class="fig-lateral-derecha">
       <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
-      <div id="fig-feedback" class="fig-feedback"></div>
+      
     </div>
   </div>
 </div>
 
-<div id="popup-final" class="coor-popup">
+<div id="popup-final" class="coor-popup" style="display:none;">
   <div class="coor-popup-content">
     <h2>🎉 Juego Terminado 🎉</h2>
     <p id="popup-puntos">Puntuación Total: 0 puntos</p>
   </div>
 </div>
 
+
 <script>
-  const shapes = ['⬛', '⚪', '💜​', '⭐', '❤️'];
-  const colors = ['black', 'white', 'purple', 'yellow', 'red'];
+  const shapes = ['●', '▲', '◆', '★', '◉', '◼', '▣'];
+  const colors = ['black', 'red', 'green', 'blue', 'orange', 'purple', 'pink'];
 
   let mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
   let round = 0;
   const maxRounds = 10;
   let score = 0;
 
+  let tiempoRestante = 90;
+  let timerInterval = null;
+  let juegoTerminado = false;
+
   const description = document.getElementById('fig-description');
   const mainFigure = document.getElementById('main-figure');
   const optionsContainer = document.getElementById('fig-options');
   const scoreDisplay = document.getElementById('coor-puntos');
+  const timerDisplay = document.getElementById('coor-timer');
   const popup = document.getElementById('popup-final');
   const popupPuntos = document.getElementById('popup-puntos');
   const feedback = document.getElementById('fig-feedback');
@@ -61,12 +71,20 @@
     return span;
   }
 
-  function isUniqueCombination(list, shape, color) {
-    return !list.some(item => item.shape === shape && item.color === color);
+  function isExactDuplicate(list, shape, color) {
+    return list.some(item => item.shape === shape && item.color === color);
+  }
+
+  function hasShape(list, shape) {
+    return list.some(item => item.shape === shape);
   }
 
   function updateScoreDisplay() {
     scoreDisplay.textContent = `Puntos: ${score}`;
+  }
+
+  function updateTimerDisplay() {
+    timerDisplay.textContent = `Tiempo: ${tiempoRestante}s`;
   }
 
   function updateRondaDisplay() {
@@ -76,20 +94,45 @@
   function resetGame() {
     score = 0;
     round = 0;
+    tiempoRestante = 90;
+    juegoTerminado = false;
     updateScoreDisplay();
+    updateTimerDisplay();
     popup.style.display = 'none';
+    feedback.textContent = '';
     newRound();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(actualizarTemporizador, 1000);
+  }
+
+  function terminarJuego() {
+    juegoTerminado = true;
+    clearInterval(timerInterval);
+    popup.style.display = "flex";
+    popupPuntos.textContent = `Puntuación Total: ${score} puntos`;
+    mainFigure.innerHTML = '';
+    optionsContainer.innerHTML = '';
+    description.textContent = '';
+    rondaDisplay.textContent = '';
+  }
+
+  function actualizarTemporizador() {
+    if (tiempoRestante > 0) {
+      tiempoRestante--;
+      updateTimerDisplay();
+    }
+    if (tiempoRestante <= 0 && !juegoTerminado) {
+      terminarJuego();
+      setTimeout(resetGame, 4000);
+    }
   }
 
   function newRound() {
+    if (juegoTerminado) return;
+
     if (round >= maxRounds) {
-      popup.style.display = 'flex';
-      popupPuntos.textContent = `Puntuación Total: ${score} puntos`;
-      mainFigure.innerHTML = '';
-      optionsContainer.innerHTML = '';
-      description.textContent = '';
-      rondaDisplay.textContent = '';
-      setTimeout(resetGame, 3000);
+      terminarJuego();
+      setTimeout(resetGame, 4000);
       return;
     }
 
@@ -116,7 +159,12 @@
       while (options.length < 4) {
         const shape = getRandomItem(shapes);
         const color = getRandomItem(colors);
-        if (isUniqueCombination(options, shape, color)) {
+
+        if (
+          shape !== baseShape &&
+          !hasShape(options, shape) &&
+          !isExactDuplicate(options, shape, color)
+        ) {
           options.push({ shape, color });
         }
       }
@@ -129,7 +177,12 @@
       while (options.length < 4) {
         const shape = getRandomItem(shapes);
         const color = getRandomItem(colors);
-        if (isUniqueCombination(options, shape, color)) {
+
+        if (
+          color !== baseColor &&
+          !hasShape(options, shape) &&
+          !isExactDuplicate(options, shape, color)
+        ) {
           options.push({ shape, color });
         }
       }
@@ -142,6 +195,7 @@
       btn.appendChild(createFigure(opt.shape, opt.color));
       btn.className = 'fig-button';
       btn.onclick = () => {
+        if (juegoTerminado) return;
         let isCorrect = false;
 
         if (mode === 'same-shape') {
@@ -166,9 +220,9 @@
   }
 
   updateScoreDisplay();
-  newRound();
+  updateTimerDisplay();
+  resetGame();
+
 </script>
-
-
 
 {{> fragments/footer}}
