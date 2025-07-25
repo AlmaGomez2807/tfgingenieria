@@ -1,0 +1,53 @@
+{{> fragments/header}}
+  <div class="ranking-container">
+    <div class="ranking-title">🏆 Ranking de Jugadores 🏆</div>
+    <ul class="ranking-list" id="ranking-list">
+      <!-- Aquí se insertarán los jugadores -->
+    </ul>
+  </div>
+
+<script>
+
+    // Esta función debe conectarse a tu base de datos real
+    async function obtenerJugadoresDesdeBD() {
+    // Simulación de datos (reemplaza con tu conexión real)
+    return [
+        { nombre: 'Sofía', puntuacion: 120 },
+        { nombre: 'Lucas', puntuacion: 110 },
+        { nombre: 'Martina', puntuacion: 100 },
+        { nombre: 'Mateo', puntuacion: 95 },
+        { nombre: 'Leo', puntuacion: 90 },
+        { nombre: 'Valeria', puntuacion: 85 },
+        { nombre: 'Hugo', puntuacion: 80 },
+        { nombre: 'Daniela', puntuacion: 78 },
+        { nombre: 'Alejandro', puntuacion: 75 },
+        { nombre: 'Emma', puntuacion: 70 }
+    ];
+    }
+
+    // Esta función renderiza el ranking en pantalla
+    async function mostrarRanking() {
+    const jugadores = await obtenerJugadoresDesdeBD();
+    const lista = document.getElementById('ranking-lista');
+    lista.innerHTML = '';
+
+    jugadores.forEach((jugador, index) => {
+        const item = document.createElement('div');
+        item.classList.add('ranking-item');
+        if (index === 0) item.classList.add('top-1');
+        else if (index === 1) item.classList.add('top-2');
+        else if (index === 2) item.classList.add('top-3');
+
+        item.innerHTML = `
+        <div class="ranking-pos">${index + 1}.</div>
+        <div class="ranking-name">${jugador.nombre}</div>
+        <div class="ranking-score">${jugador.puntuacion} pts</div>
+        `;
+        lista.appendChild(item);
+    });
+    }
+
+    // Ejecutar al cargar la página
+    window.addEventListener('DOMContentLoaded', mostrarRanking);
+</script>
+{{> fragments/footer}}

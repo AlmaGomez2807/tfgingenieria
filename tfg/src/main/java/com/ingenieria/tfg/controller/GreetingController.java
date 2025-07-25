@@ -65,4 +65,14 @@ public class GreetingController {
     public String greeting12() {
         return "instruccionesF";
     }
+
+    @RequestMapping("/perfil")
+    public String greeting13() {
+        return "perfil";
+    }
+
+    @RequestMapping("/ranking")
+    public String greeting14() {
+        return "ranking";
+    }
 }

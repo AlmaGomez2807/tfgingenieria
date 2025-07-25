@@ -1,0 +1,45 @@
+{{> fragments/header}}
+<div class="perfil-container">
+    <div class="perfil-card">
+
+      <!-- Selector de avatar -->
+      <div class="perfil-avatar-selector">
+        <img src="images/nino.png" alt="Avatar chico" class="perfil-avatar-option" onclick="seleccionarAvatar('images/nino.png')">
+        <img src="images/nina.png" alt="Avatar chica" class="perfil-avatar-option" onclick="seleccionarAvatar('images/nina.png')">
+      </div>
+
+      <!-- Avatar actual -->
+      <img id="perfil-avatar" src="images/nino.png" alt="Avatar seleccionado" class="perfil-avatar" />
+
+      <h1 class="perfil-nombre">Nombre del Jugador</h1>
+      <button class="boton-cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+
+      <div class="perfil-puntos-totales">Puntos totales: <span id="puntos-totales">0</span></div>
+
+      <h2 class="perfil-subtitulo">Máxima puntuación por juego</h2>
+      <div class="perfil-puntuaciones">
+        <div class="perfil-box"><strong>Coordinate:</strong> <span id="score-coordenadas">0</span></div>
+        <div class="perfil-box"><strong>Heading Conflicts:</strong> <span id="score-heading">0</span></div>
+        <div class="perfil-box"><strong>Radar Control:</strong> <span id="score-radar">0</span></div>
+        <div class="perfil-box"><strong>Multitask:</strong> <span id="score-multitarea">0</span></div>
+        <div class="perfil-box"><strong>Figures:</strong> <span id="score-figuras">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function seleccionarAvatar(ruta) {
+      document.getElementById('perfil-avatar').src = ruta;
+    }
+
+    function seleccionarAvatar(ruta) {
+    document.getElementById('perfil-avatar').src = ruta;
+  }
+
+  function cerrarSesion() {
+    // AQUI TODO EL CODIGO DE CERRAR SESION
+    window.location.href = "principal.html"; 
+  }
+</script>
+
+{{> fragments/footer}}
