@@ -1,11 +1,43 @@
 {{> fragments/header}}
 <div class="container-fluid">
   <h1 class="rk-title">¡Controla el cielo!</h1>
-  <div class="row">
-    
-    <!-- Zona izquierda: Controles avión 2 -->
-    <div class="col-lg-3">
+
+  <!-- Fila superior: Temporizador y puntos -->
+  <div class="row justify-content-between text-center mb-3">
+    <div class="col-3 text-start">
       <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
+    </div>
+    <div class="col-3 text-end">
+      <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
+    </div>
+  </div>
+
+  <!-- Fila inferior: Controles y radar -->
+  <div class="row align-items-start">
+    
+    <!-- Controles avión 1 -->
+    <div class="col-md-3 text-center">
+      <div class="rk-controls">
+        <h2 class="rk-subtitle">Mandos Avión 1</h2>
+        <button onclick="changeDirection('plane1', 'left')">⬅️</button>
+        <button onclick="changeDirection('plane1', 'right')">➡️</button>
+        <button onclick="changeAltitude('plane1', 'up')">⬆️</button>
+        <button onclick="changeAltitude('plane1', 'down')">⬇️</button>
+      </div>
+    </div>
+
+    <!-- Radar en el centro -->
+    <div class="col-md-6 d-flex justify-content-center">
+      <div class="rk-container">
+        <div class="rk-radar">
+          <div class="rk-plane" id="plane1"></div>
+          <div class="rk-plane rk-plane2" id="plane2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles avión 2 -->
+    <div class="col-md-3 text-center">
       <div class="rk-controls">
         <h2 class="rk-subtitle">Mandos Avión 2</h2>
         <button onclick="changeDirection('plane2', 'left')">⬅️</button>
@@ -15,53 +47,41 @@
       </div>
     </div>
 
-    <!-- Zona central: Radar con dos aviones -->
-    <div class="col-lg-6">
-      <div class="rk-container">
-        <div class="rk-radar">
-          <div class="rk-plane" id="plane1"></div>
-          <div class="rk-plane rk-plane2" id="plane2"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Zona derecha: Temporizador, puntuación y controles avión 1 -->
-    <div class="col-lg-3">
-      <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
-      </div>
-
-      <div class="rk-controls">
-        <h2 class="rk-subtitle">Mandos Avión 1</h2>
-        <button onclick="changeDirection('plane1', 'left')">⬅️</button>
-        <button onclick="changeDirection('plane1', 'right')">➡️​</button>
-        <button onclick="changeAltitude('plane1', 'up')">⬆️​</button>
-        <button onclick="changeAltitude('plane1', 'down')">⬇️</button>
-      </div>
-    </div>
   </div>
 </div>
 
+<div id="popup-final" class="coor-popup">
+  <div class="coor-popup-content">
+    <h2>🎉 Juego Terminado 🎉</h2>
+    <p id="popup-puntos">Puntuación Total: 0 puntos</p>
+  </div>
+</div>
 <script>
   const plane1 = document.getElementById('plane1');
   const plane2 = document.getElementById('plane2');
-  const timerEl = document.getElementById('rk-timer');
-  const pointsEl = document.getElementById('rk-points');
+  const timerEl = document.getElementById('coor-timer');
+  const pointsEl = document.getElementById('coor-puntos'); // Estaba mal: era 'rk-points'
+  const popup = document.getElementById('popup-final');
+  const popupTexto = document.getElementById('popup-puntos');
 
   let x1 = 0, y1 = 100, dir1 = 0.1;
   let x2 = 0, y2 = 200, dir2 = 0.1;
 
   let puntos = 0;
   let tiempoRestante = 90;
-  let temporizadorActivo = false;
+  let timerInterval = null;
+  let juegoTerminado = false;
 
   function movePlanes() {
-    x1 += dir1;
-    x2 += dir2;
-    plane1.style.left = x1 + 'px';
-    plane1.style.top = y1 + 'px';
-    plane2.style.left = x2 + 'px';
-    plane2.style.top = y2 + 'px';
-    requestAnimationFrame(movePlanes);
+    if (!juegoTerminado) {
+      x1 += dir1;
+      x2 += dir2;
+      plane1.style.left = x1 + 'px';
+      plane1.style.top = y1 + 'px';
+      plane2.style.left = x2 + 'px';
+      plane2.style.top = y2 + 'px';
+      requestAnimationFrame(movePlanes);
+    }
   }
 
   function changeDirection(planeId, direction) {
@@ -80,7 +100,6 @@
     }
   }
 
-  
   function actualizarTemporizador() {
     if (tiempoRestante > 0) {
       tiempoRestante--;
@@ -94,18 +113,44 @@
   function resetGame() {
     puntos = 0;
     tiempoRestante = 90;
-    timerEl.textContent = '⏱️ Tiempo: 90s';
-    pointsEl.textContent = '⭐ Puntos: 0';
+    x1 = 0; y1 = 100;
+    x2 = 0; y2 = 200;
+    dir1 = 0.1;
+    dir2 = 0.1;
+    timerEl.textContent = 'Tiempo: 90s';
+    pointsEl.textContent = 'Puntos: 0';
+    plane1.style.left = x1 + 'px';
+    plane1.style.top = y1 + 'px';
+    plane2.style.left = x2 + 'px';
+    plane2.style.top = y2 + 'px';
+    juegoTerminado = false;
   }
 
   function sumarPuntos(valor) {
     puntos += valor;
-    pointsEl.textContent = `⭐ Puntos: ${puntos}`;
+    pointsEl.textContent = `Puntos: ${puntos}`;
+  }
+
+  function terminarJuego() {
+    juegoTerminado = true;
+    clearInterval(timerInterval);
+    popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+    popup.style.display = "flex";
+    setTimeout(() => {
+      popup.style.display = "none";
+      reiniciarJuego();
+    }, 4000);
+  }
+
+  function reiniciarJuego() {
+    resetGame();
+    timerInterval = setInterval(actualizarTemporizador, 1000);
+    movePlanes();
   }
 
   function iniciarJuego() {
+    timerInterval = setInterval(actualizarTemporizador, 1000);
     movePlanes();
-    temporizadorActivo = setInterval(actualizarTemporizador, 1000);
   }
 
   iniciarJuego();
