@@ -490,8 +490,8 @@ footer {
 
 /*HASTA AQUÍ COORDINATE*/
 
-/* RADAR CONTROL */
 
+/* RADAR CONTROL */
 .rk-container {
   display: flex;
   justify-content: center;
@@ -500,7 +500,7 @@ footer {
 }
 
 .rk-radar {
-    width: 29rem;
+    width: 28rem;
     height: 25rem;
     background: url(images/fondo-radar.png) center center / cover no-repeat;
     border: 4px dashed #3399cc;
@@ -514,16 +514,29 @@ footer {
   width: 100%;
   text-align: center;
   margin-bottom: 20px;
+  font-size: 23px;
 }
 
 .rk-plane {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background-image: url('images/plane.png');
+  width: 40px;
+  height: 40px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  z-index: 1;
+}
+
+#plane1 {
+  background-image: url('images/plane-rojo.png'); /* avión rojo */
+}
+
+#plane2 {
+  background-image: url('images/plane-azul.png'); /* avión azul */
+}
+
+#plane1, #plane2 {
+  transition: transform 0.3s ease;
 }
 
 .rk-plane2 {
@@ -532,19 +545,39 @@ footer {
   background-image: url('images/plane.png'); 
 }
 
-.rk-controls {
-  margin-top: 10px;
+.rk-controls-izq {
+  margin-top: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: -0rem;
+}
+
+.rk-controls-der {
+  margin-top: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: -0rem;
 }
 
 .rk-subtitle {
   margin-bottom: 10px;
   color: #444;
+  font-size: 21px;
 }
 
-.rk-controls button {
+.rk-controls-izq button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #ffffff;
+  border: 2px solid #3399cc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.rk-controls-der button {
   margin: 5px;
   padding: 10px 15px;
   font-size: 16px;
@@ -555,8 +588,45 @@ footer {
   transition: background-color 0.3s;
 }
 
-.rk-controls button:hover {
+.rk-controls-izq button:hover {
   background-color: #cceeff;
+}
+.rk-controls-der button:hover {
+  background-color: #cceeff;
+}
+
+.col-3 {
+  flex: 0 0 auto;
+  width: 11rem;
+  margin-top: -1rem;
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+.meta-zone-r {
+  position: absolute;
+  border: 2px solid rgb(205, 68, 50);
+  background-color: rgba(255, 0, 0, 0.2);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 0;
+}
+.meta-zone-a {
+  position: absolute;
+  border: 2px solid rgb(50, 148, 205);
+  background-color: rgba(0, 255, 234, 0.2);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 0;
+}
+.rk-feedback {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  min-height: 2rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+  color: #333;
+  width: 100%;
 }
 
 
@@ -1004,6 +1074,8 @@ footer {
   min-width: 70px;
   text-align: right;
 }
+
+
 
 
 
