@@ -4,6 +4,7 @@ body {
   font-family: 'Fredoka', sans-serif;
   background-color: #f2f2f2;
   color: #333;
+  overflow: hidden;
 }
 /* Footer */
 footer {
@@ -338,7 +339,7 @@ footer {
   margin-top: 0rem;
   padding: 20px;
   text-align: center;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Fredoka', sans-serif;
   background-color: #f9f9f9;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -421,7 +422,7 @@ footer {
   min-height: 85vh;
   padding: 1rem;
   box-sizing: border-box;
-  background-color: #e0f7ff;
+  background-color: #f2f2f2;
 }
 
 #coor-feedback {
@@ -563,7 +564,7 @@ footer {
 
 .rk-subtitle {
   margin-bottom: 10px;
-  color: #444;
+  color: #000000;
   font-size: 21px;
 }
 
@@ -628,6 +629,57 @@ footer {
   color: #333;
   width: 100%;
 }
+.control-pad {
+  display: grid;
+  grid-template-columns: 50px 50px 50px;
+  grid-template-rows: 50px 50px 50px;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.control-pad button {
+  width: 50px;
+  height: 50px;
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: 2px solid #3399cc;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  padding: 0;
+}
+
+.control-pad button:hover {
+  background-color: #cceeff;
+}
+
+/* Posicionamiento en cruz */
+.btn-up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.btn-left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.btn-right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.btn-down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+
+
 
 
 
@@ -748,7 +800,7 @@ footer {
   display: flex;
   justify-content: center;
   padding-top: 1rem;
-  font-family: Arial, sans-serif;
+  font-family: 'Fredoka', sans-serif;
   background-color: #f0f8ff;
   min-height: 100vh;
 }
@@ -793,12 +845,12 @@ footer {
 .fig-titulo {
   font-size: 1.7rem;
   margin-bottom: 10px;
-  color: #333;
+  color: #000000;
 }
 
 .fig-description {
   font-size: 1.2em;
-  color: #333;
+  color: #000000;
   margin-bottom: 20px;
 }
 
@@ -873,7 +925,7 @@ footer {
 }
 .fig-ronda {
   font-size: 1.1rem;
-  color: #555;
+  color: #000000;
   margin-bottom: 10px;
 }
 

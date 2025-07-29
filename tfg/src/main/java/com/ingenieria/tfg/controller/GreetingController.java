@@ -75,4 +75,10 @@ public class GreetingController {
     public String greeting14() {
         return "ranking";
     }
+
+    @RequestMapping("/principal")
+    public String greeting15() {
+        return "principal";
+    }
+
 }

@@ -1,7 +1,7 @@
 {{> fragments/header}}
 <div class="container-fluid">
   <h1 class="rk-title">Lleva cada avión a su correspondiente meta</h1>
- 
+
   <div class="row justify-content-between text-center mb-3">
     <div class="col-3 text-start">
       <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
@@ -11,16 +11,17 @@
     </div>
   </div>
 
-
   <div class="row align-items-start">
     <!-- Controles avión 1 -->
     <div class="col-md-3 text-center">
       <div class="rk-controls-izq">
         <h2 class="rk-subtitle">Avión Rojo</h2>
-        <button onclick="changeDirection('plane1', 'left')">⬅️</button>
-        <button onclick="changeDirection('plane1', 'right')">➡️</button>
-        <button onclick="changeAltitude('plane1', 'up')">⬆️</button>
-        <button onclick="changeAltitude('plane1', 'down')">⬇️</button>
+        <div class="control-pad">
+          <button class="btn-up" onclick="changeAltitude('plane1', 'up')">⬆️</button>
+          <button class="btn-left" onclick="changeDirection('plane1', 'left')">⬅️</button>
+          <button class="btn-right" onclick="changeDirection('plane1', 'right')">➡️</button>
+          <button class="btn-down" onclick="changeAltitude('plane1', 'down')">⬇️</button>
+        </div>
       </div>
     </div>
 
@@ -34,20 +35,22 @@
           <div class="rk-plane rk-plane2" id="plane2"></div>
         </div>
       </div>
-      
     </div>
+
     <!-- Controles avión 2 -->
     <div class="col-md-3 text-center">
       <div class="rk-controls-der">
         <h2 class="rk-subtitle">Avión Azul</h2>
-        <button onclick="changeDirection('plane2', 'left')">⬅️</button>
-        <button onclick="changeDirection('plane2', 'right')">➡️</button>
-        <button onclick="changeAltitude('plane2', 'up')">⬆️</button>
-        <button onclick="changeAltitude('plane2', 'down')">⬇️</button>
-        
+        <div class="control-pad">
+          <button class="btn-up" onclick="changeAltitude('plane2', 'up')">⬆️</button>
+          <button class="btn-left" onclick="changeDirection('plane2', 'left')">⬅️</button>
+          <button class="btn-right" onclick="changeDirection('plane2', 'right')">➡️</button>
+          <button class="btn-down" onclick="changeAltitude('plane2', 'down')">⬇️</button>
+        </div>
       </div>
     </div>
-     <div id="rk-feedback" class="rk-feedback"></div>
+
+    <div id="rk-feedback" class="rk-feedback"></div>
   </div>
 </div>
 
