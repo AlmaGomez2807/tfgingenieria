@@ -53,6 +53,10 @@
   <div class="coor-popup-content">
     <h2>🎉 Juego Terminado 🎉</h2>
     <p id="popup-puntos">Puntuación Total: 0 puntos</p>
+    <div style="margin-top: 1.5rem;">
+      <button onclick="reiniciarJuego()" class="popup-boton">Reiniciar</button>
+      <button onclick="salirDelJuego()" class="popup-boton">Salir</button>
+    </div>
   </div>
 </div>
 
@@ -109,7 +113,7 @@
   }
 
   function checkFigures(playerThinksEqual) {
-    if (juegoTerminado) return; // bloquear si terminó
+    if (juegoTerminado) return;
     const isCorrect = playerThinksEqual === figuresAreEqual;
     figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos' : '❌ Incorrecto -5 puntos';
     actualizarPuntos(isCorrect ? 10 : -5);
@@ -169,21 +173,12 @@
     juegoTerminado = true;
     clearInterval(timerInterval);
     clearInterval(beepInterval);
-
-    // Mostrar popup con puntos
     popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
     popup.style.display = "flex";
-
-    // Opcional: bloquear botones o interacciones si es necesario
-
-    // Después de 4 segundos, cerrar popup y reiniciar
-    setTimeout(() => {
-      popup.style.display = "none";
-      reiniciarJuego();
-    }, 4000);
   }
 
   function reiniciarJuego() {
+    popup.style.display = "none";
     puntos = 0;
     tiempoRestante = 90;
     puntosEl.textContent = 'Puntos: 0';
@@ -199,6 +194,11 @@
     beepInterval = setInterval(playBeep, 9000 + Math.random() * 5000);
   }
 
+  function salirDelJuego() {
+    window.location.href = "principalJuegos";
+  }
+
   reiniciarJuego();
 </script>
+
 {{> fragments/footer}}

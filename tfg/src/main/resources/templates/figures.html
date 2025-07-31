@@ -28,13 +28,16 @@
   </div>
 </div>
 
-<div id="popup-final" class="coor-popup" style="display:none;">
+<div id="popup-final" class="coor-popup">
   <div class="coor-popup-content">
     <h2>🎉 Juego Terminado 🎉</h2>
     <p id="popup-puntos">Puntuación Total: 0 puntos</p>
+    <div style="margin-top: 1.5rem;">
+      <button onclick="reiniciarJuego()" class="popup-boton">Reiniciar</button>
+      <button onclick="salirDelJuego()" class="popup-boton">Salir</button>
+    </div>
   </div>
 </div>
-
 
 <script>
   const shapes = ['●', '▲', '◆', '★', '◉', '◼', '▣'];
@@ -45,7 +48,7 @@
   const maxRounds = 10;
   let score = 0;
 
-  let tiempoRestante = 90;
+  let tiempoRestante = 60;
   let timerInterval = null;
   let juegoTerminado = false;
 
@@ -91,7 +94,7 @@
     rondaDisplay.textContent = `Ronda ${round} de ${maxRounds}`;
   }
 
-  function resetGame() {
+  function reiniciarJuego() {
     score = 0;
     round = 0;
     tiempoRestante = 60;
@@ -100,9 +103,15 @@
     updateTimerDisplay();
     popup.style.display = 'none';
     feedback.textContent = '';
+    mainFigure.innerHTML = '';
+    optionsContainer.innerHTML = '';
     newRound();
     if (timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(actualizarTemporizador, 1000);
+  }
+
+  function salirDelJuego() {
+    window.location.href = "/"; // Cambia esta ruta si tu menú está en otra URL
   }
 
   function terminarJuego() {
@@ -123,7 +132,6 @@
     }
     if (tiempoRestante <= 0 && !juegoTerminado) {
       terminarJuego();
-      setTimeout(resetGame, 4000);
     }
   }
 
@@ -132,7 +140,6 @@
 
     if (round >= maxRounds) {
       terminarJuego();
-      setTimeout(resetGame, 4000);
       return;
     }
 
@@ -159,7 +166,6 @@
       while (options.length < 4) {
         const shape = getRandomItem(shapes);
         const color = getRandomItem(colors);
-
         if (
           shape !== baseShape &&
           !hasShape(options, shape) &&
@@ -168,7 +174,6 @@
           options.push({ shape, color });
         }
       }
-
     } else {
       description.textContent = "Selecciona la figura con el MISMO COLOR.";
       correctOption = { shape: getRandomItem(shapes), color: baseColor };
@@ -177,7 +182,6 @@
       while (options.length < 4) {
         const shape = getRandomItem(shapes);
         const color = getRandomItem(colors);
-
         if (
           color !== baseColor &&
           !hasShape(options, shape) &&
@@ -221,8 +225,7 @@
 
   updateScoreDisplay();
   updateTimerDisplay();
-  resetGame();
-
+  reiniciarJuego();
 </script>
 
 {{> fragments/footer}}

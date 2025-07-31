@@ -27,154 +27,185 @@
   <div class="coor-popup-content">
     <h2>🎉 Juego Terminado 🎉</h2>
     <p id="popup-puntos">Puntuación Total: 0 puntos</p>
+    <div style="margin-top: 1.5rem;">
+      <button onclick="reiniciarJuego()" class="popup-boton">Reiniciar</button>
+      <button onclick="salirDelJuego()" class="popup-boton">Salir</button>
+    </div>
   </div>
 </div>
-
-
-
 <script>
-  const gridCols = 15;
-  const gridRows = 10;
-  const directions = ['N', 'E', 'S', 'W'];
-  const directionAngles = { N: 0, E: 90, S: 180, W: 270 };
+const gridCols = 15;
+const gridRows = 10;
+const directions = ['N', 'S', 'E', 'W'];
+const directionAngles = { N: 0, E: 90, S: 180, W: 270 };
 
-  let planes = [];
-  let hasConflict = false;
-  let puntos = 0;
-  let ronda = 1;
-  const totalRondas = 10;
+let planes = [];
+let hasConflict = false;
+let conflictPair = [];
+let puntos = 0;
+let ronda = 1;
+const totalRondas = 10;
+let mostrarConflicto = false;
 
-  function generatePlanes() {
-    planes = [];
-    const totalPlanes = 20;
-    const occupied = new Set();
+function generatePlanes() {
+  planes = [];
+  conflictPair = [];
+  mostrarConflicto = false;
+  const totalPlanes = 20;
+  const occupied = new Set();
 
-    while (planes.length < totalPlanes) {
-      const x = Math.floor(Math.random() * gridCols);
-      const y = Math.floor(Math.random() * gridRows);
-      const key = `${x},${y}`;
-      if (!occupied.has(key)) {
-        occupied.add(key);
-        planes.push({
-          id: planes.length + 1,
-          x,
-          y,
-          heading: directions[Math.floor(Math.random() * directions.length)]
-        });
+  while (planes.length < totalPlanes) {
+    const x = Math.floor(Math.random() * gridCols);
+    const y = Math.floor(Math.random() * gridRows);
+    const key = `${x},${y}`;
+    if (!occupied.has(key)) {
+      occupied.add(key);
+      planes.push({
+        id: planes.length + 1,
+        x,
+        y,
+        heading: directions[Math.floor(Math.random() * directions.length)]
+      });
+    }
+  }
+
+  const result = buscarConflicto();
+  hasConflict = result.found;
+  conflictPair = result.pair;
+}
+
+function buscarConflicto() {
+  for (let i = 0; i < planes.length; i++) {
+    for (let j = i + 1; j < planes.length; j++) {
+      if (sonConflicto(planes[i], planes[j], planes)) {
+        return { found: true, pair: [planes[i].id, planes[j].id] };
       }
     }
-
-    hasConflict = Math.random() < 0.5;
-    if (hasConflict) insertConflictPair(occupied);
   }
+  return { found: false, pair: [] };
+}
 
-  function insertConflictPair(occupied) {
-    const possiblePairs = [];
-    for (let x = 0; x < gridCols; x++) {
-      for (let y = 0; y < gridRows; y++) {
-        if (!occupied.has(`${x},${y}`)) {
-          const pairs = [
-            [[x, y], [x, y + 1], 'N', 'S'],
-            [[x, y], [x, y - 1], 'S', 'N'],
-            [[x, y], [x + 1, y], 'W', 'E'],
-            [[x, y], [x - 1, y], 'E', 'W']
-          ];
-          for (let [p1, p2, h1, h2] of pairs) {
-            const [x1, y1] = p1;
-            const [x2, y2] = p2;
-            if (
-              x2 >= 0 && x2 < gridCols &&
-              y2 >= 0 && y2 < gridRows &&
-              !occupied.has(`${x1},${y1}`) &&
-              !occupied.has(`${x2},${y2}`)
-            ) {
-              possiblePairs.push({ p1: [x1, y1, h1], p2: [x2, y2, h2] });
-            }
-          }
-        }
+function sonConflicto(p1, p2, allPlanes) {
+  const [x1, y1, h1] = [p1.x, p1.y, p1.heading];
+  const [x2, y2, h2] = [p2.x, p2.y, p2.heading];
+
+  const opuestas = (
+    (h1 === 'E' && h2 === 'W') ||
+    (h1 === 'W' && h2 === 'E') ||
+    (h1 === 'N' && h2 === 'S') ||
+    (h1 === 'S' && h2 === 'N')
+  );
+
+  if (!opuestas) return false;
+
+  if (y1 === y2 && (h1 === 'E' || h1 === 'W')) {
+    const minX = Math.min(x1, x2);
+    const maxX = Math.max(x1, x2);
+    for (let plane of allPlanes) {
+      if (plane.y === y1 && plane.x > minX && plane.x < maxX) {
+        return false;
       }
     }
+    return true;
+  }
 
-    if (possiblePairs.length > 0) {
-      const chosen = possiblePairs[Math.floor(Math.random() * possiblePairs.length)];
-      planes.push({ id: planes.length + 1, x: chosen.p1[0], y: chosen.p1[1], heading: chosen.p1[2] });
-      planes.push({ id: planes.length + 1, x: chosen.p2[0], y: chosen.p2[1], heading: chosen.p2[2] });
-      occupied.add(`${chosen.p1[0]},${chosen.p1[1]}`);
-      occupied.add(`${chosen.p2[0]},${chosen.p2[1]}`);
-    } else {
-      hasConflict = false;
+  if (x1 === x2 && (h1 === 'N' || h1 === 'S')) {
+    const minY = Math.min(y1, y2);
+    const maxY = Math.max(y1, y2);
+    for (let plane of allPlanes) {
+      if (plane.x === x1 && plane.y > minY && plane.y < maxY) {
+        return false;
+      }
     }
+    return true;
   }
 
-  function renderPlanes() {
-    const grid = document.getElementById("hc-grid");
-    grid.innerHTML = "";
-    planes.forEach(plane => {
-      const div = document.createElement("div");
-      div.className = "hc-plane";
-      div.style.transform = `rotate(${directionAngles[plane.heading]}deg)`;
-      div.style.gridColumnStart = plane.x + 1;
-      div.style.gridRowStart = plane.y + 1;
-      div.innerHTML = "✈️";
-      grid.appendChild(div);
-    });
-  }
+  return false;
+}
 
-  function handleAnswer(playerSaysConflict) {
-    const feedback = document.getElementById("hc-feedback");
+function renderPlanes() {
+  const grid = document.getElementById("hc-grid");
+  grid.innerHTML = "";
 
-    if (playerSaysConflict === hasConflict) {
-      puntos += 10;
-      feedback.textContent = "¡Correcto! +10 puntos 🎉";
-      feedback.style.color = "green";
-    } else {
-      puntos -= 5;
-      feedback.textContent = "¡Incorrecto! -5 puntos ❌";
-      feedback.style.color = "red";
+  planes.forEach(plane => {
+    const div = document.createElement("div");
+    div.className = "hc-plane";
+
+    if (mostrarConflicto && conflictPair.includes(plane.id)) {
+      div.classList.add("conflict-plane");
     }
 
-    ronda++;
-    actualizarUI();
+    div.style.transform = `rotate(${directionAngles[plane.heading]}deg)`;
+    div.style.gridColumnStart = plane.x + 1;
+    div.style.gridRowStart = plane.y + 1;
+    div.innerHTML = "✈️";
+    grid.appendChild(div);
+  });
+}
 
-    if (ronda >= totalRondas) {
-      setTimeout(mostrarMensajeFinal, 1500);
-    } else {
-      setTimeout(() => {
-        feedback.textContent = "";
-        resetGame();
-      }, 1500);
-    }
+function handleAnswer(playerSaysConflict) {
+  const feedback = document.getElementById("hc-feedback");
+  mostrarConflicto = true;
+  renderPlanes();
+
+  if (playerSaysConflict === hasConflict) {
+    puntos += 10;
+    feedback.textContent = "¡Correcto! +10 puntos 🎉";
+    feedback.style.color = "green";
+  } else {
+    puntos -= 5;
+    feedback.textContent = "¡Incorrecto! -5 puntos ❌";
+    feedback.style.color = "red";
   }
 
-  function actualizarUI() {
-    document.getElementById("coor-puntos").textContent = `Puntos: ${puntos}`;
-    document.getElementById("hc-ronda").textContent = `Ronda ${ronda} de ${totalRondas}`;
-  }
+  ronda++;
+  actualizarUI();
 
-  function resetGame() {
-    generatePlanes();
-    renderPlanes();
-  }
-
-  function mostrarMensajeFinal() {
-    const popup = document.getElementById("popup-final");
-    const popupTexto = document.getElementById("popup-puntos");
-
-    popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
-    popup.style.display = "flex";
-
+  if (ronda > totalRondas) {
+    setTimeout(mostrarMensajeFinal, 1500);
+  } else {
     setTimeout(() => {
-      popup.style.display = "none";
-      puntos = 0;
-      ronda = 1;
-      actualizarUI();
+      feedback.textContent = "";
       resetGame();
-    }, 4000);
+    }, 1500);
   }
+}
 
-  // Iniciar juego
+function actualizarUI() {
+  document.getElementById("coor-puntos").textContent = `Puntos: ${puntos}`;
+  document.getElementById("hc-ronda").textContent = `Ronda ${Math.min(ronda, totalRondas)} de ${totalRondas}`;
+}
+
+function resetGame() {
+  generatePlanes();
+  renderPlanes();
+}
+
+function mostrarMensajeFinal() {
+  const popup = document.getElementById("popup-final");
+  const popupTexto = document.getElementById("popup-puntos");
+
+  popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+  popup.style.display = "flex";
+}
+
+function reiniciarJuego() {
+  const popup = document.getElementById("popup-final");
+  popup.style.display = "none";
+  puntos = 0;
+  ronda = 1;
   actualizarUI();
   resetGame();
+}
+
+function salirDelJuego() {
+  const popup = document.getElementById("popup-final");
+  popup.style.display = "none";
+  window.location.href = "principalJuegos";
+}
+
+actualizarUI();
+resetGame();
 </script>
 
 {{> fragments/footer}}

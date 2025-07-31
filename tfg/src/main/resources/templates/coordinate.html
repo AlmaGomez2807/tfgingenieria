@@ -22,88 +22,92 @@
   <div class="coor-popup-content">
     <h2>🎉 Juego Terminado 🎉</h2>
     <p id="popup-puntos">Puntuación Total: 0 puntos</p>
+    <div style="margin-top: 1.5rem;">
+      <button onclick="reiniciarJuego()" class="popup-boton">Reiniciar</button>
+      <button onclick="salirDelJuego()" class="popup-boton">Salir</button>
+    </div>
   </div>
 </div>
 
-  <script>
-  const size = 5;
-  let respuestaCorrecta = "";
-  let puntos = 0;
-  let ronda = 0;
-  const totalRondas = 10;
+<script>
+const size = 5;
+let respuestaCorrecta = "";
+let puntos = 0;
+let ronda = 0;
+const totalRondas = 10;
 
-  function generarJuego() {
-    if (ronda >= totalRondas) {
-      mostrarMensajeFinal();
-      return;
-    }
+function generarJuego() {
+  if (ronda >= totalRondas) {
+    mostrarMensajeFinal();
+    return;
+  }
 
-    const grid = document.getElementById("coor-grid");
-    grid.innerHTML = "";
+  const grid = document.getElementById("coor-grid");
+  grid.innerHTML = "";
 
-    const coordenadaAvionX = Math.floor(Math.random() * size);
-    const coordenadaAvionY = Math.floor(Math.random() * size);
+  const coordenadaAvionX = Math.floor(Math.random() * size);
+  const coordenadaAvionY = Math.floor(Math.random() * size);
 
-    let coordenadaTorreX, coordenadaTorreY;
-    do {
-      coordenadaTorreX = Math.floor(Math.random() * size);
-      coordenadaTorreY = Math.floor(Math.random() * size);
-    } while (coordenadaTorreX === coordenadaAvionX && coordenadaTorreY === coordenadaAvionY);
+  let coordenadaTorreX, coordenadaTorreY;
+  do {
+    coordenadaTorreX = Math.floor(Math.random() * size);
+    coordenadaTorreY = Math.floor(Math.random() * size);
+  } while (coordenadaTorreX === coordenadaAvionX && coordenadaTorreY === coordenadaAvionY);
 
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        const cell = document.createElement("div");
-        cell.className = "coor-celda";
-        if (x === coordenadaAvionX && y === coordenadaAvionY) {
-          cell.textContent = "✈️";
-        } else if (x === coordenadaTorreX && y === coordenadaTorreY) {
-          cell.textContent = "🏁";
-        }
-        grid.appendChild(cell);
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const cell = document.createElement("div");
+      cell.className = "coor-celda";
+      if (x === coordenadaAvionX && y === coordenadaAvionY) {
+        cell.textContent = "✈️";
+      } else if (x === coordenadaTorreX && y === coordenadaTorreY) {
+        cell.textContent = "🏁";
       }
+      grid.appendChild(cell);
     }
-
-    const dx = coordenadaTorreX - coordenadaAvionX;
-    const dy = coordenadaTorreY - coordenadaAvionY;
-
-    document.getElementById("coor-pregunta").textContent = `Ronda ${ronda + 1} de ${totalRondas}: ¿Qué distancia hay desde el avión hasta la meta?`;
-    const distancia = calcularDistanciaMN(dx, dy);
-    respuestaCorrecta = distancia.toString();
-
-    const opciones = generarOpcionesDistancia(parseInt(distancia));
-    asignarOpciones(opciones);
-    actualizarPuntos();
-    limpiarFeedback();
   }
 
-  function calcularDistanciaMN(dx, dy) {
-    const pasosHoriz = Math.abs(dx);
-    const pasosVert = Math.abs(dy);
-    const diagonales = Math.min(pasosHoriz, pasosVert);
-    const rectos = Math.abs(pasosHoriz - pasosVert);
-    return diagonales * 14 + rectos * 10;
-  }
+  const dx = coordenadaTorreX - coordenadaAvionX;
+  const dy = coordenadaTorreY - coordenadaAvionY;
 
-  function generarOpcionesDistancia(correcta) {
-    const opciones = new Set([correcta]);
-    while (opciones.size < 4) {
-      const variacion = (Math.floor(Math.random() * 7) - 3) * 10;
-      const nueva = correcta + variacion;
-      if (nueva > 0 && nueva !== correcta) {
-        opciones.add(nueva);
-      }
+  document.getElementById("coor-pregunta").textContent = `Ronda ${ronda + 1} de ${totalRondas}: ¿Qué distancia hay desde el avión hasta la meta?`;
+  const distancia = calcularDistanciaMN(dx, dy);
+  respuestaCorrecta = distancia.toString();
+
+  const opciones = generarOpcionesDistancia(parseInt(distancia));
+  asignarOpciones(opciones);
+  actualizarPuntos();
+  limpiarFeedback();
+}
+
+function calcularDistanciaMN(dx, dy) {
+  const pasosHoriz = Math.abs(dx);
+  const pasosVert = Math.abs(dy);
+  const diagonales = Math.min(pasosHoriz, pasosVert);
+  const rectos = Math.abs(pasosHoriz - pasosVert);
+  return diagonales * 14 + rectos * 10;
+}
+
+function generarOpcionesDistancia(correcta) {
+  const opciones = new Set([correcta]);
+  while (opciones.size < 4) {
+    const variacion = (Math.floor(Math.random() * 7) - 3) * 10;
+    const nueva = correcta + variacion;
+    if (nueva > 0 && nueva !== correcta) {
+      opciones.add(nueva);
     }
-    return Array.from(opciones).sort(() => Math.random() - 0.5);
   }
+  return Array.from(opciones).sort(() => Math.random() - 0.5);
+}
 
-  function asignarOpciones(opciones) {
-    document.querySelectorAll(".coor-boton").forEach((btn, i) => {
-      btn.disabled = false;
-      btn.textContent = opciones[i];
-    });
-  }
+function asignarOpciones(opciones) {
+  document.querySelectorAll(".coor-boton").forEach((btn, i) => {
+    btn.disabled = false;
+    btn.textContent = opciones[i];
+  });
+}
 
-  function verificarRespuesta(boton) {
+function verificarRespuesta(boton) {
   const feedback = document.getElementById("coor-feedback");
 
   if (boton.textContent === respuestaCorrecta) {
@@ -117,41 +121,48 @@
   }
 
   ronda++;
-  actualizarPuntos(); // Asegúrate de que se actualizan los puntos en pantalla también aquí
+  actualizarPuntos();
   document.querySelectorAll(".coor-boton").forEach(b => b.disabled = true);
 
   if (ronda >= totalRondas) {
-    setTimeout(mostrarMensajeFinal, 1500); // Espera a mostrar el mensaje final
+    setTimeout(mostrarMensajeFinal, 1500);
   } else {
-    setTimeout(generarJuego, 1500); // Continúa normalmente
+    setTimeout(generarJuego, 1500);
   }
-  }
+}
 
-  function actualizarPuntos() {
-    const puntosDiv = document.getElementById("coor-puntos");
-    puntosDiv.textContent = `Puntos: ${puntos}`;
-  }
+function actualizarPuntos() {
+  const puntosDiv = document.getElementById("coor-puntos");
+  puntosDiv.textContent = `Puntos: ${puntos}`;
+}
 
-  function limpiarFeedback() {
-    document.getElementById("coor-feedback").textContent = "";
-  }
+function limpiarFeedback() {
+  document.getElementById("coor-feedback").textContent = "";
+}
 
-  function mostrarMensajeFinal() {
-  // Mostrar popup con puntos
+function mostrarMensajeFinal() {
   const popup = document.getElementById("popup-final");
   const popupTexto = document.getElementById("popup-puntos");
 
   popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
-  popup.style.display = "flex"; // mostrar
-
-  // Esperar y reiniciar
-  setTimeout(() => {
-    popup.style.display = "none";
-    puntos = 0;
-    ronda = 0;
-    generarJuego();
-  }, 4000);
+  popup.style.display = "flex";
 }
+
+function reiniciarJuego() {
+  const popup = document.getElementById("popup-final");
+  popup.style.display = "none";
+  puntos = 0;
+  ronda = 0;
   generarJuego();
+}
+
+function salirDelJuego() {
+  const popup = document.getElementById("popup-final");
+  popup.style.display = "none";
+  window.location.href = "principalJuegos";
+}
+
+generarJuego();
 </script>
+
 {{> fragments/footer}}

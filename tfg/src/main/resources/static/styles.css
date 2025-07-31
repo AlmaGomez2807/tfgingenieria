@@ -46,6 +46,22 @@ footer {
   margin-left: 63px;
   color: #000000;
 }
+.custom-navbarIni {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #7ec8e3;
+  border-bottom: 2px solid #ccc;
+}
+
+.navbar-titleIni {
+  margin: 0;
+  font-size: 2rem;
+  text-align: center;
+  flex-grow: 1;
+  color: #000000;
+}
 
 .icon-left,
 .icon-right {
@@ -287,7 +303,11 @@ footer {
   align-items: center;
   justify-content: center;
 }
-
+.conflict-plane {
+  outline: 3px solid red;
+  border-radius: 50%;
+  background-color: rgba(255, 0, 0, 0.1);
+}
 /* Botones apilados verticalmente en el lateral derecho */
 .hc-opciones {
   display: flex;
@@ -488,6 +508,23 @@ footer {
   margin-bottom: 0.5rem;
   color: #12c1ed;
 }
+.popup-boton {
+  font-size: 1.2rem;
+  padding: 0.7rem 2rem;
+  margin: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #12c1ed;
+  color: white;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.popup-boton:hover {
+  background-color: #0fa5cb;
+}
+
+
 
 /*HASTA AQUÍ COORDINATE*/
 
