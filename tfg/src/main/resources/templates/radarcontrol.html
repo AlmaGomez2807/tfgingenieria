@@ -204,7 +204,7 @@ function movePlanes() {
       }
     }
 
-    // Avión azul solo suma en meta azul (metas[1])
+    // Avión azul solo suma en meta azul 
     if (!plane2EnMeta) {
       if (estaEnMeta(x2, y2, metas[1])) {
         sumarPuntos(10);
@@ -322,6 +322,9 @@ function movePlanes() {
     timerInterval = setInterval(actualizarTemporizador, 1000);
     movePlanes();
   }
+  function salirDelJuego() {
+  window.location.href = "/principalJuegos"; 
+}
 
   function iniciarJuego() {
     resetGame();

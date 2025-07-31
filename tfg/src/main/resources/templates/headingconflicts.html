@@ -89,18 +89,11 @@ function sonConflicto(p1, p2, allPlanes) {
   const [x1, y1, h1] = [p1.x, p1.y, p1.heading];
   const [x2, y2, h2] = [p2.x, p2.y, p2.heading];
 
-  const opuestas = (
-    (h1 === 'E' && h2 === 'W') ||
-    (h1 === 'W' && h2 === 'E') ||
-    (h1 === 'N' && h2 === 'S') ||
-    (h1 === 'S' && h2 === 'N')
-  );
-
-  if (!opuestas) return false;
-
-  if (y1 === y2 && (h1 === 'E' || h1 === 'W')) {
+  // Conflicto horizontal: misma fila (y), opuestos (E-W)
+  if (y1 === y2 && ((h1 === 'E' && h2 === 'W' && x1 < x2) || (h1 === 'W' && h2 === 'E' && x2 < x1))) {
     const minX = Math.min(x1, x2);
     const maxX = Math.max(x1, x2);
+    // Comprobar si hay aviones entre ambos
     for (let plane of allPlanes) {
       if (plane.y === y1 && plane.x > minX && plane.x < maxX) {
         return false;
@@ -109,7 +102,8 @@ function sonConflicto(p1, p2, allPlanes) {
     return true;
   }
 
-  if (x1 === x2 && (h1 === 'N' || h1 === 'S')) {
+  // Conflicto vertical: misma columna (x), opuestos (N-S) con S *encima* de N
+  if (x1 === x2 && ((h1 === 'N' && h2 === 'S' && y2 < y1) || (h1 === 'S' && h2 === 'N' && y1 < y2))) {
     const minY = Math.min(y1, y2);
     const maxY = Math.max(y1, y2);
     for (let plane of allPlanes) {
@@ -130,18 +124,24 @@ function renderPlanes() {
   planes.forEach(plane => {
     const div = document.createElement("div");
     div.className = "hc-plane";
-
     if (mostrarConflicto && conflictPair.includes(plane.id)) {
       div.classList.add("conflict-plane");
     }
 
-    div.style.transform = `rotate(${directionAngles[plane.heading]}deg)`;
     div.style.gridColumnStart = plane.x + 1;
     div.style.gridRowStart = plane.y + 1;
-    div.innerHTML = "✈️";
+
+    const img = document.createElement("img");
+    img.src = "images/hc-plane.png"; 
+    img.alt = "avión";
+    img.className = "plane-icon";
+    img.style.transform = `rotate(${directionAngles[plane.heading]}deg)`;
+
+    div.appendChild(img);
     grid.appendChild(div);
   });
 }
+
 
 function handleAnswer(playerSaysConflict) {
   const feedback = document.getElementById("hc-feedback");

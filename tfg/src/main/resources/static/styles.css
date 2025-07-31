@@ -296,13 +296,18 @@ footer {
   margin-bottom: 1rem;
 }
 
-/* Icono avión */
 .hc-plane {
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  width: 30px;
+  height: 30px;
 }
+
+.hc-plane img.plane-icon {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.2s;
+}
+
 .conflict-plane {
   outline: 3px solid red;
   border-radius: 50%;
