@@ -2,19 +2,16 @@
 
 <div class="hc-wrapper">
   <div class="hc-contenedor-flex">
+    <div class="hc-timer marcador" id="coor-timer">Tiempo: 90s</div>
     <div class="hc-juego">
       <h1 class="hc-titulo">¿Ves algún posible choque?</h1>
-      <div class="hc-ronda" id="hc-ronda">Ronda 1 de 10</div>
-
+      <div id="hc-feedback" class="hc-feedback"></div>
       <div class="hc-grid" id="hc-grid"></div>
-
-      
     </div>
 
     <!-- Lateral derecho: marcador + botones -->
     <div class="hc-lateral-derecha">
       <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
-      <div id="hc-feedback" class="hc-feedback"></div>
       <div class="hc-opciones">
         <button class="hc-boton" onclick="handleAnswer(true)">Hay conflicto</button>
         <button class="hc-boton" onclick="handleAnswer(false)">No hay conflicto</button>
@@ -33,6 +30,7 @@
     </div>
   </div>
 </div>
+
 <script>
 const gridCols = 15;
 const gridRows = 10;
@@ -43,9 +41,10 @@ let planes = [];
 let hasConflict = false;
 let conflictPair = [];
 let puntos = 0;
-let ronda = 1;
-const totalRondas = 10;
 let mostrarConflicto = false;
+
+let tiempoRestante = 90;
+let temporizador;
 
 function generatePlanes() {
   planes = [];
@@ -89,11 +88,9 @@ function sonConflicto(p1, p2, allPlanes) {
   const [x1, y1, h1] = [p1.x, p1.y, p1.heading];
   const [x2, y2, h2] = [p2.x, p2.y, p2.heading];
 
-  // Conflicto horizontal: misma fila (y), opuestos (E-W)
   if (y1 === y2 && ((h1 === 'E' && h2 === 'W' && x1 < x2) || (h1 === 'W' && h2 === 'E' && x2 < x1))) {
     const minX = Math.min(x1, x2);
     const maxX = Math.max(x1, x2);
-    // Comprobar si hay aviones entre ambos
     for (let plane of allPlanes) {
       if (plane.y === y1 && plane.x > minX && plane.x < maxX) {
         return false;
@@ -102,7 +99,6 @@ function sonConflicto(p1, p2, allPlanes) {
     return true;
   }
 
-  // Conflicto vertical: misma columna (x), opuestos (N-S) con S *encima* de N
   if (x1 === x2 && ((h1 === 'N' && h2 === 'S' && y2 < y1) || (h1 === 'S' && h2 === 'N' && y1 < y2))) {
     const minY = Math.min(y1, y2);
     const maxY = Math.max(y1, y2);
@@ -142,7 +138,6 @@ function renderPlanes() {
   });
 }
 
-
 function handleAnswer(playerSaysConflict) {
   const feedback = document.getElementById("hc-feedback");
   mostrarConflicto = true;
@@ -158,22 +153,16 @@ function handleAnswer(playerSaysConflict) {
     feedback.style.color = "red";
   }
 
-  ronda++;
   actualizarUI();
 
-  if (ronda > totalRondas) {
-    setTimeout(mostrarMensajeFinal, 1500);
-  } else {
-    setTimeout(() => {
-      feedback.textContent = "";
-      resetGame();
-    }, 1500);
-  }
+  setTimeout(() => {
+    feedback.textContent = "";
+    resetGame();
+  }, 1500);
 }
 
 function actualizarUI() {
   document.getElementById("coor-puntos").textContent = `Puntos: ${puntos}`;
-  document.getElementById("hc-ronda").textContent = `Ronda ${Math.min(ronda, totalRondas)} de ${totalRondas}`;
 }
 
 function resetGame() {
@@ -182,20 +171,36 @@ function resetGame() {
 }
 
 function mostrarMensajeFinal() {
+  clearInterval(temporizador);
+  document.querySelectorAll(".hc-boton").forEach(b => b.disabled = true);
   const popup = document.getElementById("popup-final");
   const popupTexto = document.getElementById("popup-puntos");
-
   popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
   popup.style.display = "flex";
+}
+
+function actualizarTemporizador() {
+  tiempoRestante--;
+  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}s`;
+  if (tiempoRestante <= 0) {
+    mostrarMensajeFinal();
+  }
+}
+
+function iniciarJuego() {
+  puntos = 0;
+  tiempoRestante = 90;
+  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}s`;
+  document.querySelectorAll(".hc-boton").forEach(b => b.disabled = false);
+  actualizarUI();
+  resetGame();
+  temporizador = setInterval(actualizarTemporizador, 1000);
 }
 
 function reiniciarJuego() {
   const popup = document.getElementById("popup-final");
   popup.style.display = "none";
-  puntos = 0;
-  ronda = 1;
-  actualizarUI();
-  resetGame();
+  iniciarJuego();
 }
 
 function salirDelJuego() {
@@ -204,8 +209,8 @@ function salirDelJuego() {
   window.location.href = "principalJuegos";
 }
 
-actualizarUI();
-resetGame();
+iniciarJuego();
 </script>
+
 
 {{> fragments/footer}}

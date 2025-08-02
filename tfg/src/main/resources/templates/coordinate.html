@@ -1,6 +1,8 @@
 {{> fragments/header}}
 <div class="coor-wrapper">
+  
   <div class="coor-layout">
+    <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
     <div class="coor-juego">
       <h1 class="coor-titulo">¿Cuál es la respuesta correcta?</h1>
       <div id="coor-pregunta" class="coor-pregunta"></div>
@@ -33,15 +35,10 @@
 const size = 5;
 let respuestaCorrecta = "";
 let puntos = 0;
-let ronda = 0;
-const totalRondas = 10;
+let tiempoRestante = 90;
+let temporizador;
 
 function generarJuego() {
-  if (ronda >= totalRondas) {
-    mostrarMensajeFinal();
-    return;
-  }
-
   const grid = document.getElementById("coor-grid");
   grid.innerHTML = "";
 
@@ -70,7 +67,7 @@ function generarJuego() {
   const dx = coordenadaTorreX - coordenadaAvionX;
   const dy = coordenadaTorreY - coordenadaAvionY;
 
-  document.getElementById("coor-pregunta").textContent = `Ronda ${ronda + 1} de ${totalRondas}: ¿Qué distancia hay desde el avión hasta la meta?`;
+  document.getElementById("coor-pregunta").textContent = `¿Qué distancia hay desde el avión hasta la meta?`;
   const distancia = calcularDistanciaMN(dx, dy);
   respuestaCorrecta = distancia.toString();
 
@@ -120,15 +117,10 @@ function verificarRespuesta(boton) {
     feedback.style.color = "red";
   }
 
-  ronda++;
   actualizarPuntos();
   document.querySelectorAll(".coor-boton").forEach(b => b.disabled = true);
 
-  if (ronda >= totalRondas) {
-    setTimeout(mostrarMensajeFinal, 1500);
-  } else {
-    setTimeout(generarJuego, 1500);
-  }
+  setTimeout(generarJuego, 1500);
 }
 
 function actualizarPuntos() {
@@ -141,6 +133,8 @@ function limpiarFeedback() {
 }
 
 function mostrarMensajeFinal() {
+  clearInterval(temporizador);
+  document.querySelectorAll(".coor-boton").forEach(b => b.disabled = true);
   const popup = document.getElementById("popup-final");
   const popupTexto = document.getElementById("popup-puntos");
 
@@ -148,12 +142,28 @@ function mostrarMensajeFinal() {
   popup.style.display = "flex";
 }
 
+function actualizarTemporizador() {
+  const timer = document.getElementById("coor-timer");
+  tiempoRestante--;
+  timer.textContent = `Tiempo: ${tiempoRestante}s`;
+
+  if (tiempoRestante <= 0) {
+    mostrarMensajeFinal();
+  }
+}
+
+function iniciarJuego() {
+  puntos = 0;
+  tiempoRestante = 90;
+  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}s`;
+  generarJuego();
+  temporizador = setInterval(actualizarTemporizador, 1000);
+}
+
 function reiniciarJuego() {
   const popup = document.getElementById("popup-final");
   popup.style.display = "none";
-  puntos = 0;
-  ronda = 0;
-  generarJuego();
+  iniciarJuego();
 }
 
 function salirDelJuego() {
@@ -162,7 +172,8 @@ function salirDelJuego() {
   window.location.href = "principalJuegos";
 }
 
-generarJuego();
+iniciarJuego();
 </script>
+
 
 {{> fragments/footer}}

@@ -245,7 +245,7 @@ footer {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 65px;
+  gap: 30px;
   flex-wrap: wrap;
 }
 
@@ -265,7 +265,7 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-width: 16rem; 
+  min-width: 8rem; 
   align-items: center;
   margin-top: 1rem;
 }
@@ -277,11 +277,7 @@ footer {
   color: #333;
 }
 
-.hc-ronda {
-  font-size: 1.1rem;
-  margin-bottom: 15px;
-  color: #333;
-}
+
 
 /* Grid de aviones */
 .hc-grid {
@@ -319,7 +315,20 @@ footer {
   flex-direction: column;
   gap: 15px;
   width: 100%;
-  margin-top: 12.5rem;
+  margin-top: 17.4rem;
+}
+
+.hc-timer.marcador {
+  min-height: 60px;
+  padding: 15px 20px;
+  background-color: #ffffff;
+  border: 2px solid #12c1ed;
+  border-radius: 10px;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  text-align: center;
+  color: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 /* Botones estilo */
@@ -345,8 +354,7 @@ footer {
   font-size: 1.4rem;
   font-weight: bold;
   min-height: 2rem;
-  margin-top: 12rem;
-  margin-bottom: -10.9rem;
+  margin-bottom: 1rem;
   color: #333;
   width: 100%;
 }
@@ -470,7 +478,7 @@ footer {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 4rem;
+  gap: 3rem;
   position: relative;
   margin-top: -3rem;
 }
@@ -910,7 +918,7 @@ footer {
   justify-content: center;
   flex-wrap: wrap;
   gap: 2rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .fig-button {

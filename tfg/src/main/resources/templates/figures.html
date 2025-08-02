@@ -9,7 +9,6 @@
     <!-- Zona central: juego -->
     <div class="fig-juego">
       <h1 class="fig-titulo">¡Elige la figura correcta!</h1>
-      <div id="fig-ronda" class="fig-ronda">Ronda 1 de 10</div>
       <div id="fig-description" class="fig-description"></div>
 
       <div class="fig-center-container">
@@ -39,15 +38,13 @@
   </div>
 </div>
 
+
 <script>
   const shapes = ['●', '▲', '◆', '★', '◉', '◼', '▣'];
   const colors = ['black', 'red', 'green', 'blue', 'orange', 'purple', 'pink'];
 
   let mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
-  let round = 0;
-  const maxRounds = 10;
   let score = 0;
-
   let tiempoRestante = 60;
   let timerInterval = null;
   let juegoTerminado = false;
@@ -60,7 +57,6 @@
   const popup = document.getElementById('popup-final');
   const popupPuntos = document.getElementById('popup-puntos');
   const feedback = document.getElementById('fig-feedback');
-  const rondaDisplay = document.getElementById('fig-ronda');
 
   function getRandomItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -90,13 +86,8 @@
     timerDisplay.textContent = `Tiempo: ${tiempoRestante}s`;
   }
 
-  function updateRondaDisplay() {
-    rondaDisplay.textContent = `Ronda ${round} de ${maxRounds}`;
-  }
-
   function reiniciarJuego() {
     score = 0;
-    round = 0;
     tiempoRestante = 60;
     juegoTerminado = false;
     updateScoreDisplay();
@@ -111,7 +102,7 @@
   }
 
   function salirDelJuego() {
-    window.location.href = "/"; // Cambia esta ruta si tu menú está en otra URL
+    window.location.href = "/"; // Cambia si tu menú está en otra URL
   }
 
   function terminarJuego() {
@@ -122,7 +113,6 @@
     mainFigure.innerHTML = '';
     optionsContainer.innerHTML = '';
     description.textContent = '';
-    rondaDisplay.textContent = '';
   }
 
   function actualizarTemporizador() {
@@ -138,16 +128,8 @@
   function newRound() {
     if (juegoTerminado) return;
 
-    if (round >= maxRounds) {
-      terminarJuego();
-      return;
-    }
-
     feedback.textContent = '';
     optionsContainer.innerHTML = '';
-    round++;
-    updateRondaDisplay();
-
     mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
 
     const baseShape = getRandomItem(shapes);
@@ -227,5 +209,6 @@
   updateTimerDisplay();
   reiniciarJuego();
 </script>
+
 
 {{> fragments/footer}}
