@@ -2,7 +2,7 @@
 <div class="coor-wrapper">
   
   <div class="coor-layout">
-    <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
+    <div class="coor-timer marcador" id="coor-timer">Tiempo: 90</div>
     <div class="coor-juego">
       <h1 class="coor-titulo">¿Cuál es la respuesta correcta?</h1>
       <div id="coor-pregunta" class="coor-pregunta"></div>
@@ -31,11 +31,15 @@
   </div>
 </div>
 
+
+<script src="/js/api.js"></script>
 <script>
 const size = 5;
 let respuestaCorrecta = "";
-let puntos = 0;
-let tiempoRestante = 90;
+let score = 0;
+let aciertos = 0;
+let fallos = 0;
+let tiempoRestante = 5;
 let temporizador;
 
 function generarJuego() {
@@ -108,11 +112,13 @@ function verificarRespuesta(boton) {
   const feedback = document.getElementById("coor-feedback");
 
   if (boton.textContent === respuestaCorrecta) {
-    puntos += 10;
+    score += 10;
+    aciertos += 1;
     feedback.textContent = "¡Correcto! +10 puntos 🎉";
     feedback.style.color = "green";
   } else {
-    puntos -= 5;
+    score -= 5;
+    fallos += 1;
     feedback.textContent = `¡Incorrecto! -5 puntos ❌ (Respuesta: ${respuestaCorrecta})`;
     feedback.style.color = "red";
   }
@@ -125,7 +131,7 @@ function verificarRespuesta(boton) {
 
 function actualizarPuntos() {
   const puntosDiv = document.getElementById("coor-puntos");
-  puntosDiv.textContent = `Puntos: ${puntos}`;
+  puntosDiv.textContent = `Puntos: ${score}`;
 }
 
 function limpiarFeedback() {
@@ -138,14 +144,28 @@ function mostrarMensajeFinal() {
   const popup = document.getElementById("popup-final");
   const popupTexto = document.getElementById("popup-puntos");
 
-  popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+  popupTexto.textContent = `Puntuación Total: ${score} puntos`;
   popup.style.display = "flex";
+  console.log(score);
+  const username = getCookie("username");
+
+  const payload = {
+  username: username,
+  score: score,
+  aciertos: aciertos,
+  fallos: fallos
+  };
+
+  const jsonString = JSON.stringify(payload, null, 2);
+  console.log(jsonString);
+
+  enviar("/games/coordinate", jsonString, "POST");
 }
 
 function actualizarTemporizador() {
   const timer = document.getElementById("coor-timer");
   tiempoRestante--;
-  timer.textContent = `Tiempo: ${tiempoRestante}s`;
+  timer.textContent = `Tiempo: ${tiempoRestante}`;
 
   if (tiempoRestante <= 0) {
     mostrarMensajeFinal();
@@ -153,9 +173,11 @@ function actualizarTemporizador() {
 }
 
 function iniciarJuego() {
-  puntos = 0;
-  tiempoRestante = 90;
-  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}s`;
+  score = 0;
+  aciertos = 0;
+  fallos = 0;
+  tiempoRestante = 5;
+  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}`;
   generarJuego();
   temporizador = setInterval(actualizarTemporizador, 1000);
 }
@@ -169,7 +191,7 @@ function reiniciarJuego() {
 function salirDelJuego() {
   const popup = document.getElementById("popup-final");
   popup.style.display = "none";
-  window.location.href = "principalJuegos";
+  window.location.href = "/principalJuegos";
 }
 
 iniciarJuego();

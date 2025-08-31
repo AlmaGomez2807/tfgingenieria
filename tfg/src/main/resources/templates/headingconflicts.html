@@ -2,7 +2,7 @@
 
 <div class="hc-wrapper">
   <div class="hc-contenedor-flex">
-    <div class="hc-timer marcador" id="coor-timer">Tiempo: 90s</div>
+    <div class="hc-timer marcador" id="coor-timer">Tiempo: 90</div>
     <div class="hc-juego">
       <h1 class="hc-titulo">¿Ves algún posible choque?</h1>
       <div id="hc-feedback" class="hc-feedback"></div>
@@ -31,6 +31,8 @@
   </div>
 </div>
 
+
+<script src="/js/api.js"></script>
 <script>
 const gridCols = 15;
 const gridRows = 10;
@@ -40,10 +42,12 @@ const directionAngles = { N: 0, E: 90, S: 180, W: 270 };
 let planes = [];
 let hasConflict = false;
 let conflictPair = [];
-let puntos = 0;
+let score = 0;
+let aciertos = 0;
+let fallos = 0;
 let mostrarConflicto = false;
 
-let tiempoRestante = 90;
+let tiempoRestante = 5;
 let temporizador;
 
 function generatePlanes() {
@@ -128,7 +132,7 @@ function renderPlanes() {
     div.style.gridRowStart = plane.y + 1;
 
     const img = document.createElement("img");
-    img.src = "images/hc-plane.png"; 
+    img.src = "/images/hc-plane.png"; 
     img.alt = "avión";
     img.className = "plane-icon";
     img.style.transform = `rotate(${directionAngles[plane.heading]}deg)`;
@@ -144,12 +148,14 @@ function handleAnswer(playerSaysConflict) {
   renderPlanes();
 
   if (playerSaysConflict === hasConflict) {
-    puntos += 10;
+    score += 10;
     feedback.textContent = "¡Correcto! +10 puntos 🎉";
+    aciertos += 1;
     feedback.style.color = "green";
   } else {
-    puntos -= 5;
+    score -= 5;
     feedback.textContent = "¡Incorrecto! -5 puntos ❌";
+    fallos += 1;
     feedback.style.color = "red";
   }
 
@@ -162,7 +168,7 @@ function handleAnswer(playerSaysConflict) {
 }
 
 function actualizarUI() {
-  document.getElementById("coor-puntos").textContent = `Puntos: ${puntos}`;
+  document.getElementById("coor-puntos").textContent = `Puntos: ${score}`;
 }
 
 function resetGame() {
@@ -175,22 +181,36 @@ function mostrarMensajeFinal() {
   document.querySelectorAll(".hc-boton").forEach(b => b.disabled = true);
   const popup = document.getElementById("popup-final");
   const popupTexto = document.getElementById("popup-puntos");
-  popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+  popupTexto.textContent = `Puntuación Total: ${score} puntos`;
   popup.style.display = "flex";
+
+  console.log(score);
+  const username = getCookie("username");
+
+  const payload = {
+  username: username,
+  score: score,
+  aciertos: aciertos,
+  fallos: fallos
+  };
+
+  const jsonString = JSON.stringify(payload, null, 2);
+  console.log(jsonString);
+  enviar("/games/headingconflicts", jsonString, "POST");
 }
 
 function actualizarTemporizador() {
   tiempoRestante--;
-  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}s`;
+  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}`;
   if (tiempoRestante <= 0) {
     mostrarMensajeFinal();
   }
 }
 
 function iniciarJuego() {
-  puntos = 0;
-  tiempoRestante = 90;
-  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}s`;
+  score = 0;
+  tiempoRestante = 5;
+  document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}`;
   document.querySelectorAll(".hc-boton").forEach(b => b.disabled = false);
   actualizarUI();
   resetGame();
@@ -199,6 +219,9 @@ function iniciarJuego() {
 
 function reiniciarJuego() {
   const popup = document.getElementById("popup-final");
+  aciertos = 0;
+  fallos = 0;
+  score = 0;
   popup.style.display = "none";
   iniciarJuego();
 }
@@ -206,7 +229,7 @@ function reiniciarJuego() {
 function salirDelJuego() {
   const popup = document.getElementById("popup-final");
   popup.style.display = "none";
-  window.location.href = "principalJuegos";
+  window.location.href = "/principalJuegos";
 }
 
 iniciarJuego();

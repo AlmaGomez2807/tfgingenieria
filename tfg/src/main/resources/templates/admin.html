@@ -1,0 +1,68 @@
+{{> fragments/header}}
+<div class="container">
+     <div class="ranking-container">
+        <div class="ranking-title">Lista de usuarios</div>
+          <!-- Aquí se insertarán los jugadores -->
+          <table id="myTable" class="ranking-list">
+            <th>Usuario</th>
+            <th>Coordinate</th>
+            <th>Figures</th>
+            <th>Heading Conflicts</th>
+            <th>Multitask</th>
+            <th>Radar Control</th>
+            <th>Ver progresión</th>
+            <th>Eliminar</th>
+          {{#listaUsuarios}}
+          <tr id="row-{{username}}" class="row-admin">
+              <td class="ranking-name">{{username}}</td>
+              <td class="ranking-score">{{maxCoordinate}}</td>
+              <td class="ranking-score">{{maxFigures}}</td>
+              <td class="ranking-score">{{maxHConflicts}}</td>
+              <td class="ranking-score">{{maxMultitask}}</td>
+              <td class="ranking-score">{{maxRControl}}</td>
+              <td><a class="hc-boton" href="/progresion/{{username}}">Ver progresión</a></td>
+              <td><button class="btn btn-danger" onclick="popUp('{{username}}')">Eliminar</button></td>
+          </tr>
+          {{/listaUsuarios}}
+          
+          {{^listaUsuarios}}
+          <td>-</td>
+          <td>-</td>
+          {{/listaUsuarios}}
+          </table>
+      </div>
+</div>
+
+<div id="popup-final" class="coor-popup">
+  <div class="coor-popup-content">
+    <h2>¿Eliminar usuario <span id="nombreusuario"></span>?</h2>
+    <div style="margin-top: 1.5rem;">
+      <button onclick="cerrarPopup()" class="popup-boton">Cancelar</button>
+      <button id="btnEliminar" class="popup-boton btn-rojo" data-username="">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function popUp(username){
+    document.getElementById("popup-final").style.display = "flex";
+    document.getElementById("btnEliminar").dataset.username = username;
+  }
+  function cerrarPopup(){
+    document.getElementById("popup-final").style.display = "none";
+  }
+
+  document.getElementById("btnEliminar").addEventListener("click", function() {
+    const username = document.getElementById("btnEliminar").dataset.username;
+    fetch("/user/eliminar/"+username, {
+        method: "DELETE"
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+    document.getElementById("row-"+username).style.display = "none";
+    cerrarPopup();
+});
+</script>
+
+{{> fragments/footer}}

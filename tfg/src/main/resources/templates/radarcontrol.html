@@ -1,10 +1,10 @@
 {{> fragments/header}}
-<div class="container-fluid">
+<div class="rk-container-fluid">
   <h1 class="rk-title">Lleva cada avión a su correspondiente meta</h1>
 
   <div class="row justify-content-between text-center mb-3">
     <div class="col-3 text-start">
-      <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
+      <div class="coor-timer marcador" id="coor-timer">Tiempo: 90</div>
     </div>
     <div class="col-3 text-end">
       <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
@@ -65,6 +65,8 @@
   </div>
 </div>
 
+
+<script src="/js/api.js"></script>
 <script>
   const plane1 = document.getElementById('plane1');
   const plane2 = document.getElementById('plane2');
@@ -84,8 +86,12 @@
   let radarWidth = 0;
   let radarHeight = 0;
 
-  let puntos = 0;
-  let tiempoRestante = 90;
+  let score = 0;
+  let aciertos = 0;
+  let fallos = 0;
+  let totalAzul = 0;
+  let totalRojo = 0;
+  let tiempoRestante = 20;
   let timerInterval = null;
   let juegoTerminado = false;
 
@@ -227,10 +233,13 @@ function movePlanes() {
   function changeDirection(planeId, direction) {
     const speed = 0.3;
     if (planeId === 'plane1') {
+      totalRojo += 1;
+      console.log(totalRojo)
       dx1 = direction === 'left' ? -speed : speed;
       dy1 = 0;
       plane1.style.transform = direction === 'left' ? 'rotate(180deg)' : 'rotate(0deg)';
     } else if (planeId === 'plane2') {
+      totalAzul += 1;
       dx2 = direction === 'left' ? -speed : speed;
       dy2 = 0;
       plane2.style.transform = direction === 'left' ? 'rotate(180deg)' : 'rotate(0deg)';
@@ -240,10 +249,12 @@ function movePlanes() {
   function changeAltitude(planeId, direction) {
     const speed = 0.3;
     if (planeId === 'plane1') {
+      totalRojo += 1;
       dy1 = direction === 'up' ? -speed : speed;
       dx1 = 0;
       plane1.style.transform = direction === 'up' ? 'rotate(-90deg)' : 'rotate(90deg)';
     } else if (planeId === 'plane2') {
+      totalAzul += 1;
       dy2 = direction === 'up' ? -speed : speed;
       dx2 = 0;
       plane2.style.transform = direction === 'up' ? 'rotate(-90deg)' : 'rotate(90deg)';
@@ -253,7 +264,7 @@ function movePlanes() {
   function actualizarTemporizador() {
     if (tiempoRestante > 0) {
       tiempoRestante--;
-      timerEl.textContent = `Tiempo: ${tiempoRestante}s`;
+      timerEl.textContent = `Tiempo: ${tiempoRestante}`;
     }
     if (tiempoRestante <= 0 && !juegoTerminado) {
       terminarJuego();
@@ -266,8 +277,8 @@ function movePlanes() {
     const radarSize = getRadarSize();
     radarWidth = radarSize.width;
     radarHeight = radarSize.height;
-    puntos = 0;
-    tiempoRestante = 90;
+    score = 0;
+    tiempoRestante = 20;
     const pos1 = getRandomPosition();
     const pos2 = getRandomPosition();
     x1 = pos1.x;
@@ -285,18 +296,26 @@ function movePlanes() {
     plane2.style.left = x2 + 'px';
     plane2.style.top = y2 + 'px';
     juegoTerminado = false;
+    popup.style.display = "none";
+    score = 0;
+    aciertos = 0;
+    fallos = 0;
+    totalAzul = 0;
+    totalRojo = 0;
   }
 
   function sumarPuntos(valor) {
-  puntos += valor;
-  pointsEl.textContent = `Puntos: ${puntos}`;
+  score += valor;
+  pointsEl.textContent = `Puntos: ${score}`;
 
   const feedback = document.getElementById("rk-feedback");
   if (valor > 0) {
     feedback.textContent = `¡Correcto! +${valor} puntos 🎉`;
+    aciertos += 1;
     feedback.style.color = "green";
   } else {
     feedback.textContent = `¡Incorrecto! ${valor} puntos ❌`;
+    fallos += 1;
     feedback.style.color = "red";
   }
   clearTimeout(feedback._timeout);
@@ -309,13 +328,27 @@ function movePlanes() {
   function terminarJuego() {
     juegoTerminado = true;
     clearInterval(timerInterval);
-    popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+    popupTexto.textContent = `Puntuación Total: ${score} puntos`;
     popup.style.display = "flex";
-    setTimeout(() => {
-      popup.style.display = "none";
-      reiniciarJuego();
-    }, 4000);
-  }
+
+    console.log(score);
+    const username = getCookie("username");
+
+    const payload = {
+      username: username,
+      score: score,
+      aciertos: aciertos,
+      fallos: fallos,
+      totalAzul: totalAzul,
+      totalRojo: totalRojo
+    };
+
+    const jsonString = JSON.stringify(payload, null, 2);
+    console.log(jsonString);
+
+    enviar("/games/rcontrol", jsonString, "POST");
+}
+
 
   function reiniciarJuego() {
     resetGame();

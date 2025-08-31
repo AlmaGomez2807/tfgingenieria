@@ -5,7 +5,7 @@
   <div class="mt-flex">
     <!-- Juego principal -->
      
-    <div class="coor-timer marcador" id="coor-timer">Tiempo: 90s</div>
+    <div class="coor-timer marcador" id="coor-timer">Tiempo: 90</div>
     <div class="mt-container">
       
       <!-- FILA 1: Iconos y pregunta -->
@@ -61,6 +61,7 @@
 </div>
 
 <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<script src="/js/api.js"></script>
 <script>
   const figures = ['✈️', '🛩️', '🛫', '🛬', '🚁​', '🚀​', '👩‍✈️​', '👨‍✈️'];
   const figure1 = document.getElementById('figure1');
@@ -78,16 +79,26 @@
   let currentEquationCorrect = true;
   let waitingForSpace = false;
   let figuresAreEqual = false;
-  let puntos = 0;
-  let tiempoRestante = 90;
+  let score = 0;
+  let aciertos = 0;
+  let fallos = 0;
+  
+  let aciertoFiguras = 0;
+  let falloFiguras = 0;
+  let aciertoOperacion = 0;
+  let falloOperacion = 0;
+  let aciertoEspacio = 0;
+  let falloEspacio = 0;
+
+  let tiempoRestante = 10;
   let timerInterval = null;
   let beepInterval = null;
   let juegoTerminado = false;
 
   function actualizarPuntos(valor) {
-    puntos += valor;
-    if (puntos < 0) puntos = 0;
-    puntosEl.textContent = `Puntos: ${puntos}`;
+    score += valor;
+    if (score < 0) score = 0;
+    puntosEl.textContent = `Puntos: ${score}`;
   }
 
   function randomFigure() {
@@ -115,7 +126,19 @@
   function checkFigures(playerThinksEqual) {
     if (juegoTerminado) return;
     const isCorrect = playerThinksEqual === figuresAreEqual;
+    if(isCorrect){
+      aciertoFiguras += 1;
+    }else{
+      falloFiguras += 1;
+    }
+    
     figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos' : '❌ Incorrecto -5 puntos';
+    if (isCorrect){
+      aciertos += 1;
+    }
+    else{
+      fallos += 1;
+    }
     actualizarPuntos(isCorrect ? 10 : -5);
     setTimeout(() => {
       figuresFeedback.textContent = '';
@@ -126,7 +149,15 @@
   function checkEquation(playerThinksCorrect) {
     if (juegoTerminado) return;
     const isCorrect = playerThinksCorrect === currentEquationCorrect;
+    if(isCorrect){
+      aciertoOperacion += 1;
+      aciertos += 1;
+    }else{
+      falloOperacion += 1;
+      fallos += 1;
+    }
     equationFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos' : '❌ Incorrecto -5 puntos';
+
     actualizarPuntos(isCorrect ? 10 : -5);
     setTimeout(() => {
       equationFeedback.textContent = '';
@@ -142,27 +173,30 @@
     setTimeout(() => {
       if (waitingForSpace) {
         soundFeedback.textContent = '⏱️ Demasiado tarde... -5 puntos';
+        falloEspacio = + 1;
         actualizarPuntos(-5);
         waitingForSpace = false;
       }
     }, 2000);
-  }
+
 
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
       e.preventDefault();
       if (waitingForSpace && !juegoTerminado) {
         soundFeedback.textContent = '✅ ¡Bien hecho! +10 puntos';
+        aciertoEspacio += 1;
+        aciertos += 1;
         actualizarPuntos(10);
         waitingForSpace = false;
       }
     }
   });
-
+  }
   function actualizarTemporizador() {
     if (tiempoRestante > 0) {
       tiempoRestante--;
-      timerEl.textContent = `Tiempo: ${tiempoRestante}s`;
+      timerEl.textContent = `Tiempo: ${tiempoRestante}`;
     }
     if (tiempoRestante <= 0 && !juegoTerminado) {
       terminarJuego();
@@ -173,14 +207,35 @@
     juegoTerminado = true;
     clearInterval(timerInterval);
     clearInterval(beepInterval);
-    popupTexto.textContent = `Puntuación Total: ${puntos} puntos`;
+    popupTexto.textContent = `Puntuación Total: ${score} puntos`;
     popup.style.display = "flex";
+
+    console.log(score);
+    const username = getCookie("username");
+
+    const payload = {
+    username: username,
+    score: score,
+    aciertos: aciertos,
+    fallos: fallos,
+    aciertoFiguras: aciertoFiguras,
+    falloFiguras: falloFiguras,
+    aciertoOperacion: aciertoOperacion,
+    falloOperacion: falloOperacion,
+    aciertoEspacio: aciertoEspacio,
+    falloEspacio: falloEspacio
+    };
+
+    const jsonString = JSON.stringify(payload, null, 2);
+    console.log(jsonString);
+
+    enviar("/games/multitask", jsonString, "POST");
   }
 
   function reiniciarJuego() {
     popup.style.display = "none";
-    puntos = 0;
-    tiempoRestante = 90;
+    score = 0;
+    tiempoRestante = 10;
     puntosEl.textContent = 'Puntos: 0';
     timerEl.textContent = 'Tiempo: 90s';
     soundFeedback.textContent = '';
@@ -192,10 +247,19 @@
     generateEquation();
     timerInterval = setInterval(actualizarTemporizador, 1000);
     beepInterval = setInterval(playBeep, 9000 + Math.random() * 5000);
+    score = 0;
+    aciertos = 0;
+    fallos = 0;
+    aciertoEspacio = 0;
+    falloEspacio = 0;
+    aciertoFiguras = 0;
+    falloFiguras = 0;
+    aciertoOperacion = 0;
+    falloOperacion = 0;
   }
 
   function salirDelJuego() {
-    window.location.href = "principalJuegos";
+    window.location.href = "/principalJuegos";
   }
 
   reiniciarJuego();

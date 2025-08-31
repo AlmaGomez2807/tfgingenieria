@@ -2,10 +2,11 @@
 <div class="home-page">
     <div class="login-container">
         <h1 class="login-title">Inicia sesión</h1>
-        <form class="login-form"  action="principalJuegos">
-            <input class="username-input" type="text" id="username" placeholder="Tu nombre" required>
+        <form class="login-form" action="/intermedia" method="get">
+            <input class="username-input" type="text" id="username" name="username" placeholder="Tu nombre" required>
             <input class="submit-button" type="submit" value="Entrar">
         </form>
+
     </div>
 </div>
-{{> fragments/footer}}
+{{> fragments/footerInicio}}

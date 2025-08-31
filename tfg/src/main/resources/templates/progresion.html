@@ -1,0 +1,232 @@
+{{> fragments/header}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script>
+function showPuntos(elementId, label1, puntos) {
+
+  var speedCanvas = document.getElementById(elementId);
+
+  Chart.defaults.global.defaultFontFamily = "Arial";
+  Chart.defaults.global.defaultFontSize = 14;
+
+  var speedData = {
+    labels: puntos.map((_, index) => index + 1),
+    datasets: [
+      {
+        label: "Puntos",
+        data: puntos,
+        fill: false, 
+        borderColor: "#000000",
+        backgroundColor: "#000000",
+        lineTension: 0,
+      }
+    ]
+  };
+
+  var chartOptions = {
+    legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+        boxWidth: 80,
+        fontColor: 'black'
+      }
+    },
+    scales: {
+        yAxes: [{
+            ticks: {
+                min: 0,
+                max: Math.round(Math.max(...puntos) * 1.1)
+            }
+        }]
+    }
+  };
+
+  var lineChart = new Chart(speedCanvas, {
+    type: 'line',
+    data: speedData,
+    options: chartOptions
+  });
+
+}
+
+function showAciertos(elementId, label1, aciertos, fallos) {
+
+  var speedCanvas = document.getElementById(elementId);
+
+  Chart.defaults.global.defaultFontFamily = "Arial";
+  Chart.defaults.global.defaultFontSize = 14;
+
+  var speedData = {
+    labels: aciertos.map((_, index) => index + 1),
+    datasets: [
+      {
+        label: "Aciertos",
+        data: aciertos,
+        fill: false, 
+        borderColor: "#27F53C",
+        backgroundColor: "#27F53C",
+        lineTension: 0,
+      },
+      {
+        label: "Fallos",
+        data: fallos,
+        fill: false, 
+        borderColor: "#E30000",
+        backgroundColor: "#E30000",
+        lineTension: 0,
+      }
+    ]
+  };
+
+  var chartOptions = {
+    legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+        boxWidth: 80,
+        fontColor: 'black'
+      }
+    },
+    scales: {
+        yAxes: [{
+            ticks: {
+                min: 0,
+                max: Math.round(Math.max(...aciertos.concat(fallos)) * 1.1)
+            }
+        }]
+    }
+  };
+
+  var lineChart = new Chart(speedCanvas, {
+    type: 'line',
+    data: speedData,
+    options: chartOptions
+  });
+
+}
+</script>
+</head>
+
+<body>
+  <h1 class="text-center mt-4">Métricas - {{u.username}}</h1>
+  <div class="container-fluid">
+    <div class="row mt-4">
+      <div class="col-lg-1"></div>
+      <div class="col-lg-3">
+
+        <div class="ranking-container text-center">
+          <h3>Puntuación máxima</h3>
+            <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Coordinate:</strong> <span id="score-heading">{{u.maxCoordinate}}</span></div>
+            <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Heading Conflicts:</strong> <span id="score-heading">{{u.maxHConflicts}}</span></div>
+            <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Radar Control:</strong> <span id="score-radar">{{u.maxRControl}}</span></div>
+            <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Multitask:</strong> <span id="score-multitarea">{{u.maxMultitask}}</span></div>
+            <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Figures:</strong> <span id="score-figuras">{{u.maxFigures}}</span></div>
+          
+        
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+      <div class="container align-items-center justify-content-center">
+        <div class="row">
+          <div id="cd">
+            <div class="d-flex justify-content-between col-lg-12"><canvas id="puntosCoordinate"></canvas></div>
+            <div class="d-flex justify-content-between col-lg-12 mt-4"><canvas id="aciertosCoordinate"></canvas></div>
+          </div>
+          <div id="fg">
+            <div class="d-flex justify-content-between col-lg-12"><canvas id="puntosFigures"></canvas></div>
+            <div class="d-flex justify-content-between col-lg-12 mt-4"><canvas id="aciertosFigures"></canvas></div>
+          </div>
+          <div id="hc">
+            <div class="d-flex justify-content-between col-lg-12"><canvas id="puntosHConflicts"></canvas></div>
+            <div class="d-flex justify-content-between col-lg-12 mt-4"><canvas id="aciertosHC"></canvas></div>
+          </div>
+          <div id="mt">
+            <div class="d-flex justify-content-between col-lg-12"><canvas id="puntosMultitask"></canvas></div>
+            <div class="d-flex justify-content-between col-lg-12 mt-4"><canvas id="aciertosMt"></canvas></div>
+          </div>
+          <div id="rc">
+            <div class="d-flex justify-content-between col-lg-12"><canvas id="puntosRControl"></canvas></div>
+            <div class="d-flex justify-content-between col-lg-12 mt-4"><canvas id="aciertosRControl"></canvas></div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-lg-2 text-center">
+                <div class="row mt-4">
+            <h3>Juego</h3>
+              <div class="col-lg-12 mt-3"><button id="btn-mt" class="hc-boton" onclick="mostrar('multitask')">Multitask</button></div>
+              <div class="col-lg-12 mt-3"><button id="btn-rc" class="hc-boton" onclick="mostrar('rcontrol')">Radar Control</button></div>
+          </div>
+          
+          <div class="row">
+            <div class="col-lg-12 mt-3"><button id="btn-cd" class="hc-boton" onclick="mostrar('coordinate')">Coordinate</button></div>
+            <div class="col-lg-12 mt-3"><button id="btn-fg" class="hc-boton" onclick="mostrar('figures')">Figures</button></div>
+          </div>
+          
+          <div class="row">
+            <div class="col-lg-12 mt-3"><button id="btn-hc" class="hc-boton" onclick="mostrar('hconflicts')">Heading Conflicts</button></div>
+          </div>
+      </div>
+      <div class="col-lg-1"></div>
+      </div>
+  </div>
+
+
+
+<script>
+showPuntos("puntosCoordinate","Puntos Coordinate",{{listaCoordinate}});
+showAciertos("aciertosCoordinate","Aciertos Coordinate",{{listaAciertosCoordinate}},{{listaFallosCoordinate}});
+
+showPuntos("puntosFigures","Puntos Figures",{{listaFigures}});
+showAciertos("aciertosFigures","Aciertos Figures",{{listaAciertosFigures}},{{listaFallosFigures}});
+
+showPuntos("puntosHConflicts","Puntos Heading Conflicts",{{listaHConflicts}});
+showAciertos("aciertosHC","Aciertos Heading Conflicts",{{listaAciertosHConflicts}},{{listaFallosHConflicts}});
+
+showPuntos("puntosMultitask","Puntos Multitask",{{listaMultitask}});
+showAciertos("aciertosMt","Aciertos Multitask",{{listaAciertosMultitask}},{{listaFallosMultitask}});
+
+showPuntos("puntosRControl","Puntos Radar Control",{{listaRControl}});
+showAciertos("aciertosRControl","Aciertos Radar Control",{{listaAciertosRControl}},{{listaFallosRControl}});
+
+function mostrar(tipo){
+  let cols = ["mt", "cd", "fg", "hc", "rc"];
+
+    for (let col of cols) 
+      document.getElementById("btn-" + col).style.background = "#12c1ed";
+
+  document.getElementById("cd").style.display = "none";
+  document.getElementById("fg").style.display = "none";
+  document.getElementById("hc").style.display = "none";
+  document.getElementById("mt").style.display = "none";
+  document.getElementById("rc").style.display = "none";
+  switch(tipo){
+    case "multitask":
+      document.getElementById("mt").style.display = "block";
+      document.getElementById("btn-mt").style.background = "grey";
+      break;
+    case "rcontrol":
+      document.getElementById("rc").style.display = "block";
+      document.getElementById("btn-rc").style.background = "grey";
+      break;
+    case "coordinate":
+      document.getElementById("cd").style.display = "block";
+      document.getElementById("btn-cd").style.background = "grey";
+      break;
+    case "figures":
+      document.getElementById("fg").style.display = "block";
+      document.getElementById("btn-fg").style.background = "grey";
+      break;
+    case "hconflicts":
+      document.getElementById("hc").style.display = "block";
+      document.getElementById("btn-hc").style.background = "grey";
+      break;
+  }
+}
+
+window.onload = function () {
+    mostrar("coordinate"); 
+  };
+</script>
+{{> fragments/footer}}

@@ -1,53 +1,92 @@
 {{> fragments/header}}
-  <div class="ranking-container">
-    <div class="ranking-title">🏆 Ranking de Jugadores 🏆</div>
-    <ul class="ranking-list" id="ranking-list">
-      <!-- Aquí se insertarán los jugadores -->
-    </ul>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="ranking-container">
+        <div class="ranking-title">🏆 Ranking de Jugadores 🏆</div>
+          <!-- Aquí se insertarán los jugadores -->
+          <table id="myTable" class="ranking-list">
+            <th>Usuario</th>
+            <th>Coordinate</th>
+            <th>Figures</th>
+            <th>Heading Conflicts</th>
+            <th>Multitask</th>
+            <th>Radar Control</th>
+          {{#listaUsuarios}}
+          <tr>
+              <td class="ranking-name">{{username}}</td>
+              <td class="ranking-score">{{maxCoordinate}}</td>
+              <td class="ranking-score">{{maxFigures}}</td>
+              <td class="ranking-score">{{maxHConflicts}}</td>
+              <td class="ranking-score">{{maxMultitask}}</td>
+              <td class="ranking-score">{{maxRControl}}</td>
+          </tr>
+          {{/listaUsuarios}}
+          {{^listaUsuarios}}
+          <td>-</td>
+          <td>-</td>
+          {{/listaUsuarios}}
+          </table>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="ranking-container text-center">
+        <div class="ranking-title">🥇 Ordenar 🥇</div>
+        <div class="container-fluid row">
+          <div class="col-lg-6"><button id="btn-3" class="hc-boton" onclick="sortTable(3)">Heading Conflicts</button></div>
+          <div class="col-lg-6"><button id="btn-5" class="hc-boton" onclick="sortTable(5)">Radio Control</button></div>
+          
+
+        </div>
+        
+        <div class="container-fluid row mt-4">
+          <div class="col-lg-6"><button id="btn-1" class="hc-boton" onclick="sortTable(1)">Coordinate</button></div>
+          <div class="col-lg-6"><button id="btn-2" class="hc-boton" onclick="sortTable(2)">Figures</button></div>
+        </div>
+        
+        <div class="container-fluid row mt-4">
+          <div class="col-lg-12"><button id="btn-4" class="hc-boton" onclick="sortTable(4)">Multitask</button></div>
+        </div>
+        
+      </div>
+      
+    </div>
   </div>
+</div>
+
 
 <script>
-
-    // Esta función debe conectarse a tu base de datos real
-    async function obtenerJugadoresDesdeBD() {
-    // Simulación de datos (reemplaza con tu conexión real)
-    return [
-        { nombre: 'Sofía', puntuacion: 120 },
-        { nombre: 'Lucas', puntuacion: 110 },
-        { nombre: 'Martina', puntuacion: 100 },
-        { nombre: 'Mateo', puntuacion: 95 },
-        { nombre: 'Leo', puntuacion: 90 },
-        { nombre: 'Valeria', puntuacion: 85 },
-        { nombre: 'Hugo', puntuacion: 80 },
-        { nombre: 'Daniela', puntuacion: 78 },
-        { nombre: 'Alejandro', puntuacion: 75 },
-        { nombre: 'Emma', puntuacion: 70 }
-    ];
+  function sortTable(element) {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("myTable");
+    switching = true;
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 1; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("TD")[element];
+        y = rows[i + 1].getElementsByTagName("TD")[element];
+        if (Number(x.innerHTML) < Number(y.innerHTML)) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+      }
     }
+    let cols = [1, 2, 3, 4, 5];
 
-    // Esta función renderiza el ranking en pantalla
-    async function mostrarRanking() {
-    const jugadores = await obtenerJugadoresDesdeBD();
-    const lista = document.getElementById('ranking-lista');
-    lista.innerHTML = '';
+    for (let col of cols) 
+      document.getElementById("btn-" + col).style.background = "#12c1ed";
+    
+      document.getElementById("btn-" + element).style.background = "grey";
+  }
 
-    jugadores.forEach((jugador, index) => {
-        const item = document.createElement('div');
-        item.classList.add('ranking-item');
-        if (index === 0) item.classList.add('top-1');
-        else if (index === 1) item.classList.add('top-2');
-        else if (index === 2) item.classList.add('top-3');
-
-        item.innerHTML = `
-        <div class="ranking-pos">${index + 1}.</div>
-        <div class="ranking-name">${jugador.nombre}</div>
-        <div class="ranking-score">${jugador.puntuacion} pts</div>
-        `;
-        lista.appendChild(item);
-    });
-    }
-
-    // Ejecutar al cargar la página
-    window.addEventListener('DOMContentLoaded', mostrarRanking);
+  window.onload = function () {
+    sortTable(2); 
+  };
 </script>
 {{> fragments/footer}}

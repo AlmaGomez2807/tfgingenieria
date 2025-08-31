@@ -3,7 +3,7 @@
 <div class="fig-wrapper">
   <div class="fig-contenedor-flex">
     <div class="fig-timer-lateral">
-      <div class="coor-timer marcador" id="coor-timer">Tiempo: 60s</div>
+      <div class="coor-timer marcador" id="coor-timer">Tiempo: 60</div>
     </div>
 
     <!-- Zona central: juego -->
@@ -38,17 +38,22 @@
   </div>
 </div>
 
-
+<script src="/js/api.js"></script>
 <script>
   const shapes = ['●', '▲', '◆', '★', '◉', '◼', '▣'];
   const colors = ['black', 'red', 'green', 'blue', 'orange', 'purple', 'pink'];
 
   let mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
   let score = 0;
-  let tiempoRestante = 60;
+  let tiempoRestante = 5;
   let timerInterval = null;
   let juegoTerminado = false;
-
+  let aciertos = 0;
+  let fallos = 0;
+  let aciertoColor = 0;
+  let falloColor = 0;
+  let aciertoFigura = 0;
+  let falloFigura = 0;
   const description = document.getElementById('fig-description');
   const mainFigure = document.getElementById('main-figure');
   const optionsContainer = document.getElementById('fig-options');
@@ -83,12 +88,18 @@
   }
 
   function updateTimerDisplay() {
-    timerDisplay.textContent = `Tiempo: ${tiempoRestante}s`;
+    timerDisplay.textContent = `Tiempo: ${tiempoRestante}`;
   }
 
   function reiniciarJuego() {
     score = 0;
-    tiempoRestante = 60;
+    tiempoRestante = 5;
+    aciertos = 0;
+    fallos = 0;
+    aciertoColor = 0;
+    aciertoFigura = 0;
+    falloColor = 0;
+    falloFigura = 0;
     juegoTerminado = false;
     updateScoreDisplay();
     updateTimerDisplay();
@@ -102,7 +113,7 @@
   }
 
   function salirDelJuego() {
-    window.location.href = "/"; // Cambia si tu menú está en otra URL
+    window.location.href = "/principalJuegos";
   }
 
   function terminarJuego() {
@@ -113,6 +124,27 @@
     mainFigure.innerHTML = '';
     optionsContainer.innerHTML = '';
     description.textContent = '';
+    //Enviar petición a endpoint para guardar datos
+    //function enviar(URL, jsonAEnviar, metodo)
+    
+    console.log(score);
+    const username = getCookie("username");
+
+    const payload = {
+      username: username,
+      score: score,
+      aciertos: aciertos,
+      fallos: fallos,
+      aciertoColor: aciertoColor,
+      falloColor: falloColor,
+      aciertoFigura: aciertoFigura,
+      falloFigura: falloFigura
+    };
+
+    const jsonString = JSON.stringify(payload, null, 2);
+    console.log(jsonString);
+
+    enviar("/games/figures", jsonString, "POST");
   }
 
   function actualizarTemporizador() {
@@ -191,10 +223,24 @@
         }
 
         if (isCorrect) {
+          if (mode === 'same-shape'){
+            aciertoFigura += 1;
+          }
+          else{
+            aciertoColor += 1;
+          }
           score += 10;
+          aciertos += 1;
           feedback.textContent = '✅ ¡Correcto! +10 puntos';
         } else {
+          if (mode === 'same-shape'){
+            falloFigura += 1;
+          }
+          else{
+            falloColor += 1;
+          }
           score -= 5;
+          fallos += 1;
           feedback.textContent = '❌ Incorrecto -5 puntos';
         }
 
