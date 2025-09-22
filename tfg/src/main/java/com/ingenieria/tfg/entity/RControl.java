@@ -17,8 +17,10 @@ public class RControl extends BaseScores {
         u.getRControl().add(this);
     }
 
-    public RControl(User u, Integer puntuacion, Integer aciertos, Integer fallos) {
+    public RControl(User u, Integer puntuacion, Integer aciertos, Integer fallos, Integer totalAzul, Integer totalRojo) {
         super(u, puntuacion, aciertos, fallos);
+        this.totalAzul = totalAzul;
+        this.totalRojo = totalRojo;
         u.getRControl().add(this);
     }
 }

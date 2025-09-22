@@ -58,11 +58,11 @@ public class DatabasePopulator implements CommandLineRunner {
         new Multitask(u, 160 - entropia, 8, 1, 6, 0, 6, 1, 6, 1);
         u.setMaxMultitask(160 - entropia);
 
-        new RControl(u, 100 - entropia, 5, 5);
-        new RControl(u, 120 - entropia, 6, 4);
-        new RControl(u, 140 - entropia, 7, 3);
-        new RControl(u, 160 - entropia, 8, 2);
-        new RControl(u, 180 - entropia, 9, 1);
+        new RControl(u, 100 - entropia, 5, 5, 3, 6);
+        new RControl(u, 120 - entropia, 6, 4, 6, 12);
+        new RControl(u, 140 - entropia, 7, 3, 9, 18);
+        new RControl(u, 160 - entropia, 8, 2, 12, 24);
+        new RControl(u, 180 - entropia, 9, 1, 15, 30);
         u.setMaxRControl(180 - entropia);
 
         userService.save(u);

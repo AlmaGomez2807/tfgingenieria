@@ -3,7 +3,6 @@ package com.ingenieria.tfg.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +13,7 @@ import com.ingenieria.tfg.dto.Puntos;
 import com.ingenieria.tfg.entity.User;
 import com.ingenieria.tfg.service.UserService;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+
 
 @RestController
 @RequestMapping("/games")
@@ -26,7 +24,7 @@ public class API_Games {
     @PostMapping("/{type}")
     public ResponseEntity<Puntos> puntosCoordinate(@PathVariable String type, @RequestBody Puntos data) {
         User u = userService.findByUsername(data.getUsername());
-        //Determinamos qué juego se tiene que actualizar
+        //Determina qué juego se tiene que actualizar
         switch (type) {
             case "coordinate":
                 userService.saveCoordinate(u, data);
@@ -50,7 +48,7 @@ public class API_Games {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(data);
     }
-
+    /*
 
     @GetMapping("/puntuaciones")
     public ResponseEntity<User> getPuntuaciones(HttpServletRequest request) {
@@ -73,4 +71,5 @@ public class API_Games {
     }
     return ResponseEntity.ok(u);
     }
+    */
 }

@@ -1,6 +1,6 @@
 {{> fragments/header}}
 <div class="rk-container-fluid">
-  <h1 class="rk-title">Lleva cada avión a su correspondiente meta</h1>
+  
 
   <div class="row justify-content-between text-center mb-3">
     <div class="col-3 text-start">
@@ -26,8 +26,13 @@
     </div>
 
     <!-- Radar en el centro -->
-    <div class="col-md-6 d-flex justify-content-center">
-      <div class="rk-container">
+    <div class="col-md-6 justify-content-center coor-juego coor-rc">
+      <div class="col-lg-12">
+        <h1 class="rk-title">Lleva cada avión a su correspondiente meta</h1>
+        <div id="rk-feedback" class="rk-feedback"></div>
+      </div>
+      
+      <div class="rk-container col-lg-12 mt-4">
         <div class="rk-radar">
           <div class="meta-zone-r" style="left:50px; top:50px; width:60px; height:60px;"></div>
           <div class="meta-zone-a" style="left:180px; top:130px; width:60px; height:60px;"></div>
@@ -50,7 +55,7 @@
       </div>
     </div>
 
-    <div id="rk-feedback" class="rk-feedback"></div>
+    
   </div>
 </div>
 
@@ -91,7 +96,7 @@
   let fallos = 0;
   let totalAzul = 0;
   let totalRojo = 0;
-  let tiempoRestante = 20;
+  let tiempoRestante = 90;
   let timerInterval = null;
   let juegoTerminado = false;
 
@@ -231,7 +236,7 @@ function movePlanes() {
 }
 
   function changeDirection(planeId, direction) {
-    const speed = 0.3;
+    const speed = 0.2;
     if (planeId === 'plane1') {
       totalRojo += 1;
       console.log(totalRojo)
@@ -247,7 +252,7 @@ function movePlanes() {
   }
 
   function changeAltitude(planeId, direction) {
-    const speed = 0.3;
+    const speed = 0.2;
     if (planeId === 'plane1') {
       totalRojo += 1;
       dy1 = direction === 'up' ? -speed : speed;
@@ -272,13 +277,13 @@ function movePlanes() {
   }
 
   function resetGame() {
-    dx1 = 0.3; dy1 = 0;  // avión 1 se mueve hacia la derecha inicialmente
-    dx2 = 0.3; dy2 = 0;  // avión 2 igual
+    dx1 = 0.2; dy1 = 0;  // avión 1 se mueve hacia la derecha inicialmente
+    dx2 = 0.2; dy2 = 0;  // avión 2 igual
     const radarSize = getRadarSize();
     radarWidth = radarSize.width;
     radarHeight = radarSize.height;
     score = 0;
-    tiempoRestante = 20;
+    tiempoRestante = 90;
     const pos1 = getRandomPosition();
     const pos2 = getRandomPosition();
     x1 = pos1.x;

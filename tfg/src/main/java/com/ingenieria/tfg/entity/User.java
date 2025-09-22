@@ -44,6 +44,7 @@ public class User {
     private Integer maxRControl = 0;
     private Integer maxMultitask = 0;
     private Integer maxFigures = 0;
+    private Integer totalPuntos = 0;
 
     public User (String username){
         this.username = username;

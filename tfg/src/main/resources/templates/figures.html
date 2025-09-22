@@ -3,7 +3,7 @@
 <div class="fig-wrapper">
   <div class="fig-contenedor-flex">
     <div class="fig-timer-lateral">
-      <div class="coor-timer marcador" id="coor-timer">Tiempo: 60</div>
+      <div class="coor-timer marcador" id="coor-timer">Tiempo: 90</div>
     </div>
 
     <!-- Zona central: juego -->
@@ -45,7 +45,7 @@
 
   let mode = Math.random() < 0.5 ? 'same-shape' : 'same-color-diff-shape';
   let score = 0;
-  let tiempoRestante = 5;
+  let tiempoRestante = 90;
   let timerInterval = null;
   let juegoTerminado = false;
   let aciertos = 0;
@@ -93,7 +93,7 @@
 
   function reiniciarJuego() {
     score = 0;
-    tiempoRestante = 5;
+    tiempoRestante = 90;
     aciertos = 0;
     fallos = 0;
     aciertoColor = 0;
@@ -232,6 +232,7 @@
           score += 10;
           aciertos += 1;
           feedback.textContent = '✅ ¡Correcto! +10 puntos';
+          feedback.style.color = "green";
         } else {
           if (mode === 'same-shape'){
             falloFigura += 1;
@@ -242,6 +243,7 @@
           score -= 5;
           fallos += 1;
           feedback.textContent = '❌ Incorrecto -5 puntos';
+          feedback.style.color = "red";
         }
 
         updateScoreDisplay();

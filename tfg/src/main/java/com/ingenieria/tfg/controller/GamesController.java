@@ -10,10 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/juegos")
 public class GamesController {
-    /*
-     * Este controlador se usará para mostrar todos los juegos a los usuarios
-     */
-     @Autowired
+
+    @Autowired
     private CookieManager cookieManager;
 
     @RequestMapping("/coordinate")

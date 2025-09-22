@@ -39,7 +39,7 @@ let respuestaCorrecta = "";
 let score = 0;
 let aciertos = 0;
 let fallos = 0;
-let tiempoRestante = 5;
+let tiempoRestante = 90;
 let temporizador;
 
 function generarJuego() {
@@ -176,7 +176,7 @@ function iniciarJuego() {
   score = 0;
   aciertos = 0;
   fallos = 0;
-  tiempoRestante = 5;
+  tiempoRestante = 90;
   document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}`;
   generarJuego();
   temporizador = setInterval(actualizarTemporizador, 1000);

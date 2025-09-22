@@ -63,8 +63,8 @@ function showAciertos(elementId, label1, aciertos, fallos) {
         label: "Aciertos",
         data: aciertos,
         fill: false, 
-        borderColor: "#27F53C",
-        backgroundColor: "#27F53C",
+        borderColor: "#0c991aff",
+        backgroundColor: "#0c991aff",
         lineTension: 0,
       },
       {
@@ -91,7 +91,62 @@ function showAciertos(elementId, label1, aciertos, fallos) {
         yAxes: [{
             ticks: {
                 min: 0,
-                max: Math.round(Math.max(...aciertos.concat(fallos)) * 1.1)
+                max: Math.max(5, Math.round(Math.max(...aciertos.concat(fallos)) * 1.1))
+            }
+        }]
+    }
+  };
+
+  var lineChart = new Chart(speedCanvas, {
+    type: 'line',
+    data: speedData,
+    options: chartOptions
+  });
+
+}
+function showTotal(elementId, label1, aciertos, fallos) {
+
+  var speedCanvas = document.getElementById(elementId);
+
+  Chart.defaults.global.defaultFontFamily = "Arial";
+  Chart.defaults.global.defaultFontSize = 14;
+
+  var speedData = {
+    labels: aciertos.map((_, index) => index + 1),
+    datasets: [
+      {
+        label: "B. rojo",
+        data: aciertos,
+        fill: false, 
+        borderColor: "red",
+        backgroundColor: "red",
+        lineTension: 0,
+      },
+      {
+        label: "B. azul",
+        data: fallos,
+        fill: false, 
+        borderColor: "#0089faff",
+        backgroundColor: "#0089faff",
+        lineTension: 0,
+      }
+    ]
+  };
+
+  var chartOptions = {
+    legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+        boxWidth: 80,
+        fontColor: 'black'
+      }
+    },
+    scales: {
+        yAxes: [{
+            ticks: {
+                min: 0,
+                max: Math.max(5, Math.round(Math.max(...aciertos.concat(fallos)) * 1.1))
             }
         }]
     }
@@ -115,14 +170,44 @@ function showAciertos(elementId, label1, aciertos, fallos) {
       <div class="col-lg-3">
 
         <div class="ranking-container text-center">
+<!--           <table id="myTable" class="ranking-list">
+            <th>Juego</th>
+            <th>Puntos</th>
+            <th>Num. Partidas</th>
+          <tr>
+            <td>Coordinate</td>
+            <td class="ranking-score">{{u.maxCoordinate}}</td>
+          </tr>
+          <tr>
+            <td>Figures</td>
+            <td class="ranking-score">{{u.maxFigures}}</td>
+          </tr>
+          <tr>
+            <td>Heading Conflicts</td>
+            <td class="ranking-score">{{u.maxHConflicts}}</td>
+          </tr>
+          <tr>
+            <td>Multitask</td>
+            <td class="ranking-score">{{u.maxMultitask}}</td>
+          </tr>
+          <tr>
+            <td>Radar Control</td>
+            <td class="ranking-score">{{u.maxRControl}}</td>
+          </tr>
+
+          </table> -->
           <h3>Puntuación máxima</h3>
             <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Coordinate:</strong> <span id="score-heading">{{u.maxCoordinate}}</span></div>
             <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Heading Conflicts:</strong> <span id="score-heading">{{u.maxHConflicts}}</span></div>
             <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Radar Control:</strong> <span id="score-radar">{{u.maxRControl}}</span></div>
             <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Multitask:</strong> <span id="score-multitarea">{{u.maxMultitask}}</span></div>
             <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Figures:</strong> <span id="score-figuras">{{u.maxFigures}}</span></div>
-          
-        
+          <h3 class="mt-4">Número de partidas</h3>
+            <div id="numpartidas-cd" class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Coordinate:</strong> <span id="score-heading">{{numPartidascd}}</span></div>
+            <div id="numpartidas-hc" class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Heading Conflicts:</strong> <span id="score-heading">{{numPartidashc}}</span></div>
+            <div id="numpartidas-rc" class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Radar Control:</strong> <span id="score-radar">{{numPartidasrc}}</span></div>
+            <div id="numpartidas-mt" class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Multitask:</strong> <span id="score-multitarea">{{numPartidasmt}}</span></div>
+            <div id="numpartidas-fg" class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Figures:</strong> <span id="score-figuras">{{numPartidasfg}}</span></div>
         </div>
       </div>
 
@@ -147,7 +232,10 @@ function showAciertos(elementId, label1, aciertos, fallos) {
           </div>
           <div id="rc">
             <div class="d-flex justify-content-between col-lg-12"><canvas id="puntosRControl"></canvas></div>
-            <div class="d-flex justify-content-between col-lg-12 mt-4"><canvas id="aciertosRControl"></canvas></div>
+            <div class="row">
+              <div class="d-flex justify-content-between col-lg-6 mt-4"><canvas id="aciertosRControl"></canvas></div>
+              <div class="d-flex justify-content-between col-lg-6 mt-4"><canvas id="totalRControl"></canvas></div>
+            </div>
           </div>
         </div>
       </div>
@@ -189,37 +277,43 @@ showAciertos("aciertosMt","Aciertos Multitask",{{listaAciertosMultitask}},{{list
 
 showPuntos("puntosRControl","Puntos Radar Control",{{listaRControl}});
 showAciertos("aciertosRControl","Aciertos Radar Control",{{listaAciertosRControl}},{{listaFallosRControl}});
+showTotal("totalRControl","Total Radar Control",{{listaRojoRControl}},{{listaAzulRControl}});
 
 function mostrar(tipo){
   let cols = ["mt", "cd", "fg", "hc", "rc"];
 
-    for (let col of cols) 
+    for (let col of cols){
       document.getElementById("btn-" + col).style.background = "#12c1ed";
+      document.getElementById(col).style.display = "none";
+      document.getElementById("numpartidas-" + col).style.display = "none";
+    }
+      
 
-  document.getElementById("cd").style.display = "none";
-  document.getElementById("fg").style.display = "none";
-  document.getElementById("hc").style.display = "none";
-  document.getElementById("mt").style.display = "none";
-  document.getElementById("rc").style.display = "none";
+  
   switch(tipo){
     case "multitask":
       document.getElementById("mt").style.display = "block";
+      document.getElementById("numpartidas-mt").style.display = "block";
       document.getElementById("btn-mt").style.background = "grey";
       break;
     case "rcontrol":
       document.getElementById("rc").style.display = "block";
+      document.getElementById("numpartidas-rc").style.display = "block";
       document.getElementById("btn-rc").style.background = "grey";
       break;
     case "coordinate":
       document.getElementById("cd").style.display = "block";
+      document.getElementById("numpartidas-cd").style.display = "block";
       document.getElementById("btn-cd").style.background = "grey";
       break;
     case "figures":
       document.getElementById("fg").style.display = "block";
+      document.getElementById("numpartidas-fg").style.display = "block";
       document.getElementById("btn-fg").style.background = "grey";
       break;
     case "hconflicts":
       document.getElementById("hc").style.display = "block";
+      document.getElementById("numpartidas-hc").style.display = "block";
       document.getElementById("btn-hc").style.background = "grey";
       break;
   }

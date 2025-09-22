@@ -23,25 +23,23 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class AdminController {
-    /*
-     * Este controlador se usará para todas las funciones del administrador
-     */
     @Autowired
     private UserService userService;
-
     @Autowired
     private CookieManager cookieManager;
-
     @RequestMapping("/admin")
     public String admin(HttpServletRequest request, Model model) {
         User u = cookieManager.getUsuario(request);
         if(!u.getUsername().equals("admin"))
             return "redirect:/principalJuegos";
-        model.addAttribute("listaUsuarios", userService.findAllUsers());
+        List<User> listaUsuarios = userService.findAllUsers();
+        User admin = userService.findByUsername("admin");
+        if(listaUsuarios.contains(admin))
+            listaUsuarios.remove(admin);
+        model.addAttribute("listaUsuarios", listaUsuarios);
         model.addAttribute("u", u);
         return "admin";
     }
-
     @RequestMapping("/progresion/{usuario}")
     public String progresion(@PathVariable String usuario, Model model) throws JsonProcessingException {
         User u = userService.findByUsername(usuario);
@@ -65,13 +63,13 @@ public class AdminController {
         List<Integer> listaRControl = new ArrayList<>();
         List<Integer> listaAciertosRControl = new ArrayList<>();
         List<Integer> listaFallosRControl = new ArrayList<>();
-
+        List<Integer> listaRojoRControl = new ArrayList<>();
+        List<Integer> listaAzulRControl = new ArrayList<>();
         for(Coordinate i: u.getCoordinate()){
             listaCoordinate.add(i.getPuntuacion());
             listaAciertosCoordinate.add(i.getAciertos());
             listaFallosCoordinate.add(i.getFallos());
         }
-
         for(Figures i: u.getFigures()){
             listaFigures.add(i.getPuntuacion());
             listaAciertosFigures.add(i.getAciertos());
@@ -91,6 +89,8 @@ public class AdminController {
             listaRControl.add(i.getPuntuacion());
             listaAciertosRControl.add(i.getAciertos());
             listaFallosRControl.add(i.getFallos());
+            listaRojoRControl.add(i.getTotalRojo());
+            listaAzulRControl.add(i.getTotalAzul());
         }
         model.addAttribute("listaCoordinate", new ObjectMapper().writeValueAsString(listaCoordinate));
         model.addAttribute("listaAciertosCoordinate", new ObjectMapper().writeValueAsString(listaAciertosCoordinate));
@@ -111,7 +111,14 @@ public class AdminController {
         model.addAttribute("listaRControl", new ObjectMapper().writeValueAsString(listaRControl));
         model.addAttribute("listaAciertosRControl", new ObjectMapper().writeValueAsString(listaAciertosRControl));
         model.addAttribute("listaFallosRControl", new ObjectMapper().writeValueAsString(listaFallosRControl));
+        model.addAttribute("listaRojoRControl", new ObjectMapper().writeValueAsString(listaRojoRControl));
+        model.addAttribute("listaAzulRControl", new ObjectMapper().writeValueAsString(listaAzulRControl));
 
+        model.addAttribute("numPartidascd", listaCoordinate.size());
+        model.addAttribute("numPartidashc", listaHConflicts.size());
+        model.addAttribute("numPartidasrc", listaRControl.size());
+        model.addAttribute("numPartidasmt", listaMultitask.size());
+        model.addAttribute("numPartidasfg", listaFigures.size());
         return "progresion";
     }
 }

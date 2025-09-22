@@ -1,17 +1,17 @@
 {{> fragments/header}}
 <div class="container">
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-8 mx-auto">
       <div class="ranking-container">
         <div class="ranking-title">🏆 Ranking de Jugadores 🏆</div>
           <!-- Aquí se insertarán los jugadores -->
           <table id="myTable" class="ranking-list">
             <th>Usuario</th>
-            <th>Coordinate</th>
-            <th>Figures</th>
-            <th>Heading Conflicts</th>
-            <th>Multitask</th>
-            <th>Radar Control</th>
+            <th id="btn-1" onclick="sortTable(1)">Coordinate</th>
+            <th id="btn-2" onclick="sortTable(2)">Figures</th>
+            <th id="btn-3" onclick="sortTable(3)">Heading Conflicts</th>
+            <th id="btn-4" onclick="sortTable(4)">Multitask</th>
+            <th id="btn-5" onclick="sortTable(5)">Radar Control</th>
           {{#listaUsuarios}}
           <tr>
               <td class="ranking-name">{{username}}</td>
@@ -28,28 +28,6 @@
           {{/listaUsuarios}}
           </table>
       </div>
-    </div>
-    <div class="col-lg-4">
-      <div class="ranking-container text-center">
-        <div class="ranking-title">🥇 Ordenar 🥇</div>
-        <div class="container-fluid row">
-          <div class="col-lg-6"><button id="btn-3" class="hc-boton" onclick="sortTable(3)">Heading Conflicts</button></div>
-          <div class="col-lg-6"><button id="btn-5" class="hc-boton" onclick="sortTable(5)">Radio Control</button></div>
-          
-
-        </div>
-        
-        <div class="container-fluid row mt-4">
-          <div class="col-lg-6"><button id="btn-1" class="hc-boton" onclick="sortTable(1)">Coordinate</button></div>
-          <div class="col-lg-6"><button id="btn-2" class="hc-boton" onclick="sortTable(2)">Figures</button></div>
-        </div>
-        
-        <div class="container-fluid row mt-4">
-          <div class="col-lg-12"><button id="btn-4" class="hc-boton" onclick="sortTable(4)">Multitask</button></div>
-        </div>
-        
-      </div>
-      
     </div>
   </div>
 </div>
@@ -80,9 +58,9 @@
     let cols = [1, 2, 3, 4, 5];
 
     for (let col of cols) 
-      document.getElementById("btn-" + col).style.background = "#12c1ed";
+      document.getElementById("btn-" + col).style.fontWeight = 400;
     
-      document.getElementById("btn-" + element).style.background = "grey";
+      document.getElementById("btn-" + element).style.fontWeight = 800;
   }
 
   window.onload = function () {

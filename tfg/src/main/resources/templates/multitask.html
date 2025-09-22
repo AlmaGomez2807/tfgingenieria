@@ -42,6 +42,8 @@
       <div class="mt-section-wide">
         <h2 class="mt-section-title">¡Pulsa ESPACIO cuando oigas el sonido!</h2>
         <div id="sound-feedback" class="mt-sound-feedback"></div>
+        <!-- NUEVO BOTÓN PARA TABLETS -->
+        <button class="mt-button" onclick="handleSpacePress()">Pulsa aquí</button>
       </div>
     </div>
 
@@ -90,7 +92,7 @@
   let aciertoEspacio = 0;
   let falloEspacio = 0;
 
-  let tiempoRestante = 10;
+  let tiempoRestante = 90;
   let timerInterval = null;
   let beepInterval = null;
   let juegoTerminado = false;
@@ -132,7 +134,7 @@
       falloFiguras += 1;
     }
     
-    figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos' : '❌ Incorrecto -5 puntos';
+    figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos': '❌ Incorrecto -5 puntos';
     if (isCorrect){
       aciertos += 1;
     }
@@ -173,26 +175,32 @@
     setTimeout(() => {
       if (waitingForSpace) {
         soundFeedback.textContent = '⏱️ Demasiado tarde... -5 puntos';
-        falloEspacio = + 1;
+        falloEspacio += 1;
         actualizarPuntos(-5);
         waitingForSpace = false;
       }
     }, 2000);
+  }
 
+  // NUEVA FUNCIÓN COMÚN PARA ESPACIO (teclado o botón)
+  function handleSpacePress() {
+    if (waitingForSpace && !juegoTerminado) {
+      soundFeedback.textContent = '✅ ¡Bien hecho! +10 puntos';
+      aciertoEspacio += 1;
+      aciertos += 1;
+      actualizarPuntos(10);
+      waitingForSpace = false;
+    }
+  }
 
+  // Listener de teclado
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
       e.preventDefault();
-      if (waitingForSpace && !juegoTerminado) {
-        soundFeedback.textContent = '✅ ¡Bien hecho! +10 puntos';
-        aciertoEspacio += 1;
-        aciertos += 1;
-        actualizarPuntos(10);
-        waitingForSpace = false;
-      }
+      handleSpacePress();
     }
   });
-  }
+
   function actualizarTemporizador() {
     if (tiempoRestante > 0) {
       tiempoRestante--;
@@ -214,16 +222,16 @@
     const username = getCookie("username");
 
     const payload = {
-    username: username,
-    score: score,
-    aciertos: aciertos,
-    fallos: fallos,
-    aciertoFiguras: aciertoFiguras,
-    falloFiguras: falloFiguras,
-    aciertoOperacion: aciertoOperacion,
-    falloOperacion: falloOperacion,
-    aciertoEspacio: aciertoEspacio,
-    falloEspacio: falloEspacio
+      username: username,
+      score: score,
+      aciertos: aciertos,
+      fallos: fallos,
+      aciertoFiguras: aciertoFiguras,
+      falloFiguras: falloFiguras,
+      aciertoOperacion: aciertoOperacion,
+      falloOperacion: falloOperacion,
+      aciertoEspacio: aciertoEspacio,
+      falloEspacio: falloEspacio
     };
 
     const jsonString = JSON.stringify(payload, null, 2);
@@ -235,7 +243,7 @@
   function reiniciarJuego() {
     popup.style.display = "none";
     score = 0;
-    tiempoRestante = 10;
+    tiempoRestante = 90;
     puntosEl.textContent = 'Puntos: 0';
     timerEl.textContent = 'Tiempo: 90s';
     soundFeedback.textContent = '';

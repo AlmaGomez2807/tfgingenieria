@@ -37,7 +37,8 @@ public class UserService {
     public void saveGeneral(User u, BaseScores b, Integer score, Integer aciertos, Integer fallos) {
         if (b.getPuntuacion() < score)
             b.setPuntuacion(score);
-
+        if(score > 0)
+            u.setTotalPuntos(u.getTotalPuntos()+score);
         b.setAciertos(aciertos + b.getAciertos());
         b.setFallos(fallos + b.getFallos());
     }

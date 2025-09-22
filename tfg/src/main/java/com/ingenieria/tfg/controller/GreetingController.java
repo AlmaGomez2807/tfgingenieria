@@ -1,6 +1,5 @@
 package com.ingenieria.tfg.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class GreetingController {
-    /*
-     * Este controlador gestionará la entrada de usuarios
-     */
     @Autowired
     private UserService userService;
 
@@ -32,21 +28,19 @@ public class GreetingController {
 
     @RequestMapping("/intermedia")
     public String intermedia(@RequestParam("username") String username, HttpServletResponse response) {
-        // Crear cookie con el nombre de usuario
+        // Creamos la cookie con el nombre de usuario
         Cookie cookie = new Cookie("username", username);
         cookie.setPath("/");
-        cookie.setMaxAge(7 * 24 * 60 * 60); // 7 días
+        cookie.setMaxAge(7 * 24 * 60 * 60); 
         response.addCookie(cookie);
-
-        // Si el usuario no existe en la BBDD, lo guarda
+        // Si el usuario no existe en la BBDD, lo guardamos
         if (userService.findByUsername(username) == null)
             userService.save(username);
-        
-        // Redirige automáticamente a la página principal del juego
         if(username.equals("admin"))
             return "redirect:/admin";
         return "redirect:/principalJuegos";
     }
+    
     @RequestMapping("/principalJuegos")
     public String principalJuegos(HttpServletRequest request, Model model) {
         // Leer cookies

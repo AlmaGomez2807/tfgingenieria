@@ -47,7 +47,7 @@ let aciertos = 0;
 let fallos = 0;
 let mostrarConflicto = false;
 
-let tiempoRestante = 5;
+let tiempoRestante = 90;
 let temporizador;
 
 function generatePlanes() {
@@ -209,7 +209,7 @@ function actualizarTemporizador() {
 
 function iniciarJuego() {
   score = 0;
-  tiempoRestante = 5;
+  tiempoRestante = 90;
   document.getElementById("coor-timer").textContent = `Tiempo: ${tiempoRestante}`;
   document.querySelectorAll(".hc-boton").forEach(b => b.disabled = false);
   actualizarUI();
