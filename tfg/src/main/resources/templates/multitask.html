@@ -134,14 +134,14 @@
       falloFiguras += 1;
     }
     
-    figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos': '❌ Incorrecto -5 puntos';
+    figuresFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos': '❌ ¡Incorrecto! Vuelve a probar';
     if (isCorrect){
       aciertos += 1;
     }
     else{
       fallos += 1;
     }
-    actualizarPuntos(isCorrect ? 10 : -5);
+    actualizarPuntos(isCorrect ? 10 : -0);
     setTimeout(() => {
       figuresFeedback.textContent = '';
       generateFigures();
@@ -158,9 +158,9 @@
       falloOperacion += 1;
       fallos += 1;
     }
-    equationFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos' : '❌ Incorrecto -5 puntos';
+    equationFeedback.textContent = isCorrect ? '✅ ¡Correcto! +10 puntos' : '❌ ¡Incorrecto! Vuelve a probar';
 
-    actualizarPuntos(isCorrect ? 10 : -5);
+    actualizarPuntos(isCorrect ? 10 : -0);
     setTimeout(() => {
       equationFeedback.textContent = '';
       generateEquation();
@@ -174,18 +174,18 @@
     soundFeedback.textContent = '¡Dale a ESPACIO!';
     setTimeout(() => {
       if (waitingForSpace) {
-        soundFeedback.textContent = '⏱️ Demasiado tarde... -5 puntos';
+        soundFeedback.textContent = '⏱️ Demasiado tarde...';
         falloEspacio += 1;
-        actualizarPuntos(-5);
+        actualizarPuntos(-0);
         waitingForSpace = false;
       }
     }, 2000);
   }
 
-  // NUEVA FUNCIÓN COMÚN PARA ESPACIO (teclado o botón)
+
   function handleSpacePress() {
     if (waitingForSpace && !juegoTerminado) {
-      soundFeedback.textContent = '✅ ¡Bien hecho! +10 puntos';
+      soundFeedback.textContent = '✅ ¡Correcto! +10 puntos';
       aciertoEspacio += 1;
       aciertos += 1;
       actualizarPuntos(10);

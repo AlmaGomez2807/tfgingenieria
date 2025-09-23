@@ -139,7 +139,6 @@
 
   // Actualizar la posición visual de la meta en el DOM
   const metaElements = document.querySelectorAll('.meta-zone-r, .meta-zone-a');
-  // Suponemos que metas[0] = '.meta-zone-r' y metas[1] = '.meta-zone-a'
   if (metaIndex === 0) {
     metaElements[0].style.left = metas[0].x + 'px';
     metaElements[0].style.top = metas[0].y + 'px';
@@ -155,7 +154,7 @@ function checkPlaneMeta(planeId, x, y, metaIndexCorrect, metaIndexWrong, flagNam
       window[flagName] = true;
       moverMeta(metaIndexCorrect);
     } else if (estaEnMeta(x, y, metas[metaIndexWrong])) {
-      sumarPuntos(-5);
+      sumarPuntos(-0);
       window[flagName] = true;
     }
   } else {
@@ -206,7 +205,7 @@ function movePlanes() {
         plane1EnMeta = true;
         moverMeta(0); // Mover meta roja a nueva posición
       } else if (estaEnMeta(x1, y1, metas[1])) {
-        sumarPuntos(-5);
+        sumarPuntos(-0);
         plane1EnMeta = true;
       }
     } else {
@@ -222,7 +221,7 @@ function movePlanes() {
         plane2EnMeta = true;
         moverMeta(1); // Mover meta azul a nueva posición
       } else if (estaEnMeta(x2, y2, metas[0])) {
-        sumarPuntos(-5);
+        sumarPuntos(-0);
         plane2EnMeta = true;
       }
     } else {
@@ -315,11 +314,11 @@ function movePlanes() {
 
   const feedback = document.getElementById("rk-feedback");
   if (valor > 0) {
-    feedback.textContent = `¡Correcto! +${valor} puntos 🎉`;
+    feedback.textContent = `✅ ¡Correcto! +${valor} puntos`;
     aciertos += 1;
     feedback.style.color = "green";
   } else {
-    feedback.textContent = `¡Incorrecto! ${valor} puntos ❌`;
+    feedback.textContent = `¡❌ ¡Incorrecto! Vuelve a probar`;
     fallos += 1;
     feedback.style.color = "red";
   }

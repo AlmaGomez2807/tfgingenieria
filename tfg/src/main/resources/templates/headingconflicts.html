@@ -149,12 +149,12 @@ function handleAnswer(playerSaysConflict) {
 
   if (playerSaysConflict === hasConflict) {
     score += 10;
-    feedback.textContent = "¡Correcto! +10 puntos 🎉";
+    feedback.textContent = "✅ ¡Correcto! +10 puntos";
     aciertos += 1;
     feedback.style.color = "green";
   } else {
-    score -= 5;
-    feedback.textContent = "¡Incorrecto! -5 puntos ❌";
+    score -= 0;
+    feedback.textContent = "❌ ¡Incorrecto! Vuelve a probar";
     fallos += 1;
     feedback.style.color = "red";
   }

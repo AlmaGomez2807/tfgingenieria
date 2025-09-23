@@ -114,12 +114,12 @@ function verificarRespuesta(boton) {
   if (boton.textContent === respuestaCorrecta) {
     score += 10;
     aciertos += 1;
-    feedback.textContent = "¡Correcto! +10 puntos 🎉";
+    feedback.textContent = "✅ ¡Correcto! +10 puntos";
     feedback.style.color = "green";
   } else {
-    score -= 5;
+    score -= 0;
     fallos += 1;
-    feedback.textContent = `¡Incorrecto! -5 puntos ❌ (Respuesta: ${respuestaCorrecta})`;
+    feedback.textContent = `❌ ¡Incorrecto! Vuelve a probar (Respuesta: ${respuestaCorrecta})`;
     feedback.style.color = "red";
   }
 
