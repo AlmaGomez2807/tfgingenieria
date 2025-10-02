@@ -6,7 +6,6 @@
       <div class="coor-timer marcador" id="coor-timer">Tiempo: 90</div>
     </div>
 
-    <!-- Zona central: juego -->
     <div class="fig-juego">
       <h1 class="fig-titulo">¡Elige la figura correcta!</h1>
       <div id="fig-description" class="fig-description"></div>
@@ -19,7 +18,6 @@
       <div id="fig-feedback" class="fig-feedback"></div>
     </div>
 
-    <!-- Zona derecha: marcador y feedback -->
     <div class="fig-lateral-derecha">
       <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
       
@@ -124,8 +122,6 @@
     mainFigure.innerHTML = '';
     optionsContainer.innerHTML = '';
     description.textContent = '';
-    //Enviar petición a endpoint para guardar datos
-    //function enviar(URL, jsonAEnviar, metodo)
     
     console.log(score);
     const username = getCookie("username");
@@ -257,6 +253,4 @@
   updateTimerDisplay();
   reiniciarJuego();
 </script>
-
-
 {{> fragments/footer}}

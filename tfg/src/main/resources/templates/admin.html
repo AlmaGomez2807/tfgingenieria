@@ -2,7 +2,6 @@
 <div class="container">
      <div class="ranking-container">
         <div class="ranking-title">Lista de usuarios</div>
-          <!-- Aquí se insertarán los jugadores -->
           <table id="myTable" class="ranking-list">
             <th>Usuario</th>
             <th>Coordinate</th>
@@ -47,6 +46,7 @@
   function popUp(username){
     document.getElementById("popup-final").style.display = "flex";
     document.getElementById("btnEliminar").dataset.username = username;
+    document.getElementById("nombreusuario").textContent = username;
   }
   function cerrarPopup(){
     document.getElementById("popup-final").style.display = "none";

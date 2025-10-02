@@ -22,7 +22,7 @@ public class API_User {
         return ResponseEntity.ok("Usuario eliminado correctamente");
     }
     @PutMapping("/avatar/{username}/{id}")
-    public ResponseEntity<String> cambiarAvatar(@PathVariable String username, @PathVariable Boolean id) {
+    public ResponseEntity<String> cambiarAvatar(@PathVariable String username, @PathVariable Integer id) {
         userService.setAvatar(userService.findByUsername(username), id);
         return ResponseEntity.ok("Avatar modificado");
     }

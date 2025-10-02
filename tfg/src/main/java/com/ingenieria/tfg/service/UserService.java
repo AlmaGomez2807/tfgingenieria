@@ -24,7 +24,7 @@ public class UserService {
         User u = userRepository.findByUsername(username);
         return u;
     }
-    public void setAvatar (User u, Boolean b) {
+    public void setAvatar (User u, Integer b) {
         u.setAvatar(b);
         userRepository.save(u);
     }

@@ -1,7 +1,5 @@
 {{> fragments/header}}
 <div class="rk-container-fluid">
-  
-
   <div class="row justify-content-between text-center mb-3">
     <div class="col-3 text-start">
       <div class="coor-timer marcador" id="coor-timer">Tiempo: 90</div>
@@ -12,7 +10,7 @@
   </div>
 
   <div class="row align-items-start">
-    <!-- Controles avión 1 -->
+    <!--avión 1-->
     <div class="col-md-3 text-center">
       <div class="rk-controls-izq">
         <h2 class="rk-subtitle">Avión Rojo</h2>
@@ -25,7 +23,6 @@
       </div>
     </div>
 
-    <!-- Radar en el centro -->
     <div class="col-md-6 justify-content-center coor-juego coor-rc">
       <div class="col-lg-12">
         <h1 class="rk-title">Lleva cada avión a su correspondiente meta</h1>
@@ -42,7 +39,7 @@
       </div>
     </div>
 
-    <!-- Controles avión 2 -->
+    <!--avión 2-->
     <div class="col-md-3 text-center">
       <div class="rk-controls-der">
         <h2 class="rk-subtitle">Avión Azul</h2>
@@ -100,8 +97,7 @@
   let timerInterval = null;
   let juegoTerminado = false;
 
-  // --- NUEVO: zonas meta ---
-  // Definimos las zonas meta (ajusta x,y,width,height según necesites)
+
   const metas = [
     { x: 50, y: 50, width: 60, height: 60 },   // Zona meta 1
     { x: 180, y: 130, width: 60, height: 60 }  // Zona meta 2
@@ -126,18 +122,15 @@
     };
   }
 
-  // Función para comprobar si una posición (x,y) está dentro de una zona meta
+  // comprobar si una posición (x,y) está dentro de una zona meta
   function estaEnMeta(x, y, meta) {
     return x >= meta.x && x <= meta.x + meta.width &&
            y >= meta.y && y <= meta.y + meta.height;
   }
 
   function moverMeta(metaIndex) {
-  // Nueva posición aleatoria dentro del radar (considerando tamaño meta)
   metas[metaIndex].x = Math.floor(Math.random() * (radarWidth - metas[metaIndex].width));
   metas[metaIndex].y = Math.floor(Math.random() * (radarHeight - metas[metaIndex].height));
-
-  // Actualizar la posición visual de la meta en el DOM
   const metaElements = document.querySelectorAll('.meta-zone-r, .meta-zone-a');
   if (metaIndex === 0) {
     metaElements[0].style.left = metas[0].x + 'px';
@@ -163,7 +156,6 @@ function checkPlaneMeta(planeId, x, y, metaIndexCorrect, metaIndexWrong, flagNam
     }
   }
 }
-
 
 function movePlanes() {
   if (!juegoTerminado) {
@@ -198,12 +190,12 @@ function movePlanes() {
       return;
     }
 
-    // Avión rojo solo suma en meta roja (metas[0])
+    // Avión rojo solo suma en meta roja
     if (!plane1EnMeta) {
       if (estaEnMeta(x1, y1, metas[0])) {
         sumarPuntos(10);
         plane1EnMeta = true;
-        moverMeta(0); // Mover meta roja a nueva posición
+        moverMeta(0); 
       } else if (estaEnMeta(x1, y1, metas[1])) {
         sumarPuntos(-0);
         plane1EnMeta = true;
@@ -235,7 +227,7 @@ function movePlanes() {
 }
 
   function changeDirection(planeId, direction) {
-    const speed = 0.2;
+    const speed = 0.3;
     if (planeId === 'plane1') {
       totalRojo += 1;
       console.log(totalRojo)
@@ -251,7 +243,10 @@ function movePlanes() {
   }
 
   function changeAltitude(planeId, direction) {
-    const speed = 0.2;
+
+    const speed = 0.3;
+
+    
     if (planeId === 'plane1') {
       totalRojo += 1;
       dy1 = direction === 'up' ? -speed : speed;
@@ -276,8 +271,8 @@ function movePlanes() {
   }
 
   function resetGame() {
-    dx1 = 0.2; dy1 = 0;  // avión 1 se mueve hacia la derecha inicialmente
-    dx2 = 0.2; dy2 = 0;  // avión 2 igual
+    dx1 = 0.3; dy1 = 0;  // avión 1 se mueve hacia la derecha inicialmente
+    dx2 = 0.3; dy2 = 0;  // avión 2 igual
     const radarSize = getRadarSize();
     radarWidth = radarSize.width;
     radarHeight = radarSize.height;
@@ -289,8 +284,8 @@ function movePlanes() {
     y1 = pos1.y;
     x2 = pos2.x;
     y2 = pos2.y;
-    dir1 = 0.2;
-    dir2 = 0.2;
+    dir1 = 0.3;
+    dir2 = 0.3;
     plane1EnMeta = false; // reset flags al reiniciar
     plane2EnMeta = false;
     timerEl.textContent = 'Tiempo: 90s';
@@ -371,7 +366,4 @@ function movePlanes() {
 
   iniciarJuego();
 </script>
-
-
-
 {{> fragments/footer}}

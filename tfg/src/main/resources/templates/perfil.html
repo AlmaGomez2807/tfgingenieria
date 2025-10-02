@@ -1,53 +1,52 @@
 {{> fragments/header}}
 <div class="perfil-container">
-    <div class="perfil-card">
+  <div class="perfil-card">
 
-      <!-- Selector de avatar -->
-      <div class="perfil-avatar-selector">
-        <img src="images/nino.png" alt="Avatar chico" class="perfil-avatar-option" onclick="seleccionarAvatar('images/nino.png', 0)">
-        <img src="images/nina.png" alt="Avatar chica" class="perfil-avatar-option" onclick="seleccionarAvatar('images/nina.png', 1)">
-      </div>
+    <!-- Selector de avatar -->
+    <div class="perfil-avatar-selector">
+      <img src="images/0.png" alt="Avatar chico" class="perfil-avatar-option" onclick="seleccionarAvatar('images/0.png', 0)">
+      <img src="images/1.png" alt="Avatar chica" class="perfil-avatar-option" onclick="seleccionarAvatar('images/1.png', 1)">
+      <img src="images/2.png" alt="Avatar 3" class="perfil-avatar-option" onclick="seleccionarAvatar('images/2.png', 2)">
+      <img src="images/3.png" alt="Avatar 4" class="perfil-avatar-option" onclick="seleccionarAvatar('images/3.png', 3)">
+      <img src="images/4.png" alt="Avatar 5" class="perfil-avatar-option" onclick="seleccionarAvatar('images/4.png', 4)">
+      <img src="images/5.png" alt="Avatar 6" class="perfil-avatar-option" onclick="seleccionarAvatar('images/5.png', 5)">
+    </div>
 
-      <!-- Avatar actual -->
-      <img id="perfil-avatar" src="/images/nino.png" alt="Avatar seleccionado" class="perfil-avatar" />
+    <!-- Avatar actual -->
+    <img id="perfil-avatar" src="/images/0.png" alt="Avatar seleccionado" class="perfil-avatar" />
 
-      <h1 class="perfil-nombre" id="nombre-jugador">{{u.Username}}</h1>
-      <button class="boton-cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+    <h1 class="perfil-nombre" id="nombre-jugador">{{u.Username}}</h1>
+    <button class="boton-cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
 
-      <div class="perfil-puntos-totales">Puntos totales: <span id="puntos-totales">{{u.totalPuntos}}</span></div>
+    <div class="perfil-puntos-totales">Puntos totales: <span id="puntos-totales">{{u.totalPuntos}}</span></div>
 
-      <h2 class="perfil-subtitulo">Máxima puntuación por juego</h2>
-      <div class="perfil-puntuaciones">
-        <div class="perfil-box"><strong>Coordinate:</strong> <span id="score-coordenadas">{{coordinate}}</span></div>
-        <div class="perfil-box"><strong>Heading Conflicts:</strong> <span id="score-heading">{{hconflicts}}</span></div>
-        <div class="perfil-box"><strong>Radar Control:</strong> <span id="score-radar">{{rcontrol}}</span></div>
-        <div class="perfil-box"><strong>Multitask:</strong> <span id="score-multitarea">{{multitask}}</span></div>
-        <div class="perfil-box"><strong>Figures:</strong> <span id="score-figuras">{{figures}}</span></div>
-      </div>
+    <h2 class="perfil-subtitulo">Máxima puntuación por juego</h2>
+    <div class="perfil-puntuaciones">
+      <div class="perfil-box"><strong>Coordinate:</strong> <span id="score-coordenadas">{{coordinate}}</span></div>
+      <div class="perfil-box"><strong>Heading Conflicts:</strong> <span id="score-heading">{{hconflicts}}</span></div>
+      <div class="perfil-box"><strong>Radar Control:</strong> <span id="score-radar">{{rcontrol}}</span></div>
+      <div class="perfil-box"><strong>Multitask:</strong> <span id="score-multitarea">{{multitask}}</span></div>
+      <div class="perfil-box"><strong>Figures:</strong> <span id="score-figuras">{{figures}}</span></div>
     </div>
   </div>
+</div>
 
-  <script src="/js/api.js"></script>
-  <script>
-  function seleccionarAvatar(ruta, boolean) {
+<script src="/js/api.js"></script>
+<script>
+  function seleccionarAvatar(ruta, idAvatar) {
     document.getElementById('perfil-avatar').src = ruta;
     document.getElementById('img-perfil').src = ruta;
-    enviar("/user/avatar/{{u.Username}}/"+boolean, null, "PUT");
+    enviar("/user/avatar/{{u.Username}}/"+idAvatar, null, "PUT");
   }
 
   function cerrarSesion() {
     document.cookie = "username=; path=/; max-age=0";
     window.location.href = "/";
   }
-  let ruta;
-  if({{u.Avatar}}){
-    ruta = '/images/nina.png'
-  }
-  else{
-    ruta = '/images/nino.png'
-  }
-  document.getElementById('perfil-avatar').src = ruta;
-  document.getElementById('img-perfil').src = ruta;
+
+    
+  document.getElementById('perfil-avatar').src = '/images/{{u.Avatar}}.png';;
+  document.getElementById('img-perfil').src = '/images/{{u.Avatar}}.png';;
 </script>
 
 {{> fragments/footer}}

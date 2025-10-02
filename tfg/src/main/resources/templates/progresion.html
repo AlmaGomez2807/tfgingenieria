@@ -44,7 +44,7 @@ function showPuntos(elementId, label1, puntos) {
   var lineChart = new Chart(speedCanvas, {
     type: 'line',
     data: speedData,
-    options: chartOptions
+    options: chartOptions,
   });
 
 }
@@ -170,32 +170,6 @@ function showTotal(elementId, label1, aciertos, fallos) {
       <div class="col-lg-3">
 
         <div class="ranking-container text-center">
-<!--           <table id="myTable" class="ranking-list">
-            <th>Juego</th>
-            <th>Puntos</th>
-            <th>Num. Partidas</th>
-          <tr>
-            <td>Coordinate</td>
-            <td class="ranking-score">{{u.maxCoordinate}}</td>
-          </tr>
-          <tr>
-            <td>Figures</td>
-            <td class="ranking-score">{{u.maxFigures}}</td>
-          </tr>
-          <tr>
-            <td>Heading Conflicts</td>
-            <td class="ranking-score">{{u.maxHConflicts}}</td>
-          </tr>
-          <tr>
-            <td>Multitask</td>
-            <td class="ranking-score">{{u.maxMultitask}}</td>
-          </tr>
-          <tr>
-            <td>Radar Control</td>
-            <td class="ranking-score">{{u.maxRControl}}</td>
-          </tr>
-
-          </table> -->
           <h3>Puntuación máxima</h3>
             <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Coordinate:</strong> <span id="score-heading">{{u.maxCoordinate}}</span></div>
             <div class="perfil-box col-lg-12 indicador-ranking mt-3"><strong>Heading Conflicts:</strong> <span id="score-heading">{{u.maxHConflicts}}</span></div>
@@ -260,8 +234,6 @@ function showTotal(elementId, label1, aciertos, fallos) {
       </div>
   </div>
 
-
-
 <script>
 showPuntos("puntosCoordinate","Puntos Coordinate",{{listaCoordinate}});
 showAciertos("aciertosCoordinate","Aciertos Coordinate",{{listaAciertosCoordinate}},{{listaFallosCoordinate}});
@@ -287,9 +259,7 @@ function mostrar(tipo){
       document.getElementById(col).style.display = "none";
       document.getElementById("numpartidas-" + col).style.display = "none";
     }
-      
-
-  
+    
   switch(tipo){
     case "multitask":
       document.getElementById("mt").style.display = "block";

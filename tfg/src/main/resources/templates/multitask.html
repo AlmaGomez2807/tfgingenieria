@@ -1,20 +1,14 @@
 {{> fragments/header}}
 
 <div class="mt-wrapper">
-  <!-- Juego y marcador en layout flexible -->
   <div class="mt-flex">
-    <!-- Juego principal -->
-     
     <div class="coor-timer marcador" id="coor-timer">Tiempo: 90</div>
     <div class="mt-container">
-      
-      <!-- FILA 1: Iconos y pregunta -->
       <div class="mt-figures-row">
         <div class="mt-figure" id="figure1">✈️</div>
         <div class="mt-question-block">
           <h1 class="mt-title">¡Multitask!</h1>
 
-          <!-- Feedback solo para figuras -->
           <div id="figures-feedback" class="mt-feedback"></div>
           <h2 class="mt-section-title">¿Las figuras son iguales? </h2>
           <div class="mt-button-group">
@@ -25,9 +19,7 @@
         <div class="mt-figure" id="figure2">🛩️</div>
       </div>
 
-      <!-- FILA 2: Operación aritmética -->
       <div class="mt-section-wide">
-        <!-- Feedback solo para ecuaciones -->
         <div id="equation-feedback" class="mt-feedback"></div>
 
         <h2 class="mt-section-title">¿Es correcta la operación?</h2>
@@ -38,16 +30,14 @@
         </div>
       </div>
 
-      <!-- FILA 3: Sonido -->
       <div class="mt-section-wide">
         <h2 class="mt-section-title">¡Pulsa ESPACIO cuando oigas el sonido!</h2>
         <div id="sound-feedback" class="mt-sound-feedback"></div>
-        <!-- NUEVO BOTÓN PARA TABLETS -->
-        <button class="mt-button" onclick="handleSpacePress()">Pulsa aquí</button>
+        <!-- BOTÓN PARA TABLETS -->
+        <button class="mt-button" onclick="handleSpacePress()">Espacio</button>
       </div>
     </div>
 
-    <!-- Marcador -->
     <div class="coor-puntos marcador" id="coor-puntos">Puntos: 0</div>
   </div>
 </div>
@@ -179,7 +169,7 @@
         actualizarPuntos(-0);
         waitingForSpace = false;
       }
-    }, 2000);
+    }, 3000);
   }
 
 
@@ -193,7 +183,7 @@
     }
   }
 
-  // Listener de teclado
+  
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
       e.preventDefault();
@@ -272,5 +262,4 @@
 
   reiniciarJuego();
 </script>
-
 {{> fragments/footer}}

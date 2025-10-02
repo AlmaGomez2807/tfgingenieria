@@ -20,7 +20,7 @@ public class User {
     @Id
     @Column(unique = true)
     private String username;
-    private Boolean avatar = false; //false si niño, true si niña
+    private Integer avatar = 0; //false si niño, true si niña
 
     //Puntuaciones
     @OneToMany(cascade = CascadeType.ALL)

@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: arm64v8/mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: miappdb
+      MYSQL_USER: miuser
+      MYSQL_PASSWORD: mipassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  springapp:
+    image: appultima
+    build: .
+    container_name: springapp
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/miappdb
+      SPRING_DATASOURCE_USERNAME: miuser
+      SPRING_DATASOURCE_PASSWORD: mipassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+volumes:
+  mysql_data:
